@@ -10,7 +10,7 @@ interface HeaderSearchProps {
 export const Header: React.FC<HeaderSearchProps> = ({
 }) => {
   return (
-    <HeaderContainer>
+    <HeaderContainer hideBorder={false}>
       <Inner>
         <h1>Totem Logo</h1>
 

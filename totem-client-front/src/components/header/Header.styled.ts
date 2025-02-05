@@ -10,6 +10,10 @@ export const HeaderContainer = styled.header<{
   right: 0;
   width: 100%;
   height: 56px;
+  border-bottom: ${({ hideBorder }) =>
+          hideBorder
+                  ? 'none'
+                  : '1px solid lightgray'};
 `;
 
 export const Inner = styled.div`
@@ -23,4 +27,4 @@ export const Inner = styled.div`
 export const SearchContainer = styled.div`
   flex: 1;
 
-`
+`;
