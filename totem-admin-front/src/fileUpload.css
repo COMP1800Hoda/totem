@@ -1,0 +1,63 @@
+.App {
+    font-family: 'Arial', sans-serif;
+    justify-content: center;
+    flex-direction: column;
+    text-align: center;
+    margin-top: 5vh; /* Responsive top margin */
+  }
+  
+  .file-input-container {
+    width: 90%; 
+    max-width: 500px; 
+    height: auto; 
+    border: 2px dashed #ccc;
+    border-radius: 10px;
+    padding: 2rem; 
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+    margin: 2vh auto; 
+    text-align: center;
+  }
+  
+  .custom-file-choose {
+    background-color: #6c63ff; 
+    color: white;
+    padding: 12px 30px; 
+    font-size: 16px; 
+    border-radius: 5px;
+    cursor: pointer;
+    border: none;
+    /* margin-top: 10px; */
+    /* width: 50%;  */
+    transition: background-color 0.3s;
+  }
+  
+  .custom-file-upload {
+    background-color: #6c63ff; 
+    color: white;
+    padding: 12px 20px; 
+    font-size: 18px; 
+    border-radius: 5px;
+    cursor: pointer;
+    border: none;
+    margin-top: 10px;
+    margin-left: 45px;
+    /* width: 50%;  */
+    transition: background-color 0.3s;
+  }
+  
+  .custom-file-choose:hover,
+  .custom-file-upload:hover {
+    background-color: #5a52e0; 
+  }
+  
+  .icon {
+    color: #6c63ff;
+    font-size: 100px; 
+    /* margin-bottom: 8px; */
+  }
+  
+ 
