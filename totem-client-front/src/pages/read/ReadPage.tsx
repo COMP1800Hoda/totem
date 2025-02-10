@@ -14,7 +14,7 @@ import { FaArrowLeft } from "react-icons/fa"; // Importing a back arrow icon
 import samplePage from "../../assets/sample-page.jpg";
 
 
-const ReadPage: React.FC = () => {
+export const ReadPage: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [showNav, setShowNav] = useState(false);
   const totalPages = 32;

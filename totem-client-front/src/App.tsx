@@ -4,7 +4,7 @@ import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
 import HomePage from './pages/home/HomePage.tsx';
 import NotFoundPage from './pages/notFound/NotFoundPage.tsx';
-import ReadPage from './pages/read/ReadPage.tsx';
+import { ReadPage } from './pages/read/ReadPage.tsx';
 import Catalogue from './pages/catalogue/CataloguePage.tsx';
 import ProfilePage from './pages/profile/ProfilePage.tsx';
 
