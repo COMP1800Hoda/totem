@@ -1,52 +1,73 @@
-import React, { useEffect } from 'react';
-
+import React, { useState } from "react";
 import {
-  HeroTitle,
-  MainContainer, NameButton,
+  MainContainer,
   Wrapper,
-} from './ReadPage.styled.ts';
-import { Header } from '../../components/header/Header.tsx';
-import { SearchContainer } from '../../components/header/Header.styled.ts';
-import { Link } from 'react-router';
-import { Button, Stack } from 'react-bootstrap';
+  ReadingContainer,
+  TopNav,
+  BottomNav,
+  BookImage,
+  ProgressBar,
+} from "../../pages/read/ReadPage.styled.ts";
+import { SearchContainer } from "../../components/header/Header.styled.ts";
+import { Link } from "react-router";
+import { FaArrowLeft } from "react-icons/fa"; // Importing a back arrow icon
+import samplePage from "../../assets/sample-page.jpg";
+
 
 const ReadPage: React.FC = () => {
-  const [userName, setUserName] = React.useState<string | null>(null);
-  const onButtonClick = (text: string) => {
-    setUserName(text);
-  }
+  const [currentPage, setCurrentPage] = useState(1);
+  const [showNav, setShowNav] = useState(false);
+  const totalPages = 32;
 
-  useEffect(() => {
+  const nextPage = () => {
+    if (currentPage < totalPages) setCurrentPage(currentPage + 1);
+  };
 
-  }, []);
+  const prevPage = () => {
+    if (currentPage > 1) setCurrentPage(currentPage - 1);
+  };
+
+  const toggleNav = () => {
+    setShowNav(!showNav);
+  };
 
   return (
-    <Wrapper id={'page-home'} className={'page'}>
-      <Header />
+    <Wrapper id={"page-home"} className={"page"}>
       <MainContainer>
         <SearchContainer>
-          <HeroTitle className="text-highlight">
-            Read
-          </HeroTitle>
-          {/*NOTE: When you navigate, use Link component instead of <a href=""/> */}
-          <Link to={'/'}>Home</Link>
-
-
-        {/*  Bootstrap example */}
-          <Stack direction="horizontal" gap={2}>
-            {/*basic bootstrap button example*/}
-            <Button variant="primary" onClick={() => onButtonClick('Heesun')}>
-              {userName ?? "TEST ME"}
-            </Button>
-            {/* Styling example (you can simply do styling by using styled-components (see ReadPage.styled.ts) */}
-            <NameButton onClick={() => onButtonClick('Scott')}>
-              {userName ?? "TEST ME"}
-            </NameButton>
-          </Stack>
+          <Link to={"/"}>
+            <FaArrowLeft size={24} color="#333" /> {/* Back Arrow Icon */}
+          </Link>
         </SearchContainer>
+
+        {/* Book Reading Section */}
+        <ReadingContainer onClick={toggleNav}>
+          <TopNav show={showNav}>عنوان کتاب (Placeholder)</TopNav>
+
+          {/* Set the book page placeholder image */}
+          <BookImage src={samplePage} alt="Book Page" />
+
+
+          <BottomNav show={showNav}>
+            <button onClick={prevPage}>قبلی</button>
+            <span>
+              {currentPage}/{totalPages}
+            </span>
+            <button onClick={nextPage}>بعدی</button>
+          </BottomNav>
+
+          {/* Progress Bar now only shows when navigation is visible */}
+          <ProgressBar
+            type="range"
+            min="1"
+            max={totalPages}
+            value={currentPage}
+            onChange={(e) => setCurrentPage(Number(e.target.value))}
+            show={showNav} // ✅ Pass the show prop correctly
+          />
+
+        </ReadingContainer>
       </MainContainer>
     </Wrapper>
   );
 };
-
-export default ReadPage;
