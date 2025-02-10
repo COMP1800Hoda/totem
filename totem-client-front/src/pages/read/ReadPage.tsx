@@ -47,15 +47,6 @@ const ReadPage: React.FC = () => {
           {/* Set the book page placeholder image */}
           <BookImage src={samplePage} alt="Book Page" />
 
-
-          <BottomNav show={showNav}>
-            <button onClick={prevPage}>قبلی</button>
-            <span>
-              {currentPage}/{totalPages}
-            </span>
-            <button onClick={nextPage}>بعدی</button>
-          </BottomNav>
-
           {/* Progress Bar now only shows when navigation is visible */}
           <ProgressBar
             type="range"
