@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import ImageKit from 'imagekit';
 import './fileUpload.css';
 
@@ -11,6 +11,15 @@ const imagekit = new ImageKit({
 
 const FileUpload: React.FC = () => {
   const [files, setFiles] = useState<File[]>([]); 
+  const [folderName, setFolderName] = useState<string | null>(null);
+
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+  useEffect (() => {
+    if(fileInputRef.current){
+      fileInputRef.current.setAttribute("webkitdirectory", "");
+    }
+  })
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     console.log("Selecting files");
@@ -19,6 +28,21 @@ const FileUpload: React.FC = () => {
 
     if (fileList && fileList.length > 0) {
       const filesArray = Array.from(fileList); 
+
+      const firstFile = filesArray[0];
+      
+      const isFolderUpload =firstFile.webkitRelativePath !== "";
+
+      if(isFolderUpload){
+
+        //extract folder name
+        const folderPath = firstFile.webkitRelativePath.split("/");
+        //check if the folder name is not empty. If not empty, set the folder name
+        const extractedFolderName = folderPath.length > 0 ? folderPath[0] : null;
+        setFolderName(extractedFolderName);
+      } else {
+        setFolderName(null);
+      }
       setFiles(filesArray); 
     }
   };
@@ -27,6 +51,9 @@ const FileUpload: React.FC = () => {
     event.preventDefault(); 
 
     if (files.length > 0) {
+      //get the url path for the folder in Imagekit.io
+      const uploadPath = folderName ? `/${folderName}/` : "/";
+
       for (const file of files) {
         const reader = new FileReader();
 
@@ -37,7 +64,9 @@ const FileUpload: React.FC = () => {
               const result = await imagekit.upload({
                 file: base64Data, 
                 fileName: file.name, 
-                tags: ["tag1", "tag2"], 
+                folder: uploadPath,
+              
+                tags: [`${folderName}`], 
               });
               console.log("Upload successful", result);
               alert(`File ${file.name} uploaded successfully!`);
@@ -70,9 +99,10 @@ const FileUpload: React.FC = () => {
             : "No files chosen, yet!"}
         </p>
         <label htmlFor="file-upload" className="custom-file-choose">
-          CHOOSE FILES
+          CHOOSE FOLDER
         </label>
         <input
+          ref={fileInputRef}
           id="file-upload"
           type="file"
           multiple 
@@ -80,12 +110,13 @@ const FileUpload: React.FC = () => {
           style={{ display: 'none' }}
         />
       </div>
-      <div>
+      
         <button className="custom-file-upload" onClick={handleSubmit}>
           Upload
         </button>
-      </div>
+      
     </div>
+
   );
 };
 
