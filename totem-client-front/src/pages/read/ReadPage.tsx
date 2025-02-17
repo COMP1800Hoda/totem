@@ -64,7 +64,7 @@ const ReadPage: React.FC = () => {
 
           {/* 🔹 Slider */}
           <SliderContainer>
-            <PageIndicator>{currentPage}/4</PageIndicator>
+            
             <input 
               type="range" 
               min="1" 
@@ -72,6 +72,7 @@ const ReadPage: React.FC = () => {
               value={currentPage} 
               onInput={(e) => setCurrentPage(Number((e.target as HTMLInputElement).value))} 
             />
+            <PageIndicator>4/{currentPage}</PageIndicator>
           </SliderContainer>
 
           
