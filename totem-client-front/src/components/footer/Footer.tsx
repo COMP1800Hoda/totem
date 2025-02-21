@@ -1,19 +1,49 @@
 import React from 'react';
-import { Link } from 'react-router';  // Import Link from react-router-dom
-import { FooterContainer, IconWrapper, IconStyle, HomeIcon, BookOpenIcon, UserIcon } from './Footer.styled';
+import { Link } from 'react-router';  // Correct import from react-router-dom
+import { 
+  FooterContainer, 
+  IconWrapper, 
+  IconStyle, 
+  HomeIcon, 
+  BookOpenIcon, 
+  HeadphonesIcon, 
+  SearchIcon, 
+  UserIcon 
+} from './Footer.styled';
 
 const Footer: React.FC = () => {
   return (
     <FooterContainer>
       <IconWrapper>
         <Link to="/">
-          <IconStyle><HomeIcon /></IconStyle>
+          <IconStyle>
+            <HomeIcon />
+            <span>Home</span>
+          </IconStyle>
         </Link>
-        <Link to="/c">
-          <IconStyle><BookOpenIcon /></IconStyle>
+        <Link to="/my-books">
+          <IconStyle>
+            <BookOpenIcon />
+            <span>My Books</span>
+          </IconStyle>
         </Link>
-        <Link to="/p">
-          <IconStyle><UserIcon /></IconStyle>
+        <Link to="/my-audio">
+          <IconStyle>
+            <HeadphonesIcon />
+            <span>My Audio</span>
+          </IconStyle>
+        </Link>
+        <Link to="/search">
+          <IconStyle>
+            <SearchIcon />
+            <span>Search</span>
+          </IconStyle>
+        </Link>
+        <Link to="/profile">
+          <IconStyle>
+            <UserIcon />
+            <span>Profile</span>
+          </IconStyle>
         </Link>
       </IconWrapper>
     </FooterContainer>

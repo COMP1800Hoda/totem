@@ -1,39 +1,63 @@
-// Footer.styled.ts
 import styled from 'styled-components';
-import { Home, BookOpen, User } from 'lucide-react';
+import { AiOutlineHome, AiOutlineBook, AiOutlineSearch, AiOutlineUser } from 'react-icons/ai';
+import { MdHeadset } from 'react-icons/md';
 
 export const FooterContainer = styled.footer`
   position: fixed;
   bottom: 0;
-  left: 0;
-  right: 0;
-  height: 70px;
+  margin: 0;
+  width: 100%;
+  height: 50px; /* Reduced height for compact design */
+  background-color: #ffffff;
+  border-top: 1px solid #ddd;
   display: flex;
-  align-items: center;
   justify-content: center;
-  background: white;
-  border-top: 1px solid lightgray;
+  align-items: center;
+  padding: 5px 0; /* Adjusted padding */
+  padding-left: 0;
 `;
 
 export const IconWrapper = styled.div`
   display: flex;
-  gap: 40px;
+  justify-content: space-between;
+  width: 90%; /* Prevents excessive stretching */
+  max-width: 400px; /* Ensures proper alignment on mobile */
 `;
 
 export const IconStyle = styled.div`
-  font-size: 32px;
-  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-decoration: none;
+  color: #333;
+  font-size: 10px; /* Adjusted label font size */
+
+  &:hover {
+    color: #007bff;
+  }
 `;
 
-// Exporting the Icons as components
-export const HomeIcon = styled(Home)`
-  font-size: 40px;
+export const Label = styled.span`
+  font-size: 10px; /* Smaller text for compact design */
+  margin-top: 1px;
 `;
 
-export const BookOpenIcon = styled(BookOpen)`
-  font-size: 40px;
+export const HomeIcon = styled(AiOutlineHome)`
+  font-size: 20px; /* Reduced icon size */
 `;
 
-export const UserIcon = styled(User)`
-  font-size: 40px;
+export const BookOpenIcon = styled(AiOutlineBook)`
+  font-size: 20px;
+`;
+
+export const HeadphonesIcon = styled(MdHeadset)`
+  font-size: 20px;
+`;
+
+export const SearchIcon = styled(AiOutlineSearch)`
+  font-size: 20px;
+`;
+
+export const UserIcon = styled(AiOutlineUser)`
+  font-size: 20px;
 `;
