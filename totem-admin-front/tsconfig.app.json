@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "allowJs": true,
     "incremental": true,
     "tsBuildInfoFile": "./.tsbuildinfo",
     "target": "ES2020",
@@ -22,5 +23,6 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
   },
-  "include": ["src"]
+  "include": ["src"],
+  "exclude": ["node_modules"]
 }
