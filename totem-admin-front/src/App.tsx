@@ -1,13 +1,13 @@
-import { useState } from 'react'
-import FileUpload from './fileUpload.tsx'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React from "react";
+import Login from "./Login.tsx"; // No need for .js extension in TypeScript
+import "bootstrap/dist/css/bootstrap.min.css";
 
-function App() {
+const App: React.FC = () => {
   return (
-    <FileUpload />
+    <div className="d-flex justify-content-center align-items-center vh-100 w-100">
+      <Login />
+    </div>
   );
-}
+};
 
-export default App
+export default App;
