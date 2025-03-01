@@ -21,7 +21,7 @@ const imagekit = new ImageKit({
 const FileUpload: React.FC = () => {
   const [bookTitle, setBookTitle] = useState<string>("");
   const [bookId, setBookId] = useState<string>("");
-  const [age, setAge] = useState<string>("");
+  const [age, setAge] = useState<string>("0~2");
 
   // const [type, setType] = useState<string>('');
 
@@ -311,9 +311,9 @@ const FileUpload: React.FC = () => {
             onChange={(e) => setAge(e.target.value)}
             style={{ width: "500px" }}
           >
-            <option value="3">0~2</option>
-            <option value="4">3~4</option>
-            <option value="5">5~6</option>
+            <option value="0~2">0~2</option>
+            <option value="3~4">3~4</option>
+            <option value="5~6">5~6</option>
           </select>
         </div>
         {/* <div className="form-group">
