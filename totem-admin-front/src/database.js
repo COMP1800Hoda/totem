@@ -1,29 +1,13 @@
-import Parse from 'parse';
+// Import Parse SDK -> change this
+/**
+ * Vite automatically externalizes the events module for browser compatibility. 
+ * The Parse SDK relies on events.EventEmitter, which isn't available in Vite's browser environment.
+ * explicitly use the browser version of Parse:
+ */
+import Parse from "parse/dist/parse.min.js";
 
-// ES6 Minimized
-// import Parse from 'parse/dist/parse.min.js';
-async function initializeParse() {
+// Initialize with your Back4app keys
+Parse.initialize("XWNVzANvs7w6pYMl4fZWLCcikgXdMvCZhEnI48sH", "NFHym7RCYmwrHL2Ohqr7769mcUt66ikBF13liUdt");  
+Parse.serverURL = 'https://parseapi.back4app.com';
 
-    
-    Parse.serverURL = 'https://parseapi.back4app.com';
-    Parse.initialize("XWNVzANvs7w6pYMl4fZWLCcikgXdMvCZhEnI48sH", "NFHym7RCYmwrHL2Ohqr7769mcUt66ikBF13liUdt");  
-
-    console.log("Successfully connected to Parse!");
-    try {
-        const StorybookAdmin = Parse.Object.extend("storybook_admin");
-        const storybookAdmin = new StorybookAdmin();
-
-        storybookAdmin.set("BookTitle", storybook);
-        storybookAdmin.set("BookID", 123);
-        storybookAdmin.set("Age", 3);
-
-        await storybookAdmin.save();
-        console.log("✅ Storybook data saved successfully!");
-        alert('Book data saved successfully!');
-    } catch (error) {
-        console.error("❌ Error saving storybook data:", error);
-        alert('Error saving data to the database.');
-    }
-
-}
-export { initializeParse };
+export default Parse;
