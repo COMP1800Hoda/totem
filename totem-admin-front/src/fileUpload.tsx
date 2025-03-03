@@ -22,15 +22,11 @@ const FileUpload: React.FC = () => {
   const [bookTitle, setBookTitle] = useState<string>("");
   const [bookId, setBookId] = useState<string>("");
   const [age, setAge] = useState<string>("0~2");
-
-  // const [type, setType] = useState<string>('');
-
   const [genres, setGenres] = useState([
     "Action Adventure",
     "Historical Fiction",
   ]);
 
-  // const [newGenre, setNewGenre] = useState('');
   // default creators
   const initialCreators = [
     { role: "Author", name: "John Doe", customRole: "" },
@@ -41,18 +37,14 @@ const FileUpload: React.FC = () => {
   ];
   const [creators, setCreators] = useState(initialCreators);
 
-  // don't have setRoles function
   const [roles, setRoles] = useState(initialRoles);
+  const [published, setPublished] = useState<string>("");
   const [publisher, setPublisher] = useState<string>("");
   const [isbn, setISBN] = useState<string>("");
   const [abstract, setAbstract] = useState<string>("");
   const [coverImage, setCoverImage] = useState<File | null>(null);
-
-  // const [contentImages, setContentImages] = useState<File[]>([]);
-
   const [files, setFiles] = useState<FileData[]>([]);
   const [folderName, setFolderName] = useState<string | null>(null);
-
   const coverInputRef = useRef<HTMLInputElement | null>(null);
   const contentInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -113,11 +105,6 @@ const FileUpload: React.FC = () => {
     }
   };
 
-  // const handleContentChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-  //   if (event.target.files) {
-  //     setContentImages(Array.from(event.target.files));
-  //   }
-  // };
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     console.log("Selecting files");
     const fileList = event.target.files;
@@ -131,9 +118,8 @@ const FileUpload: React.FC = () => {
 
       if (isFolderUpload) {
         const folderPath = firstFile.webkitRelativePath.split("/");
-        const extractedFolderName =
-          folderPath.length > 0 ? folderPath[0] : null;
-        setFolderName(extractedFolderName);
+       
+        setFolderName(bookId);
       } else {
         setFolderName(null);
       }
@@ -152,96 +138,102 @@ const FileUpload: React.FC = () => {
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
-    // uncomment later
-    // if (files.length === 0) {
-    //   alert("Please fill in all required fields and upload images.");
-    //   return;
-    // }
+    // Folder for cover images
+    const coverImageFolder = `/book-cover-images/${bookId}/`;
+
+    // Folder for content images
+    const contentImagesFolder = `/book-images/${bookId}/`;
+
+    // Array to track upload promises
+    const uploadPromises: Promise<void>[] = [];
 
     // Upload cover image
-    // if (coverImage) {
-    //   const reader = new FileReader();
-    //   reader.onload = async (loadEvent) => {
-    //     const base64Data = loadEvent.target?.result as string;
-    //     if (base64Data) {
-    //       try {
-    //         await imagekit.upload({
-    //           file: base64Data,
-    //           fileName: coverImage.name,
-    //           folder: `/${bookId}/`,
-    //           tags: [bookId],
-    //         });
-    //         console.log('Cover image uploaded successfully');
-    //       } catch (error) {
-    //         console.error('Error uploading cover image:', error);
-    //       }
-    //     }
-    //   };
-    //   reader.readAsDataURL(coverImage);
-    // }
-
-    // Upload content images
-    // for (const file of contentImages) {
-    //   const reader = new FileReader();
-    //   reader.onload = async (loadEvent) => {
-    //     const base64Data = loadEvent.target?.result as string;
-    //     if (base64Data) {
-    //       try {
-    //         await imagekit.upload({
-    //           file: base64Data,
-    //           fileName: file.name,
-    //           folder: `/${bookId}/`,
-    //           folder: uploadPath,
-    //           tags: [bookId],
-    //         });
-    //         console.log(`Content image ${file.name} uploaded successfully`);
-    //       } catch (error) {
-    //         console.error(`Error uploading content image ${file.name}:`, error);
-    //       }
-    //     }
-    //   };
-    //   reader.readAsDataURL(file);
-    // }
-    const uploadPath = folderName ? `/${folderName}/` : "/";
-
-    for (const fileData of files) {
-      const reader = new FileReader();
-
-      reader.onload = async (loadEvent) => {
-        const base64Data = loadEvent.target?.result as string;
-        if (base64Data) {
-          try {
-            const result = await imagekit.upload({
-              file: base64Data,
-              fileName: fileData.name,
-              folder: uploadPath,
-              tags: [`${folderName}`],
-            });
-            console.log("Upload successful", result);
-            alert(`File ${fileData.name} uploaded successfully!`);
-          } catch (error) {
-            console.error("Error uploading file:", error);
-            alert(
-              `Upload failed for ${fileData.name}: ${(error as Error).message}`
-            );
+    if (coverImage) {
+      const coverUploadPromise = new Promise<void>(async (resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = async (loadEvent) => {
+          const base64Data = loadEvent.target?.result as string;
+          if (base64Data) {
+            try {
+              await imagekit.upload({
+                file: base64Data,
+                fileName: coverImage.name,
+                folder: coverImageFolder,
+                tags: [bookId],
+              });
+              console.log("Cover image uploaded successfully");
+              resolve();
+            } catch (error) {
+              console.error("Error uploading cover image:", error);
+              alert(`Error uploading cover image: ${(error as Error).message}`);
+              reject(error);
+            }
           }
-        }
-      };
-
-      reader.onerror = (error) => {
-        console.error("Error reading file:", error);
-        alert(`Error reading file: ${fileData.name}`);
-      };
-
-      reader.readAsDataURL(fileData.file);
+        };
+        reader.onerror = (error) => {
+          console.error("Error reading cover image:", error);
+          alert("Error reading cover image");
+          reject(error);
+        };
+        reader.readAsDataURL(coverImage); 
+      });
+      uploadPromises.push(coverUploadPromise);
     }
 
-    alert("Book uploaded successfully!");
-  };
+    // Upload content images
+    for (const fileData of files) {
+      const contentUploadPromise = new Promise<void>(async (resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = async (loadEvent) => {
+          const base64Data = loadEvent.target?.result as string;
+          if (base64Data) {
+            try {
+              await imagekit.upload({
+                file: base64Data,
+                fileName: fileData.name,
+                folder: contentImagesFolder,
+                tags: [bookId],
+              });
+              console.log(`Content image ${fileData.name} uploaded successfully`);
+              resolve();
+            } catch (error) {
+              console.error(`Error uploading content image ${fileData.name}:`, error);
+              alert(
+                `Error uploading content image ${fileData.name}: ${(error as Error).message}`
+              );
+              reject(error);
+            }
+          }
+        };
+        reader.onerror = (error) => {
+          console.error(`Error reading content image ${fileData.name}:`, error);
+          alert(`Error reading content image ${fileData.name}`);
+          reject(error);
+        };
 
-  // Function to handle file removal
-  const handleRemove = (index: number) => {
-    setFiles((prev) => prev.filter((_, i) => i !== index)); // Remove file by index
+        if (fileData.file instanceof File) {
+          reader.readAsDataURL(fileData.file); // Use fileData.file
+        } else {
+          console.error(`Invalid file type for ${fileData.name}`);
+          alert(`Invalid file type for ${fileData.name}`);
+          reject(new Error(`Invalid file type for ${fileData.name}`));
+        }
+      });
+      uploadPromises.push(contentUploadPromise);
+    }
+
+    try {
+      
+      await Promise.all(uploadPromises);
+      console.log("All files uploaded successfully");
+
+      // Add metadata to the database
+      await handleAddToDB();
+      alert("Book uploaded and metadata saved successfully!");
+    } catch (error) {
+      console.error("Error during upload or database save:", error);
+      alert("An error occurred during the upload process. Please try again.");
+    }
   };
 
   // add one function to add storybook metadata to database
@@ -255,6 +247,7 @@ const FileUpload: React.FC = () => {
       !genres ||
       !creators ||
       !publisher ||
+      !published ||
       !isbn ||
       !abstract
     ) {
@@ -262,16 +255,17 @@ const FileUpload: React.FC = () => {
       return;
     }
 
-    const Storybook = Parse.Object.extend("storybookTesting");
+    const Storybook = Parse.Object.extend("StoryBook_Admin");
     const storybook = new Storybook();
-    storybook.set("bookTitle", bookTitle);
-    storybook.set("bookId", bookId);
-    storybook.set("age", age);
-    storybook.set("genres", genres);
-    storybook.set("creators", creators);
-    storybook.set("publisher", publisher);
-    storybook.set("isbn", isbn);
-    storybook.set("abstract", abstract);
+    storybook.set("BookTitle", bookTitle);
+    storybook.set("BookID", bookId);
+    storybook.set("Age", age);
+    storybook.set("Genre", genres);
+    storybook.set("CreatedBy", creators);
+    storybook.set("Publisher", publisher);
+    storybook.set("Published", published);
+    storybook.set("ISBN", isbn);
+    storybook.set("Abstract", abstract);
 
     try {
       await storybook.save();
@@ -279,6 +273,10 @@ const FileUpload: React.FC = () => {
     } catch (error) {
       console.log("Error saving metadata:", error);
     }
+  };
+  // Function to handle file removal
+  const handleRemove = (index: number) => {
+    setFiles((prev) => prev.filter((_, i) => i !== index)); // Remove file by index
   };
 
   return (
@@ -291,7 +289,7 @@ const FileUpload: React.FC = () => {
             type="text"
             value={bookTitle}
             onChange={(e) => setBookTitle(e.target.value)}
-            //required
+          //required
           />
         </div>
 
@@ -301,7 +299,7 @@ const FileUpload: React.FC = () => {
             type="text"
             value={bookId}
             onChange={(e) => setBookId(e.target.value)}
-            //required
+          //required
           />
         </div>
         <div className="form-group">
@@ -316,14 +314,7 @@ const FileUpload: React.FC = () => {
             <option value="5~6">5~6</option>
           </select>
         </div>
-        {/* <div className="form-group">
-          <label>Type</label>
-          <select value={type} onChange={(e) => setType(e.target.value)} style={{ width: '500px' }}>
-            <option value="Fiction">Fiction</option>
-            <option value="type1">type1</option>
-            <option value="type2">type2</option>
-          </select>
-        </div> */}
+      
         <div className="form-group">
           <label>Genre</label>
           {genres.map((genre, index) => (
@@ -458,16 +449,13 @@ const FileUpload: React.FC = () => {
         </div>
         <div className="form-group">
           <label>Published</label>
-          <input type="text" placeholder="Published" />
-        </div>
-        {/* <div className="form-group">
-          <label>Published by</label>
           <input
             type="text"
-            placeholder="Published by"
-          //disabled
-          />
-        </div> */}
+            value={published}
+            onChange={(e) => setPublished(e.target.value)}
+            placeholder="Published" />
+        </div>
+  
         <div className="form-group">
           <label>ISBN</label>
           <input
@@ -477,14 +465,7 @@ const FileUpload: React.FC = () => {
             onChange={(e) => setISBN(e.target.value)}
           />
         </div>
-        {/* <div className="form-group">
-          <label>Contributed by</label>
-          <input
-            type="text"
-            placeholder="Contributed by"
-
-          />
-        </div> */}
+       
         <div className="form-group">
           <label>Abstract</label>
           <textarea
@@ -552,11 +533,7 @@ const FileUpload: React.FC = () => {
           Upload
         </button>
       </div>
-      <div>
-        <button type="submit" onClick={handleAddToDB}>
-          Add to DB
-        </button>
-      </div>
+      
     </div>
   );
 };
