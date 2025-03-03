@@ -1,15 +1,15 @@
-import React, { useState, useRef } from 'react';
-import ImageKit from 'imagekit';
-import { initializeParse } from './database.js';
-import './fileUpload.css';
+import React, { useState, useRef } from "react";
+import ImageKit from "imagekit";
+import Parse from "./database.js";
+import "./fileUpload.css";
 
 interface FileData {
   file: File;
   name: string;
   size: string;
   url: string; // For image previews
-};
-initializeParse();
+}
+// initializeParse();
 
 // Initialize ImageKit
 const imagekit = new ImageKit({
@@ -19,30 +19,35 @@ const imagekit = new ImageKit({
 });
 
 const FileUpload: React.FC = () => {
-  const [bookTitle, setBookTitle] = useState<string>('');
-  const [bookId, setBookId] = useState<string>('');
-  const [age, setAge] = useState<string>('');
-  // const [type, setType] = useState<string>('');
-  const [genres, setGenres] = useState(['Action Adventure', 'Historical Fiction']);
-  // const [newGenre, setNewGenre] = useState('');
-  const initialCreators = [{ role: 'Author', name: 'John Doe', customRole: '' }];
+  const [bookTitle, setBookTitle] = useState<string>("");
+  const [bookId, setBookId] = useState<string>("");
+  const [age, setAge] = useState<string>("0~2");
+  const [genres, setGenres] = useState([
+    "Action Adventure",
+    "Historical Fiction",
+  ]);
+
+  // default creators
+  const initialCreators = [
+    { role: "Author", name: "John Doe", customRole: "" },
+  ];
   const initialRoles = [
-    { value: 'Author', label: 'Author' },
-    { value: 'Illustrator', label: 'Illustrator' }
+    { value: "Author", label: "Author" },
+    { value: "Illustrator", label: "Illustrator" },
   ];
   const [creators, setCreators] = useState(initialCreators);
-  const [roles, setRoles] = useState(initialRoles);
-  const [publisher, setPublisher] = useState<string>('');
-  const [isbn, setISBN] = useState<string>('');
-  const [abstract, setAbstract] = useState<string>('');
-  const [coverImage, setCoverImage] = useState<File | null>(null);
-  // const [contentImages, setContentImages] = useState<File[]>([]);
 
+  const [roles, setRoles] = useState(initialRoles);
+  const [published, setPublished] = useState<string>("");
+  const [publisher, setPublisher] = useState<string>("");
+  const [isbn, setISBN] = useState<string>("");
+  const [abstract, setAbstract] = useState<string>("");
+  const [coverImage, setCoverImage] = useState<File | null>(null);
   const [files, setFiles] = useState<FileData[]>([]);
   const [folderName, setFolderName] = useState<string | null>(null);
-
   const coverInputRef = useRef<HTMLInputElement | null>(null);
   const contentInputRef = useRef<HTMLInputElement | null>(null);
+
   //handle Genre
   const handleGenreInputChange = (index: number, value: string): void => {
     const newGenres = genres.map((genre, i) => {
@@ -55,24 +60,27 @@ const FileUpload: React.FC = () => {
   };
 
   const handleAddGenre = (): void => {
-    setGenres([...genres, '']); // Add an empty genre
+    setGenres([...genres, ""]); // Add an empty genre
   };
 
   const handleRemoveGenre = (index: number): void => {
     setGenres(genres.filter((_, i) => i !== index));
   };
 
- 
   const handleCreatorChange = (index: number, field: string, value: string) => {
     const newCreators = creators.map((creator, i) => {
       if (i === index) {
         // If the field is 'customRole', update the customRole field
-        if (field === 'customRole') {
+        if (field === "customRole") {
           return { ...creator, customRole: value }; // Update customRole without changing the role
         }
         // If the role is changed to 'Other', initialize customRole if it doesn't exist
-        if (field === 'role' && value === 'Other') {
-          return { ...creator, role: value, customRole: creator.customRole || '' };
+        if (field === "role" && value === "Other") {
+          return {
+            ...creator,
+            role: value,
+            customRole: creator.customRole || "",
+          };
         }
         // Handle updates to all other fields
         return { ...creator, [field]: value };
@@ -82,14 +90,10 @@ const FileUpload: React.FC = () => {
     setCreators(newCreators);
   };
 
-
-
   const handleAddCreator = () => {
-   
-    const defaultRole = roles.length > 0 ? roles[0].value : 'Author';
-    setCreators([...creators, { role: defaultRole, name: '', customRole: '' }]);
+    const defaultRole = roles.length > 0 ? roles[0].value : "Author";
+    setCreators([...creators, { role: defaultRole, name: "", customRole: "" }]);
   };
-
 
   const handleRemoveCreator = (index: number) => {
     setCreators(creators.filter((_, i) => i !== index));
@@ -101,11 +105,6 @@ const FileUpload: React.FC = () => {
     }
   };
 
-  // const handleContentChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-  //   if (event.target.files) {
-  //     setContentImages(Array.from(event.target.files));
-  //   }
-  // };
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     console.log("Selecting files");
     const fileList = event.target.files;
@@ -119,123 +118,171 @@ const FileUpload: React.FC = () => {
 
       if (isFolderUpload) {
         const folderPath = firstFile.webkitRelativePath.split("/");
-        const extractedFolderName = folderPath.length > 0 ? folderPath[0] : null;
-        setFolderName(extractedFolderName);
+       
+        setFolderName(bookId);
       } else {
         setFolderName(null);
       }
 
-      const filesData = filesArray.map(file => ({
-        file: file,  // Store the actual File object
+      const filesData = filesArray.map((file) => ({
+        file: file, // Store the actual File object
         name: file.name,
         size: `${(file.size / 1024).toFixed(2)}kb`, // Convert size to KB
-        url: URL.createObjectURL(file)  // Generate preview URL
+        url: URL.createObjectURL(file), // Generate preview URL
       }));
 
       setFiles(filesData);
     }
   };
 
-
-
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
-    if (files.length === 0) {
-      alert('Please fill in all required fields and upload images.');
+    // Folder for cover images
+    const coverImageFolder = `/book-cover-images/${bookId}/`;
+
+    // Folder for content images
+    const contentImagesFolder = `/book-images/${bookId}/`;
+
+    // Array to track upload promises
+    const uploadPromises: Promise<void>[] = [];
+
+    // Upload cover image
+    if (coverImage) {
+      const coverUploadPromise = new Promise<void>(async (resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = async (loadEvent) => {
+          const base64Data = loadEvent.target?.result as string;
+          if (base64Data) {
+            try {
+              await imagekit.upload({
+                file: base64Data,
+                fileName: coverImage.name,
+                folder: coverImageFolder,
+                tags: [bookId],
+              });
+              console.log("Cover image uploaded successfully");
+              resolve();
+            } catch (error) {
+              console.error("Error uploading cover image:", error);
+              alert(`Error uploading cover image: ${(error as Error).message}`);
+              reject(error);
+            }
+          }
+        };
+        reader.onerror = (error) => {
+          console.error("Error reading cover image:", error);
+          alert("Error reading cover image");
+          reject(error);
+        };
+        reader.readAsDataURL(coverImage); 
+      });
+      uploadPromises.push(coverUploadPromise);
+    }
+
+    // Upload content images
+    for (const fileData of files) {
+      const contentUploadPromise = new Promise<void>(async (resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = async (loadEvent) => {
+          const base64Data = loadEvent.target?.result as string;
+          if (base64Data) {
+            try {
+              await imagekit.upload({
+                file: base64Data,
+                fileName: fileData.name,
+                folder: contentImagesFolder,
+                tags: [bookId],
+              });
+              console.log(`Content image ${fileData.name} uploaded successfully`);
+              resolve();
+            } catch (error) {
+              console.error(`Error uploading content image ${fileData.name}:`, error);
+              alert(
+                `Error uploading content image ${fileData.name}: ${(error as Error).message}`
+              );
+              reject(error);
+            }
+          }
+        };
+        reader.onerror = (error) => {
+          console.error(`Error reading content image ${fileData.name}:`, error);
+          alert(`Error reading content image ${fileData.name}`);
+          reject(error);
+        };
+
+        if (fileData.file instanceof File) {
+          reader.readAsDataURL(fileData.file); // Use fileData.file
+        } else {
+          console.error(`Invalid file type for ${fileData.name}`);
+          alert(`Invalid file type for ${fileData.name}`);
+          reject(new Error(`Invalid file type for ${fileData.name}`));
+        }
+      });
+      uploadPromises.push(contentUploadPromise);
+    }
+
+    try {
+      
+      await Promise.all(uploadPromises);
+      console.log("All files uploaded successfully");
+
+      // Add metadata to the database
+      await handleAddToDB();
+      alert("Book uploaded and metadata saved successfully!");
+    } catch (error) {
+      console.error("Error during upload or database save:", error);
+      alert("An error occurred during the upload process. Please try again.");
+    }
+  };
+
+  // add one function to add storybook metadata to database
+  const handleAddToDB = async () => {
+    // just checking, you should change it and add more variables to check
+    // should have an alert pop up to notify the admin
+    if (
+      !bookTitle ||
+      !bookId ||
+      !age ||
+      !genres ||
+      !creators ||
+      !publisher ||
+      !published ||
+      !isbn ||
+      !abstract
+    ) {
+      console.log("Please fill in all required fields");
       return;
     }
 
-    // Upload cover image
-    // if (coverImage) {
-    //   const reader = new FileReader();
-    //   reader.onload = async (loadEvent) => {
-    //     const base64Data = loadEvent.target?.result as string;
-    //     if (base64Data) {
-    //       try {
-    //         await imagekit.upload({
-    //           file: base64Data,
-    //           fileName: coverImage.name,
-    //           folder: `/${bookId}/`,
-    //           tags: [bookId],
-    //         });
-    //         console.log('Cover image uploaded successfully');
-    //       } catch (error) {
-    //         console.error('Error uploading cover image:', error);
-    //       }
-    //     }
-    //   };
-    //   reader.readAsDataURL(coverImage);
-    // }
+    const Storybook = Parse.Object.extend("StoryBook_Admin");
+    const storybook = new Storybook();
+    storybook.set("BookTitle", bookTitle);
+    storybook.set("BookID", bookId);
+    storybook.set("Age", age);
+    storybook.set("Genre", genres);
+    storybook.set("CreatedBy", creators);
+    storybook.set("Publisher", publisher);
+    storybook.set("Published", published);
+    storybook.set("ISBN", isbn);
+    storybook.set("Abstract", abstract);
 
-    // Upload content images
-    // for (const file of contentImages) {
-    //   const reader = new FileReader();
-    //   reader.onload = async (loadEvent) => {
-    //     const base64Data = loadEvent.target?.result as string;
-    //     if (base64Data) {
-    //       try {
-    //         await imagekit.upload({
-    //           file: base64Data,
-    //           fileName: file.name,
-    //           folder: `/${bookId}/`,
-    //           folder: uploadPath,
-    //           tags: [bookId],
-    //         });
-    //         console.log(`Content image ${file.name} uploaded successfully`);
-    //       } catch (error) {
-    //         console.error(`Error uploading content image ${file.name}:`, error);
-    //       }
-    //     }
-    //   };
-    //   reader.readAsDataURL(file);
-    // }
-    const uploadPath = folderName ? `/${folderName}/` : "/";
-
-    for (const fileData of files) {
-      const reader = new FileReader();
-
-      reader.onload = async (loadEvent) => {
-        const base64Data = loadEvent.target?.result as string;
-        if (base64Data) {
-          try {
-            const result = await imagekit.upload({
-              file: base64Data,
-              fileName: fileData.name,
-              folder: uploadPath,
-              tags: [`${folderName}`],
-            });
-            console.log("Upload successful", result);
-            alert(`File ${fileData.name} uploaded successfully!`);
-          } catch (error) {
-            console.error("Error uploading file:", error);
-            alert(`Upload failed for ${fileData.name}: ${(error as Error).message}`);
-          }
-        }
-      };
-
-      reader.onerror = (error) => {
-        console.error("Error reading file:", error);
-        alert(`Error reading file: ${fileData.name}`);
-      };
-
-      reader.readAsDataURL(fileData.file);
+    try {
+      await storybook.save();
+      console.log("Book metadata saved successfully!");
+    } catch (error) {
+      console.log("Error saving metadata:", error);
     }
-
-
-    alert('Book uploaded successfully!');
   };
-
   // Function to handle file removal
   const handleRemove = (index: number) => {
-    setFiles(prev => prev.filter((_, i) => i !== index));  // Remove file by index
+    setFiles((prev) => prev.filter((_, i) => i !== index)); // Remove file by index
   };
 
   return (
     <div className="App">
       <h2>Upload New Book</h2>
       <form onSubmit={handleSubmit}>
-
         <div className="form-group">
           <label>Book Title</label>
           <input
@@ -257,30 +304,34 @@ const FileUpload: React.FC = () => {
         </div>
         <div className="form-group">
           <label>Age</label>
-          <select value={age} onChange={(e) => setAge(e.target.value)} style={{ width: '500px' }}>
-            <option value="3">0~2</option>
-            <option value="4">3~4</option>
-            <option value="5">5~6</option>
+          <select
+            value={age}
+            onChange={(e) => setAge(e.target.value)}
+            style={{ width: "500px" }}
+          >
+            <option value="0~2">0~2</option>
+            <option value="3~4">3~4</option>
+            <option value="5~6">5~6</option>
           </select>
         </div>
-        {/* <div className="form-group">
-          <label>Type</label>
-          <select value={type} onChange={(e) => setType(e.target.value)} style={{ width: '500px' }}>
-            <option value="Fiction">Fiction</option>
-            <option value="type1">type1</option>
-            <option value="type2">type2</option>
-          </select>
-        </div> */}
+      
         <div className="form-group">
           <label>Genre</label>
           {genres.map((genre, index) => (
-            <div key={index} style={{ display: 'flex', alignItems: 'center', marginBottom: '5px' }}>
+            <div
+              key={index}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                marginBottom: "5px",
+              }}
+            >
               <input
                 type="text"
                 value={genre}
                 onChange={(e) => handleGenreInputChange(index, e.target.value)}
                 placeholder="Enter genre..."
-                style={{ marginRight: '15px' }}
+                style={{ marginRight: "15px" }}
               />
               <div className="input-with-icon">
                 <button
@@ -295,50 +346,74 @@ const FileUpload: React.FC = () => {
             </div>
           ))}
 
-          <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-            <button type="button" onClick={handleAddGenre} className="Addbutton">Add</button>
+          <div style={{ display: "flex", justifyContent: "flex-end" }}>
+            <button
+              type="button"
+              onClick={handleAddGenre}
+              className="Addbutton"
+            >
+              Add
+            </button>
           </div>
         </div>
         <div className="form-group">
           <label>Created by</label>
           {creators.map((creator, index) => (
-            <div key={index} className="form-row" style={{ display: 'flex', alignItems: 'center', marginBottom: '5px' }}>
-              {creator.role === 'Other' ? (
+            <div
+              key={index}
+              className="form-row"
+              style={{
+                display: "flex",
+                alignItems: "center",
+                marginBottom: "5px",
+              }}
+            >
+              {creator.role === "Other" ? (
                 <>
                   <input
                     type="text"
                     placeholder="Custom role name"
-                    value={creator.customRole || ''}
-                    onChange={(e) => handleCreatorChange(index, 'customRole', e.target.value)}
-                    style={{ marginRight: '5px' }}
+                    value={creator.customRole || ""}
+                    onChange={(e) =>
+                      handleCreatorChange(index, "customRole", e.target.value)
+                    }
+                    style={{ marginRight: "5px" }}
                   />
                   <input
                     type="text"
                     placeholder="Name"
                     value={creator.name}
-                    onChange={(e) => handleCreatorChange(index, 'name', e.target.value)}
+                    onChange={(e) =>
+                      handleCreatorChange(index, "name", e.target.value)
+                    }
                   />
                 </>
               ) : (
                 <>
                   <select
                     value={creator.role}
-                    onChange={(e) => handleCreatorChange(index, 'role', e.target.value)}
-                    style={{ marginRight: '5px' }}
+                    onChange={(e) =>
+                      handleCreatorChange(index, "role", e.target.value)
+                    }
+                    style={{ marginRight: "5px" }}
                   >
                     <option value="">Select role</option>
                     <option value="Author">Author</option>
                     <option value="Poet">Poet</option>
                     <option value="Illustrator">Illustrator</option>
-                    <option value="Book Cover Designer">Book Cover Designer</option>
+                    <option value="Book Cover Designer">
+                      Book Cover Designer
+                    </option>
                     <option value="Other">Other</option>
                   </select>
                   <input
                     type="text"
                     placeholder="Name"
                     value={creator.name}
-                    onChange={(e) => handleCreatorChange(index, 'name', e.target.value)}
-                    style={{ marginRight: '3px'}}
+                    onChange={(e) =>
+                      handleCreatorChange(index, "name", e.target.value)
+                    }
+                    style={{ marginRight: "3px" }}
                   />
                 </>
               )}
@@ -353,8 +428,14 @@ const FileUpload: React.FC = () => {
               </div>
             </div>
           ))}
-          <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-            <button type="button" onClick={handleAddCreator} className="Addbutton">Add</button>
+          <div style={{ display: "flex", justifyContent: "flex-end" }}>
+            <button
+              type="button"
+              onClick={handleAddCreator}
+              className="Addbutton"
+            >
+              Add
+            </button>
           </div>
         </div>
         <div className="form-group">
@@ -370,18 +451,11 @@ const FileUpload: React.FC = () => {
           <label>Published</label>
           <input
             type="text"
-            placeholder="Published"
-
-          />
+            value={published}
+            onChange={(e) => setPublished(e.target.value)}
+            placeholder="Published" />
         </div>
-        {/* <div className="form-group">
-          <label>Published by</label>
-          <input
-            type="text"
-            placeholder="Published by"
-          //disabled
-          />
-        </div> */}
+  
         <div className="form-group">
           <label>ISBN</label>
           <input
@@ -391,14 +465,7 @@ const FileUpload: React.FC = () => {
             onChange={(e) => setISBN(e.target.value)}
           />
         </div>
-        {/* <div className="form-group">
-          <label>Contributed by</label>
-          <input
-            type="text"
-            placeholder="Contributed by"
-
-          />
-        </div> */}
+       
         <div className="form-group">
           <label>Abstract</label>
           <textarea
@@ -432,7 +499,7 @@ const FileUpload: React.FC = () => {
             id="file-upload"
             type="file"
             onChange={handleFileChange}
-            style={{ display: 'none' }}
+            style={{ display: "none" }}
             accept="image/*"
             multiple
             required
@@ -440,15 +507,19 @@ const FileUpload: React.FC = () => {
         </div>
       </div>
       <div className="upload-container">
-
         {folderName && <p>Selected Folder: {folderName}</p>}
         <div>
           {files.map((file, index) => (
-            <div key={index} className='preview-container'>
+            <div key={index} className="preview-container">
               <span>{file.name}</span>
-              <div style={{ display: 'flex', alignItems: 'center' }}>
-                <span style={{ fontSize: '16px', marginRight: '10px' }}>{file.size} </span>
-                <button onClick={() => handleRemove(index)} className='preview-remove-Button'>
+              <div style={{ display: "flex", alignItems: "center" }}>
+                <span style={{ fontSize: "16px", marginRight: "10px" }}>
+                  {file.size}{" "}
+                </span>
+                <button
+                  onClick={() => handleRemove(index)}
+                  className="preview-remove-Button"
+                >
                   <i className="fa-solid fa-xmark"></i>
                 </button>
               </div>
@@ -458,9 +529,11 @@ const FileUpload: React.FC = () => {
       </div>
       <div className="button-row ">
         <button type="submit">Preview</button>
-        <button type="submit" onClick={handleSubmit}>Upload</button>
+        <button type="submit" onClick={handleSubmit}>
+          Upload
+        </button>
       </div>
-
+      
     </div>
   );
 };
