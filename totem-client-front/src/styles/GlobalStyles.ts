@@ -72,7 +72,7 @@ table {
 
 a {
   font-weight: 500;
-  color: auto;
+  color: unset;
   text-decoration: inherit;
 }
 
