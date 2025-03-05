@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { Header } from '../../components/header/Header';
 import Footer from '../../components/footer/Footer';
 import { 
@@ -11,20 +11,27 @@ import {
 } from "./HomePage.styled";
 
 // Reusable component for displaying both books and audio thumbnails
-const ItemComponent = ({ src, alt, title }: { src: string; alt: string; title: string }) => (
-  <div style={{ margin: '10px', textAlign: 'center' }}>
-    <img src={src} alt={alt} style={{ width: '150px', height: 'auto' }} />
-    <div>{title}</div>
-  </div>
-);
+const ItemComponent = ({ src, alt, title, bookId }: { src: string; alt: string; title: string; bookId?: string }) => {
+  const navigate = useNavigate();
+
+  return (
+    <div 
+      style={{ margin: '10px', textAlign: 'center', cursor: 'pointer' }} 
+      onClick={() => navigate(`/books/${bookId}`)} // Navigate to the book details page
+    >
+      <img src={src} alt={alt} style={{ width: '150px', height: 'auto' }} />
+      <div>{title}</div>
+    </div>
+  );
+};
 
 const Home: React.FC = () => {
   const isAuthenticated = false; // Placeholder: Replace with actual authentication logic
-  
+
   const bookItems = [
-    { src: "book1.jpg", alt: "Book 1", title: "Book 1" },
-    { src: "book2.jpg", alt: "Book 2", title: "Book 2" },
-    { src: "book3.jpg", alt: "Book 3", title: "Book 3" }
+    { src: "book1.jpg", alt: "Book 1", title: "Book 1", bookId: "1" },
+    { src: "book2.jpg", alt: "Book 2", title: "Book 2", bookId: "2" },
+    { src: "book3.jpg", alt: "Book 3", title: "Book 3", bookId: "3" }
   ];
 
   const audioItems = [
@@ -52,8 +59,8 @@ const Home: React.FC = () => {
         </SectionHeader>
         {/* Flexbox layout to display items in a row */}
         <div style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap' }}>
-          {bookItems.map((item, index) => (
-            <ItemComponent key={index} {...item} />
+          {bookItems.map((item) => (
+            <ItemComponent key={item.bookId} {...item} />
           ))}
         </div>
       </Section>

@@ -11,6 +11,7 @@ import ProfilePage from './pages/profile/ProfilePage.tsx';
 import AudioPage from './pages/audio/AudioPage.tsx';
 import MyAudioPage from './pages/myAudio/MyAudioPage.tsx';
 import SearchPage from './pages/search/SearchPage.tsx';
+import BookDetailsPage from './pages/bookDetails/BookDetailsPage.tsx';
 
 const App: React.FC = () => (
   <Router>
@@ -24,6 +25,7 @@ const App: React.FC = () => (
       <Route path="/my-audio" element={<MyAudioPage />} />
       <Route path="/search" element={<SearchPage />} />
       <Route path="/books" element={<BooksPage />} />
+      <Route path="/books/:id" element={<BookDetailsPage />} />
     </Routes>
 
   </Router>
