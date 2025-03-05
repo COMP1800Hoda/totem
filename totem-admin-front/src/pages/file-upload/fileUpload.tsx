@@ -1,6 +1,6 @@
 import React, { useState, useRef } from "react";
 import ImageKit from "imagekit";
-import Parse from "./database.js";
+import Parse from "../../database.js";
 import "./fileUpload.css";
 
 interface FileData {
