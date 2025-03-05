@@ -13,3 +13,35 @@ export const SearchContainer = styled.div`
     flex: 1;
   }
 `;
+
+export const SearchInput = styled.input`
+  padding: 0.5em;
+  font-size: 16px;
+  width: 300px;
+  margin-right: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+`;
+
+export const SearchButton = styled.button`
+    margin-top: 0.5em;
+  padding: 0.5em 1em;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  background-color: #007bff;
+  color: white;
+`;
+
+export const SearchResults = styled.ul`
+  list-style-type: none;
+  padding: 0;
+  margin-top: 20px;
+`;
+
+export const SearchResultItem = styled.li`
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+`;
+
