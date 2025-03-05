@@ -26,8 +26,8 @@ export const BookGrid = styled.div<BookGridProps>`
 
 // Book cover styling with dynamic size adjustments
 export const BookCover = styled.img<BookGridProps>`
-  width: ${(props) => (props.layoutType === 'threeColumns' ? '120px' : '150px')};
-  height: ${(props) => (props.layoutType === 'threeColumns' ? '180px' : '225px')};
+  width: ${(props) => (props.layoutType === 'threeColumns' ? '110px' : '150px')};
+  height: ${(props) => (props.layoutType === 'threeColumns' ? '160px' : '225px')};
   object-fit: cover;
   border-radius: 6px;
   box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);

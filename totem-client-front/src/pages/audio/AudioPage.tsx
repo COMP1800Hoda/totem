@@ -29,7 +29,7 @@ const AudioPage: React.FC = () => {
     <AudioContainer>
       <Header />
       <div style={{ padding: '20px', marginTop: '80px', textAlign: 'center' }}>
-        <h1>This is the MyAudio page.</h1>
+        <h1>This is the Audio page.</h1>
         <button onClick={toggleView} style={{ margin: '20px', padding: '10px 20px', cursor: 'pointer' }}>
           Toggle {isGridView ? 'List' : 'Grid'} View
         </button>
