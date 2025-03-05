@@ -1,6 +1,7 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useState } from "react";
-import Parse from "./database.d.ts";
+import Parse from "./database";
+import { Link } from "react-router-dom";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -67,11 +68,22 @@ const Login = () => {
             />
           </div>
 
+          {/* Forgot Password Link */}
+          <div className="mb-3 text-end text-primary text-decoration-underline">
+            <Link to="/forgotPassword">Forgot password?</Link>
+          </div>
+
           {/* Login Button */}
           <button
             type="submit"
-            className="btn btn-primary mx-auto d-block"
-            style={{ width: "100px" }}
+            className="btn mx-auto d-block"
+            style={{
+              color: "#000000",
+              width: "120px",
+              height: "50px",
+              fontSize: "18px",
+              backgroundColor: "#DECBB7",
+            }}
           >
             Log in
           </button>
