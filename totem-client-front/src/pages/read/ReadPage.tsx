@@ -62,13 +62,13 @@ const ReadPage: React.FC = () => {
       <ReadingContainer onClick={handlePageClick}>
         <HTMLFlipBook 
           ref={flipBookRef} 
-          width={600} 
+          width={400} 
           height={400} 
           size="stretch"
           minWidth={100}
           minHeight={100}
-          maxWidth={800}
-          maxHeight={600}
+          maxWidth={500}
+          maxHeight={500}
           showCover={false}
           mobileScrollSupport={true}
           style={{}}
