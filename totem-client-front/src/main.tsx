@@ -1,10 +1,10 @@
+import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { StyleSheetManager } from 'styled-components';
 import isPropValid from '@emotion/is-prop-valid';
 
 import App from './App.tsx';
 import GlobalStyles from './styles/GlobalStyles.ts';
-import { StrictMode } from 'react';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

@@ -1,27 +1,26 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
-import AdminHomePage from './Adminhome.tsx';
-import FileUpload from './fileUpload.tsx';
-import './App.css';
+import React from "react";
+import { BrowserRouter as Router, Route, Routes } from 'react-router';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
-function App() {
+import Login from "./pages/login/Login.tsx";
+import NotFoundPage from './pages/not-found/NotFoundPage.tsx';
+import HomePage from './pages/homepage/HomePage.tsx';
+import FileUpload from './pages/file-upload/fileUpload.tsx';
+import ManageBooks from './pages/manage-books/ManageBooks.tsx';
+
+const App: React.FC = () => {
   return (
     <Router>
-      <div className="App">
-        {/* Navigation Links */}
-        {/* <nav>
-          <Link to="/" className="nav-link">Admin Home</Link>
-          <Link to="/file-upload" className="nav-link">File Upload</Link>
-        </nav> */}
-
-        {/* Routes */}
-        <Routes>
-          <Route path="/" element={<AdminHomePage />} />
-          <Route path="/file-upload" element={<FileUpload />} />
-        </Routes>
-      </div>
+      <Routes>
+        <Route path="/" element={<Login />} />
+        <Route path="/main" element={<HomePage />} />
+        <Route path="/manage-books" element={<ManageBooks />} />
+        <Route path="/add-book" element={<FileUpload />} />
+        <Route path="*" element={<NotFoundPage />} />
+      </Routes>
     </Router>
   );
-}
+};
 
 export default App;
