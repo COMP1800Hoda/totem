@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { 
   Container, 
   TopNavBar, 
@@ -15,6 +16,8 @@ import samplePage3 from "../../assets/sample-page-3.jpg";
 import samplePage4 from "../../assets/sample-page-4.jpg";
 
 const ReadPage: React.FC = () => {
+  const navigate = useNavigate();
+  const { id } = useParams<{ id: string }>();
   const [currentPage, setCurrentPage] = useState(1);
   const [showNav, setShowNav] = useState(false);
 
@@ -47,7 +50,7 @@ const ReadPage: React.FC = () => {
       {/* 🔹 Top Navigation Bar */}
       {showNav && (
         <TopNavBar>
-          <NavButton onClick={() => console.log("Back Clicked")}>🔙</NavButton>
+          <NavButton onClick={() => navigate(`/books/${id}`)}>🔙</NavButton>
           <Title>آدم برفي و مترسك</Title>
         </TopNavBar>
       )}
@@ -64,7 +67,6 @@ const ReadPage: React.FC = () => {
 
           {/* 🔹 Slider */}
           <SliderContainer>
-            
             <input 
               type="range" 
               min="1" 
@@ -75,7 +77,6 @@ const ReadPage: React.FC = () => {
             <PageIndicator>{currentPage}/4</PageIndicator>
           </SliderContainer>
 
-          
           <NavButton onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}>قبلی</NavButton>
         </BottomNavBar>
       )}
