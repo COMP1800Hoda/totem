@@ -77,10 +77,11 @@ const EditPassword = () => {
           backgroundColor: "#F8F0E9",
         }}
       >
+        <h3 className="fw-bold">Set a new password</h3>
         <form onSubmit={handleEditPassword}>
           {/* New Password Input */}
+          <label className="form-label">Password:</label>
           <div className="mb-3">
-            <label className="form-label">New password</label>
             <input
               type="password"
               className="form-control p-2"
@@ -92,11 +93,12 @@ const EditPassword = () => {
           </div>
 
           {/* Confirm Password Input */}
+          <label className="form-label">Confirm Password:</label>
           <div className="mb-3">
             <input
               type="password"
               className="form-control p-2"
-              placeholder="Confirm your new password"
+              placeholder="Re-enter your new password"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               required
