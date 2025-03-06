@@ -1,15 +1,18 @@
 .App {
   font-family: 'Arial', sans-serif;
-  max-width: 1000px;
+  max-width: 570px;
   margin: 0 auto;
-  /* padding: 20px; */
+  padding: 20px;
   text-align: left;
   color: black;
 }
 
-h2 {
+.upload_header {
   text-align: left;
   color: black;
+  font-weight: bold;
+  font-size: 25px;
+  margin-bottom: 15px;
 }
 
 .form-row {
@@ -41,7 +44,7 @@ input[type="text"],
 input[type="file"],
 select,
 textarea {
-  width: 95%;
+  width: 100%;
   padding: 10px;
   margin-bottom: 10px;
   border: 1px solid #ccc;
@@ -64,8 +67,8 @@ button {
 
 
 .file-input-container {
-  width: 90%;
-  max-width: 500px;
+  width: 100%;
+  max-width: 560px;
   height: auto;
   border: 2px dashed #ccc;
   border-radius: 10px;
@@ -139,10 +142,6 @@ button {
 }
 
 
-.upload-container {
-  margin: 20px;
-}
-
 .file-list {
   display: flex;
   flex-wrap: wrap;
@@ -171,12 +170,13 @@ button {
 }
 
 .preview-container {
- width: 105%;
+  width: 100%;
+  padding-left: 5px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 10px;
-  background-color: white;
+  /* background-color: white; */
   gap: 5px;
   border-radius: 4px;
 }

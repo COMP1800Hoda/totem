@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef,useEffect } from "react";
 import ImageKit from "imagekit";
 import Parse from "../../database.js";
 import "./fileUpload.css";
@@ -36,7 +36,6 @@ const FileUpload: React.FC = () => {
     { value: "Illustrator", label: "Illustrator" },
   ];
   const [creators, setCreators] = useState(initialCreators);
-
   const [roles, setRoles] = useState(initialRoles);
   const [published, setPublished] = useState<string>("");
   const [publisher, setPublisher] = useState<string>("");
@@ -45,6 +44,9 @@ const FileUpload: React.FC = () => {
   const [coverImage, setCoverImage] = useState<File | null>(null);
   const [files, setFiles] = useState<FileData[]>([]);
   const [folderName, setFolderName] = useState<string | null>(null);
+  const [coverimageurl, setUrl] = useState<string | null>(null);
+  const [contentimageurl, setimageUrl] = useState<string[]>([]);
+  const [isUploading, setIsUploading] = useState(false);
   const coverInputRef = useRef<HTMLInputElement | null>(null);
   const contentInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -117,8 +119,7 @@ const FileUpload: React.FC = () => {
       const isFolderUpload = firstFile.webkitRelativePath !== "";
 
       if (isFolderUpload) {
-        const folderPath = firstFile.webkitRelativePath.split("/");
-       
+  
         setFolderName(bookId);
       } else {
         setFolderName(null);
@@ -134,9 +135,17 @@ const FileUpload: React.FC = () => {
       setFiles(filesData);
     }
   };
+  useEffect(() => {
+    if (isUploading && coverimageurl && contentimageurl.length > 0) {
+      // Both coverimageurl and contentimageurl are updated
+      handleAddToDB();
+      setIsUploading(false); // Reset the uploading state
+    }
+  }, [coverimageurl, contentimageurl, isUploading]);
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
+    setIsUploading(true); // Set uploading state to true
 
     // Folder for cover images
     const coverImageFolder = `/book-cover-images/${bookId}/`;
@@ -155,13 +164,15 @@ const FileUpload: React.FC = () => {
           const base64Data = loadEvent.target?.result as string;
           if (base64Data) {
             try {
-              await imagekit.upload({
+              const response = await imagekit.upload({
                 file: base64Data,
                 fileName: coverImage.name,
                 folder: coverImageFolder,
                 tags: [bookId],
               });
-              console.log("Cover image uploaded successfully");
+              const coverimageUrl = response.url;
+              setUrl(coverimageUrl); // Update coverimageurl state
+              console.log("Cover image uploaded successfully. URL:", coverimageUrl);
               resolve();
             } catch (error) {
               console.error("Error uploading cover image:", error);
@@ -175,7 +186,7 @@ const FileUpload: React.FC = () => {
           alert("Error reading cover image");
           reject(error);
         };
-        reader.readAsDataURL(coverImage); 
+        reader.readAsDataURL(coverImage);
       });
       uploadPromises.push(coverUploadPromise);
     }
@@ -188,13 +199,15 @@ const FileUpload: React.FC = () => {
           const base64Data = loadEvent.target?.result as string;
           if (base64Data) {
             try {
-              await imagekit.upload({
+              const response = await imagekit.upload({
                 file: base64Data,
                 fileName: fileData.name,
                 folder: contentImagesFolder,
                 tags: [bookId],
               });
-              console.log(`Content image ${fileData.name} uploaded successfully`);
+              const imageUrl = response.url;
+              setimageUrl((prevUrls) => [...prevUrls, imageUrl]); // Update contentimageurl state
+              console.log("Content image uploaded successfully. URL:", imageUrl);
               resolve();
             } catch (error) {
               console.error(`Error uploading content image ${fileData.name}:`, error);
@@ -210,29 +223,19 @@ const FileUpload: React.FC = () => {
           alert(`Error reading content image ${fileData.name}`);
           reject(error);
         };
-
-        if (fileData.file instanceof File) {
-          reader.readAsDataURL(fileData.file); // Use fileData.file
-        } else {
-          console.error(`Invalid file type for ${fileData.name}`);
-          alert(`Invalid file type for ${fileData.name}`);
-          reject(new Error(`Invalid file type for ${fileData.name}`));
-        }
+        reader.readAsDataURL(fileData.file);
       });
       uploadPromises.push(contentUploadPromise);
     }
 
     try {
-      
+      // Wait for all uploads to complete
       await Promise.all(uploadPromises);
       console.log("All files uploaded successfully");
-
-      // Add metadata to the database
-      await handleAddToDB();
-      alert("Book uploaded and metadata saved successfully!");
     } catch (error) {
-      console.error("Error during upload or database save:", error);
+      console.error("Error during upload:", error);
       alert("An error occurred during the upload process. Please try again.");
+      setIsUploading(false); // Reset the uploading state on error
     }
   };
 
@@ -249,7 +252,9 @@ const FileUpload: React.FC = () => {
       !publisher ||
       !published ||
       !isbn ||
-      !abstract
+      !abstract||
+      !coverimageurl||
+      !contentimageurl
     ) {
       console.log("Please fill in all required fields");
       return;
@@ -266,6 +271,8 @@ const FileUpload: React.FC = () => {
     storybook.set("Published", published);
     storybook.set("ISBN", isbn);
     storybook.set("Abstract", abstract);
+    storybook.set("CoverImgUrl", coverimageurl);
+    storybook.set("ContentImgUrl", contentimageurl);
 
     try {
       await storybook.save();
@@ -281,7 +288,7 @@ const FileUpload: React.FC = () => {
 
   return (
     <div className="App">
-      <h2>Upload New Book</h2>
+      <h2 className = "upload_header">Upload New Book</h2>
       <form onSubmit={handleSubmit}>
         <div className="form-group">
           <label>Book Title</label>
@@ -307,7 +314,7 @@ const FileUpload: React.FC = () => {
           <select
             value={age}
             onChange={(e) => setAge(e.target.value)}
-            style={{ width: "500px" }}
+            style={{ width: "530px" }}
           >
             <option value="0~2">0~2</option>
             <option value="3~4">3~4</option>
@@ -331,7 +338,7 @@ const FileUpload: React.FC = () => {
                 value={genre}
                 onChange={(e) => handleGenreInputChange(index, e.target.value)}
                 placeholder="Enter genre..."
-                style={{ marginRight: "15px" }}
+                style={{ marginRight: "10px" }}
               />
               <div className="input-with-icon">
                 <button
