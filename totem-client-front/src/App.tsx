@@ -4,8 +4,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
 import HomePage from './pages/home/HomePage.tsx';
-import NotFoundPage from './pages/notFound/NotFoundPage.tsx';
-import { ReadPage } from './pages/read/ReadPage.tsx';
+import NotFoundPage from './pages/not-found/NotFoundPage.tsx';
+import ReadPage from './pages/read/ReadPage.tsx';
 import BooksPage from './pages/book/BooksPage.tsx';
 import MyBooksPage from './pages/myBooks/MyBooksPage.tsx';
 import ProfilePage from './pages/profile/ProfilePage.tsx';
