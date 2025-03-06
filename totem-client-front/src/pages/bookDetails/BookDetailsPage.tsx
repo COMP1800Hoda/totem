@@ -1,5 +1,5 @@
 import React from "react";
-import { useParams } from "react-router";
+import { useParams, useNavigate } from "react-router-dom";
 import { 
   BookContainer, BackButton, BookCard, BookCover, BookDetails, 
   BookTitle, BookMeta, BookTags, Tag, ReadButton, Synopsis, BookInfo 
@@ -115,6 +115,7 @@ const mockBooks: BookProps[] = [
 
 const BookPage: React.FC = () => {
   const { id } = useParams<{ id: string }>(); // Get the book ID from the URL
+  const navigate = useNavigate(); // Added useNavigate for navigation from ReadButton to ReadPage
   const book = mockBooks.find((b) => b.id === id);
 
   if (!book) {
@@ -136,7 +137,7 @@ const BookPage: React.FC = () => {
           </BookTags>
         </BookDetails>
       </BookCard>
-      <ReadButton>Read this book</ReadButton>
+      <ReadButton onClick={() => navigate(`/read/${book.id}`)}>Read this book</ReadButton> /* Changed to use navigate */
       <Synopsis>
         <p>{book.synopsis}</p>
       </Synopsis>
