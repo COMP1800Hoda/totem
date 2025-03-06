@@ -1,0 +1,57 @@
+.section{
+    padding-left: 10px;
+}
+.admin-homepage {
+    padding: 10px;
+    font-family: Arial, sans-serif;
+    max-width: 3000px; 
+    margin: 0 auto;
+    
+  }
+  
+  .welcome-heading {
+    padding-right: 40px;
+    text-align: left;
+    font-family: Arial, sans-serif;
+    font-size: 40px;
+  }
+
+  .menu-row {
+    display: flex;
+    justify-content: space-between; 
+    align-items: center; 
+    padding: 10px;
+    background-color: white; 
+    border-bottom: 1px solid #eee;
+  }
+  
+  .menu-item span {
+    flex-grow: 1;
+  }
+  
+  .fa-angle-right {
+    margin-left: auto; /* Pushes the icon to the right */
+    padding-left: 20px; /* Adjust this value to increase the gap */
+    color: #ccc;
+    font-size: 1.5em; /* Adjust size as needed */
+  }
+  .rightarrow {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: none;
+    font-size: 18px;
+    width: 18%;
+    padding: 5px;
+    margin-bottom: 5px;
+  }
+
+  /* Remove the outline and border changes when the button is focused or active */
+.rightarrow:focus, .button:active {
+    outline: none;
+    border: none; 
+  }
+
+.rightarrow:hover {
+    color: white;
+  }
