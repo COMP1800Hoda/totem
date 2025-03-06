@@ -1,129 +1,102 @@
 import styled from "styled-components";
-import { Button } from "react-bootstrap";
-import { Container } from "../../components/Container.tsx";
 
-export const Wrapper = styled.div`
-  width: 100%;
-  min-height: 100vh;
-  padding-bottom: 200px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  background-color: #fdf6e3; /* Light beige background for a book-like feel */
-`;
-
-export const MainContainer = styled(Container)`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  max-width: 1000px;
+/* 🔹 Main Container */
+export const Container = styled.div`
   position: relative;
-`;
-
-/* 🔹 Book Reading Section */
-export const ReadingContainer = styled.div`
-  position: relative;
-  width: 100%;
-  height: 80vh;
+  width: 100vw;
+  height: 100vh;
+  background-color: #f5f5f5; /* Light background */
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
-  padding-top: 50px; /* Ensure top nav does not overlap */
-  padding-bottom: 50px; /* Ensure bottom nav does not overlap */
 `;
 
-/* 🔹 Navigation Bars */
-export const TopNav = styled.div<{ show: boolean }>`
+/* 🔹 Top Navigation Bar */
+export const TopNavBar = styled.div`
   position: absolute;
   top: 0;
-  left: 0;
   width: 100%;
-  padding: 10px 15px;
-  background-color: rgba(0, 0, 0, 0.7);
-  color: white;
-  font-size: 1.2rem;
-  display: ${(props) => (props.show ? "flex" : "none")};
-  align-items: center;
-  justify-content: space-between;
-`;
-
-/* 🔹 Back Arrow Icon */
-export const BackButton = styled.button`
-  background: none;
-  border: none;
-  color: white;
-  font-size: 1.5rem;
-  cursor: pointer;
+  height: 8%;
+  background: white;
   display: flex;
   align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
 `;
 
-/* 🔹 Bottom Navigation */
-export const BottomNav = styled.div<{ show: boolean }>`
+/* 🔹 Bottom Navigation Bar */
+export const BottomNavBar = styled.div`
   position: absolute;
   bottom: 0;
-  left: 0;
   width: 100%;
+  height: 10%;
+  background: white;
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  padding: 10px 15px;
-  background-color: rgba(0, 0, 0, 0.7);
-  color: white;
-  display: ${(props) => (props.show ? "flex" : "none")};
-
-  button {
-    background-color: #ffcc00;
-    border: none;
-    padding: 8px 12px;
-    font-size: 1rem;
-    cursor: pointer;
-    border-radius: 5px;
-  }
+  justify-content: space-between;
+  padding: 0 16px;
+  box-shadow: 0px -4px 8px rgba(0, 0, 0, 0.1);
 `;
 
-/* 🔹 Book Page Image */
-export const BookImage = styled.img`
-  max-width: 100%;
-  max-height: 80vh;
-  object-fit: contain;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-  border-radius: 0; /* Removed corner radius */
-`;
-
-/* 🔹 Progress Bar */
-/* 🔹 Progress Bar */
-export const ProgressBar = styled.input<{ show: boolean }>`
-  width: 100%;
-  position: absolute;
-  bottom: -25px; /* Adjusted to avoid overlapping */
-  background: transparent;
+/* 🔹 Navigation Button */
+export const NavButton = styled.button`
+  background: none;
+  border: none;
+  font-size: 16px;
   cursor: pointer;
-  display: ${(props) => (props.show ? "block" : "none")}; /* FIX: Add type for show */
+  color: black;
+  padding: 8px 16px;
 
-  &::-webkit-slider-runnable-track {
-    height: 5px;
-    background: #ffcc00;
-    border-radius: 2px;
+  &:hover {
+    opacity: 0.7;
   }
+`;
 
-  &::-webkit-slider-thumb {
-    width: 12px;
-    height: 12px;
-    background: white;
-    border-radius: 50%;
+/* 🔹 Book Title */
+export const Title = styled.h2`
+  font-size: 18px;
+  font-weight: bold;
+  color: black;
+`;
+
+/* 🔹 Reading Page */
+export const ReadingContainer = styled.div`
+  position: absolute;
+  top: 8%;
+  bottom: 10%;
+  width: 100%;
+  height: calc(100vh - 120px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+
+  img {
+    max-height: 90%;
+    max-width: 90%;
+    object-fit: contain;
+  }
+`;
+
+/* 🔹 Slider Container */
+export const SliderContainer = styled.div`
+  display: flex;
+  align-items: center;
+  width: 60%;
+  direction: rtl; /* Slider moves right to left */
+
+  input {
+    width: 100%;
     cursor: pointer;
   }
 `;
 
-
-export const HeroTitle = styled.h2`
-  font-size: 2rem;
-
-  & p {
-    font-size: 1.5rem;
-  }
+/* 🔹 Page Indicator */
+export const PageIndicator = styled.span`
+  margin-right: 10px;
+  font-size: 16px;
+  font-weight: bold;
+  color: black;
 `;
