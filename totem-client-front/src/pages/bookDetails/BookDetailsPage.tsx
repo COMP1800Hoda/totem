@@ -124,7 +124,7 @@ const BookPage: React.FC = () => {
 
   return (
     <BookContainer>
-      <BackButton onClick={() => window.history.back()}>&lt; Back</BackButton>
+      <BackButton onClick={() => navigate("/")}> &lt; Back</BackButton>
       <BookCard>
         <BookCover src={book.coverImage} alt="Book Cover" />
         <BookDetails>
