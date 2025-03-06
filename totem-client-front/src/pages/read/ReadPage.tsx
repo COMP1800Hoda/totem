@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import HTMLFlipBook from "react-pageflip"; // Import the component
 import { 
   Container, 
   TopNavBar, 
@@ -20,6 +21,8 @@ const ReadPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const [currentPage, setCurrentPage] = useState(1);
   const [showNav, setShowNav] = useState(false);
+
+  const flipBookRef = useRef<HTMLElement>(null); // Using ref to interact with the component
 
   // Pages in right-to-left order
   const pageImages = [samplePage1, samplePage2, samplePage3, samplePage4];
@@ -57,7 +60,46 @@ const ReadPage: React.FC = () => {
 
       {/* 🔹 Reading Page */}
       <ReadingContainer onClick={handlePageClick}>
-        <img src={pageImages[currentPage - 1]} alt={`Page ${currentPage}`} />
+        <HTMLFlipBook 
+          ref={flipBookRef} 
+          width={600} 
+          height={400} 
+          size="stretch"
+          minWidth={100}
+          minHeight={100}
+          maxWidth={800}
+          maxHeight={600}
+          showCover={false}
+          mobileScrollSupport={true}
+          style={{}}
+          className=""
+          startPage={0}
+          drawShadow={true}
+          flippingTime={1000}
+          useMouseEvents={true}
+          swipeDistance={30}
+          clickEventForward={true}
+          usePortrait={true}
+          startZIndex={0}
+          autoSize={true}
+          maxShadowOpacity={0.5}
+          showPageCorners={true}
+          disableFlipByClick={false}
+        >
+          {/* Rendering the pages inside the flipbook */}
+          <div>
+            <img src={pageImages[0]} alt="Page 1" />
+          </div>
+          <div>
+            <img src={pageImages[1]} alt="Page 2" />
+          </div>
+          <div>
+            <img src={pageImages[2]} alt="Page 3" />
+          </div>
+          <div>
+            <img src={pageImages[3]} alt="Page 4" />
+          </div>
+        </HTMLFlipBook>
       </ReadingContainer>
 
       {/* 🔹 Bottom Navigation Bar */}
