@@ -1,21 +1,60 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
+import Parse from "parse/dist/parse.min.js";
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");
+  const [message, setMessage] = useState("");
+
   const navigate = useNavigate();
 
-  const handleReset = (e: React.FormEvent) => {
+  const handleReset = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Reset link sent to email: ", email);
+
+    // Let browser handle validation if the field is empty
+    if (!email) return;
+
+    try {
+      const query = new Parse.Query("Admin");
+      query.equalTo("admin_email", email);
+      const adminUser = await query.first();
+      if (!adminUser) {
+        setMessage("Email not found");
+        console.log("Email not found");
+        return;
+      }
+
+      const response = await fetch("http://localhost:3000/reset-password", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email }),
+      });
+
+      if (response.ok) {
+        setMessage("Password reset link sent. Check your email.");
+        // navigate("/confirmPage");
+      } else {
+        setMessage("An error occured");
+      }
+      // navigate("/confirmPage");
+    } catch (error) {
+      console.log("An error occured", error);
+      setMessage("An error occurred. Please try again.");
+    }
   };
 
   return (
     <div className="d-flex justify-content-center align-items-center vh-100">
       <div
         className="card p-4 shadow-lg"
-        style={{ width: "100%", maxWidth: "400px", borderRadius: "12px" }}
+        style={{
+          width: "100%",
+          maxWidth: "400px",
+          borderRadius: "12px",
+          backgroundColor: "#F8F0E9",
+        }}
       >
         {/* Back Button */}
         <button
@@ -57,7 +96,7 @@ const ForgotPassword = () => {
           <button
             type="submit"
             className="btn btn-primary w-100 p-3"
-            disabled={!email}
+            onClick={handleReset}
             style={{
               color: "#000000",
               backgroundColor: "#DECBB7",
@@ -69,6 +108,7 @@ const ForgotPassword = () => {
           >
             Reset Password
           </button>
+          {message && <p className="mt-2">{message}</p>}
         </form>
       </div>
     </div>

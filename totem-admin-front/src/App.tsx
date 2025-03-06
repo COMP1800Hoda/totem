@@ -1,8 +1,10 @@
 import React from "react";
-import Login from "./login.tsx"; // No need for .js extension in TypeScript
+import Login from "./Login"; // No need for .js extension in TypeScript
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Routes, Route } from "react-router-dom";
-import ForgotPassword from "./forgotPassword.tsx";
+import ForgotPassword from "./ForgotPassword";
+import ConfirmPage from "./ConfirmPage";
+import EditPassword from "./EditPassword";
 
 const App: React.FC = () => {
   return (
@@ -10,6 +12,8 @@ const App: React.FC = () => {
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/forgotPassword" element={<ForgotPassword />} />
+        <Route path="/confirmPage" element={<ConfirmPage />} />
+        <Route path="/editPassword" element={<EditPassword />} />
       </Routes>
     </div>
   );
