@@ -1,12 +1,10 @@
 import React from 'react';
-import { Table } from '@mantine/core';
 import { flexRender, Row } from '@tanstack/react-table';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { Table as TableType } from '@tanstack/table-core';
 
-// import { Course } from '../../../types';
-// import { useNavigateToCourseDetail } from '../../../hooks';
 import { Storybook } from '../../../types/Storybook.ts';
+import { useNavigateToBookDetail } from '../../../hooks/useNavigateToBookDetail.ts';
 
 type LazyTableHeaderProps = {
   table: TableType<Storybook>;
@@ -16,8 +14,9 @@ type LazyTableHeaderProps = {
 export const CourseTableBody = ({
   table,
   tableContainerRef,
+  ...props
 }: LazyTableHeaderProps) => {
-  const navigateToCourseDetail = useNavigateToCourseDetail();
+  const navigateToCourseDetail = useNavigateToBookDetail();
 
   const { rows } = table.getRowModel();
 
@@ -37,16 +36,17 @@ export const CourseTableBody = ({
   });
 
   return (
-    <Table.Tbody
+    <table
       style={{
         height: `${rowVirtualizer.getTotalSize()}px`, //tells scrollbar how big the table is
       }}
+      {...props}
     >
       {rowVirtualizer.getVirtualItems().map((virtualRow) => {
         const row = rows[virtualRow.index] as Row<Storybook>;
         const book = row.original as Storybook;
         return (
-          <Table.Tr
+          <tr
             data-index={virtualRow.index} //needed for dynamic row height measurement
             ref={(node) => rowVirtualizer.measureElement(node)} //measure dynamic row height
             key={row.id}
@@ -57,7 +57,7 @@ export const CourseTableBody = ({
           >
             {row.getVisibleCells().map((cell) => {
               return (
-                <Table.Td
+                <td
                   key={cell.id}
                   style={{
                     display: 'flex',
@@ -65,12 +65,12 @@ export const CourseTableBody = ({
                   }}
                 >
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                </Table.Td>
+                </td>
               );
             })}
-          </Table.Tr>
+          </tr>
         );
       })}
-    </Table.Tbody>
+    </table>
   );
 };

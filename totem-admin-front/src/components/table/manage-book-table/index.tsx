@@ -8,26 +8,26 @@ import {
 } from '@tanstack/react-table';
 
 import { courseColumns } from '../column/courseColumns.tsx';
-import { Course, CourseFormat } from '../../../types';
+// import { Course, CourseFormat } from '../../../types';
 import { LazyTableContainer, TableWrapper } from './CourseTable.styled.ts';
-import { useInfiniteCourseQuery } from '../../../hooks';
-import { NoResult } from '../../NoResult.tsx';
+// import { useInfiniteCourseQuery } from '../../../hooks';
+// import { NoResult } from '../../NoResult.tsx';
 import { CourseTableHeader } from './CourseTableHeader.tsx';
 import { CourseTableBody } from './CourseTableBody.tsx';
-import CustomLoader from '../../CustomLoader.tsx';
+// import CustomLoader from '../../CustomLoader.tsx';
 import SearchResultHeader from './SearchResultHeader.tsx';
 import { Container } from '../../Container.tsx';
 
 type LazyTableType = {
   activeTab: string | null;
-  courseFormat: CourseFormat;
+  // courseFormat: CourseFormat;
   keyword: string;
   fetchSize?: number;
 };
 
 const LazyTable: React.FC<LazyTableType> = ({
-  activeTab,
-  courseFormat,
+  // activeTab,
+  // courseFormat,
   keyword,
   fetchSize = 50,
 }) => {
@@ -120,10 +120,6 @@ const LazyTable: React.FC<LazyTableType> = ({
         </Table>
         <CustomLoader show={isFetching} />
       </TableWrapper>
-      {/* TODO: remove this indicator (added only for dev purpose)*/}
-      <div style={{ textAlign: 'right', padding: 10 }}>
-        {flatData.length} of {totalDBRowCount} rows fetched
-      </div>
     </LazyTableContainer>
   );
 };

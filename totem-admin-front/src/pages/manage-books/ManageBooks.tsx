@@ -4,6 +4,7 @@ import { Header } from '../../components/header/Header.tsx';
 import { Container } from '../../components/Container.tsx';
 import { MainTitle } from '../../components/text/MainTitle.tsx';
 import { SearchContainer } from './ManageBooks.styled.ts';
+import LazyTable from '../../components/table/manage-book-table';
 
 export const ManageBooks = () => {
   return (
@@ -19,10 +20,12 @@ export const ManageBooks = () => {
               <option value="genre">Genre</option>
               <option value="contributed">Contributed by</option>
             </Form.Select>
-            <Form.Control size="sm" type="text" placeholder="Large text" />
+            <Form.Control size="sm" type="text" placeholder="Search by keywords" />
           </SearchContainer>
-
         </Container>
+      </div>
+      <div id="table-container">
+        <LazyTable/>
 
       </div>
     </div>
