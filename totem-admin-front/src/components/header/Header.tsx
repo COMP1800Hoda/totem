@@ -1,7 +1,7 @@
 import React from 'react';
-import { IconSearch } from '@tabler/icons-react';
+import { IconMenu2 } from '@tabler/icons-react';
 
-import { HeaderContainer, Inner, SearchContainer } from './Header.styled.ts';
+import { HeaderContainer, Inner } from './Header.styled.ts';
 import { COLORS } from '../../constants/colors.ts';
 
 interface HeaderSearchProps {
@@ -12,7 +12,8 @@ export const Header: React.FC<HeaderSearchProps> = ({
   return (
     <HeaderContainer hideBorder={false}>
       <Inner>
-        <h1>Totem Logo</h1>
+        <h1>Totem</h1>
+        <IconMenu2 color={COLORS.darkGray} size={24} stroke={1.5} />
       </Inner>
     </HeaderContainer>
   );

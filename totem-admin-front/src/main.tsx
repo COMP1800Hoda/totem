@@ -1,12 +1,23 @@
-import React from "react";
-import ReactDOM from "react-dom/client";
-import { BrowserRouter } from "react-router-dom";
 import App from "./App.tsx";
+import GlobalStyles from './styles/GlobalStyles.ts';
 
-ReactDOM.createRoot(document.getElementById("root")!).render(
-  <React.StrictMode>
-    <BrowserRouter>
+import { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
+import { StyleSheetManager } from 'styled-components';
+import isPropValid from '@emotion/is-prop-valid';
+
+createRoot(document.getElementById('root')!).render(
+  <StrictMode>
+    <StyleSheetManager shouldForwardProp={shouldForwardProp}>
       <App />
-    </BrowserRouter>
-  </React.StrictMode>
+      <GlobalStyles />
+    </StyleSheetManager>
+  </StrictMode>,
 );
+
+function shouldForwardProp(propName: string, target: unknown) {
+  if (typeof target === 'string') {
+    return isPropValid(propName);
+  }
+  return true;
+}

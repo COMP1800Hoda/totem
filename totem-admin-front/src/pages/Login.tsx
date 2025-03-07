@@ -1,14 +1,16 @@
-import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useState } from "react";
-import Parse from "./database";
+import Parse from "../database";
 import { Link } from "react-router-dom";
 import bcrypt from "bcryptjs";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
+  const navigate = useNavigate();
+
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError("");
@@ -31,6 +33,8 @@ const Login = () => {
       if (isMatch) {
         console.log("Login successful");
         setSuccess(true);
+        navigate('/main')
+
       } else {
         console.log("Incorrect password");
         setError("Incorrect password");
