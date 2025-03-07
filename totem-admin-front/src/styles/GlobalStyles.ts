@@ -106,7 +106,13 @@ const GlobalStyles = createGlobalStyle`
   }
 
   .page {
-    padding-top: 50px;
+    padding-top: 56px;
+  }
+  
+  .container-mb {
+    display: flex; 
+    flex-direction: column;
+    align-items: center;
   }
 
   .text-highlight {
