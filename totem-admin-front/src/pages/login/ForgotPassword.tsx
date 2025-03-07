@@ -1,10 +1,10 @@
-import "bootstrap/dist/css/bootstrap.min.css";
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import Parse from "parse/dist/parse.min.js";
+import 'bootstrap/dist/css/bootstrap.min.css';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import Parse from '../../database';
 const ForgotPassword = () => {
-  const [email, setEmail] = useState("");
-  const [message, setMessage] = useState("");
+  const [email, setEmail] = useState('');
+  const [message, setMessage] = useState('');
 
   const navigate = useNavigate();
 
@@ -15,33 +15,34 @@ const ForgotPassword = () => {
     if (!email) return;
 
     try {
-      const query = new Parse.Query("Admin");
-      query.equalTo("admin_email", email);
+      const query = new Parse.Query('Admin');
+      query.equalTo('admin_email', email);
       const adminUser = await query.first();
       if (!adminUser) {
-        setMessage("Email not found");
-        console.log("Email not found");
+        setMessage('Email not found');
+        console.log('Email not found');
         return;
       }
 
-      const response = await fetch("http://localhost:3000/reset-password", {
-        method: "POST",
+      // change this based on the port
+      const response = await fetch('http://localhost:8080/reset-password', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({ email }),
       });
 
       if (response.ok) {
-        setMessage("Password reset link sent. Check your email.");
+        setMessage('Password reset link sent. Check your email.');
         // navigate("/confirmPage");
       } else {
-        setMessage("An error occured");
+        setMessage('An error occured');
       }
       // navigate("/confirmPage");
     } catch (error) {
-      console.log("An error occured", error);
-      setMessage("An error occurred. Please try again.");
+      console.log('An error occured', error);
+      setMessage('An error occurred. Please try again.');
     }
   };
 
@@ -50,25 +51,25 @@ const ForgotPassword = () => {
       <div
         className="card p-4 shadow-lg"
         style={{
-          width: "100%",
-          maxWidth: "400px",
-          borderRadius: "12px",
-          backgroundColor: "#F8F0E9",
+          width: '100%',
+          maxWidth: '400px',
+          borderRadius: '12px',
+          backgroundColor: '#F8F0E9',
         }}
       >
         {/* Back Button */}
         <button
           className="btn btn-light mb-3 d-flex align-items-center justify-content-center"
-          onClick={() => navigate("/")}
+          onClick={() => navigate('/')}
           style={{
-            width: "32px",
-            height: "32px",
-            borderRadius: "60%",
-            padding: "5px",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            boxShadow: "0 2px 5px rgba(18, 1, 1, 0.1)",
+            width: '32px',
+            height: '32px',
+            borderRadius: '60%',
+            padding: '5px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            boxShadow: '0 2px 5px rgba(18, 1, 1, 0.1)',
           }}
         >
           ←
@@ -88,7 +89,7 @@ const ForgotPassword = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              style={{ borderRadius: "8px" }}
+              style={{ borderRadius: '8px' }}
             />
           </div>
 
@@ -98,11 +99,11 @@ const ForgotPassword = () => {
             className="btn btn-primary w-100 p-3"
             onClick={handleReset}
             style={{
-              color: "#000000",
-              backgroundColor: "#DECBB7",
-              borderRadius: "8px",
-              border: "none",
-              cursor: email ? "pointer" : "not-allowed",
+              color: '#000000',
+              backgroundColor: '#DECBB7',
+              borderRadius: '8px',
+              border: 'none',
+              cursor: email ? 'pointer' : 'not-allowed',
               opacity: email ? 1 : 0.6,
             }}
           >

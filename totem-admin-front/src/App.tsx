@@ -1,12 +1,12 @@
-import React from "react";
-import ForgotPassword from "./pages/login/ForgotPassword.tsx";
-import ConfirmPage from "./pages/login/ConfirmPage.tsx";
-import EditPassword from "./pages/login/EditPassword.tsx";
+import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
-import Login from "./pages/login/Login.tsx";
+import Login from './pages/login/Login.tsx';
+import ForgotPassword from './pages/login/ForgotPassword';
+import ConfirmPage from './pages/login/ConfirmPage';
+import EditPassword from './pages/login/EditPassword';
 import NotFoundPage from './pages/not-found/NotFoundPage.tsx';
 import HomePage from './pages/homepage/HomePage.tsx';
 import FileUpload from './pages/file-upload/fileUpload.tsx';
@@ -26,8 +26,7 @@ const App: React.FC = () => {
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </div>
-  )
+  );
 };
-
 
 export default App;
