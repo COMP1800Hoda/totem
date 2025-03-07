@@ -72,23 +72,23 @@ const ReadPage: React.FC = () => {
           maxHeight={isPortrait ? 500 : 1000}
           showCover={false}
           mobileScrollSupport={true}
+          autoSize={false}
+          className="flipbook"
+          style={{}}
           startPage={0}
           drawShadow={true}
           flippingTime={1000}
           useMouseEvents={true}
           swipeDistance={30}
           clickEventForward={true}
-          usePortrait={isPortrait} // ✅ Ensures portrait mode on smaller screens
-          startZIndex={0}
-          autoSize={false} // ✅ Prevents unwanted stretching
-          maxShadowOpacity={0.5}
+          usePortrait={isPortrait}
           showPageCorners={true}
+          startZIndex={0}
+          maxShadowOpacity={0.5}
           disableFlipByClick={false}
-          style={{ width: "100%", height: "100%" }} // ✅ Ensures proper fitting
-          className="flipbook"
         >
           {pageImages.map((image, index) => (
-            <div key={index} className="page">
+            <div key={index} className="page_stf__item">
               <img src={image} alt={`Page ${index + 1}`} />
             </div>
           ))}

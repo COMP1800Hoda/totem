@@ -10,7 +10,7 @@ export const Container = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  overflow: hidden; /* ✅ Prevents overflow */
+  overflow: hidden;
 `;
 
 /* 🔹 Top Navigation Bar */
@@ -73,19 +73,52 @@ export const ReadingContainer = styled.div`
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  overflow: hidden; /* ✅ Ensures no extra space */
-  
+  overflow: hidden;
+
   .flipbook {
     width: 100%;
     height: 100%;
+    object-fit: cover;
+    max-width: 100vw;
+    max-height: 100vh;
   }
 
+   .page_stf__item {
+      padding: 0 !important;  /* ✅ Remove padding */
+      margin: 0 !important;   /* ✅ Ensure no extra margins */
+      left: 0 !important;     /* ✅ Remove left offset */
+      top: 0 !important;      /* ✅ Remove top offset */
+      bottom: 0 !important;   /* ✅ Remove bottom offset */
+      position: absolute !important; /* ✅ Keep positioning intact */
+      width: 100% !important; /* ✅ Ensure full width */
+      height: 100% !important; /* ✅ Ensure full height */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+  }
+
+
+
   img {
-    max-height: 100%;
-    max-width: 100%;
-    object-fit: contain;
+    width: 100%;
+    height: 100%;
+    object-fit: contain !important;
   }
 `;
+
+/* 🔹 Flipbook Page Container */
+export const Page = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
+  overflow: hidden;
+`;
+
 
 /* 🔹 Slider Container */
 export const SliderContainer = styled.div`
