@@ -5,11 +5,12 @@ export const Container = styled.div`
   position: relative;
   width: 100vw;
   height: 100vh;
-  background-color: #f5f5f5; /* Light background */
+  background-color: #f5f5f5;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  overflow: hidden; /* ✅ Prevents overflow */
 `;
 
 /* 🔹 Top Navigation Bar */
@@ -72,10 +73,16 @@ export const ReadingContainer = styled.div`
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  overflow: hidden; /* ✅ Ensures no extra space */
+  
+  .flipbook {
+    width: 100%;
+    height: 100%;
+  }
 
   img {
-    max-height: 90%;
-    max-width: 90%;
+    max-height: 100%;
+    max-width: 100%;
     object-fit: contain;
   }
 `;
@@ -85,7 +92,7 @@ export const SliderContainer = styled.div`
   display: flex;
   align-items: center;
   width: 60%;
-  direction: rtl; /* Slider moves right to left */
+  direction: rtl;
 
   input {
     width: 100%;
