@@ -15,20 +15,16 @@ import ManageBooks from './pages/manage-books/ManageBooks.tsx';
 const App: React.FC = () => {
   return (
     <Router>
-      {' '}
-      {/* ✅ Wrap everything inside <Router> */}
-      <div className="d-flex justify-content-center align-items-center vh-100 w-100">
-        <Routes>
-          <Route path="/" element={<Login />} />
-          <Route path="/forgotPassword" element={<ForgotPassword />} />
-          <Route path="/confirmPage" element={<ConfirmPage />} />
-          <Route path="/editPassword" element={<EditPassword />} />
-          <Route path="/main" element={<HomePage />} />
-          <Route path="/manage-books" element={<ManageBooks />} />
-          <Route path="/add-book" element={<FileUpload />} />
-          <Route path="*" element={<NotFoundPage />} />
-        </Routes>
-      </div>
+      <Routes>
+        <Route path="/" element={<Login />} />
+        <Route path="/forgotPassword" element={<ForgotPassword />} />
+        <Route path="/confirmPage" element={<ConfirmPage />} />
+        <Route path="/editPassword" element={<EditPassword />} />
+        <Route path="/main" element={<HomePage />} />
+        <Route path="/manage-books" element={<ManageBooks />} />
+        <Route path="/add-book" element={<FileUpload />} />
+        <Route path="*" element={<NotFoundPage />} />
+      </Routes>
     </Router>
   );
 };
