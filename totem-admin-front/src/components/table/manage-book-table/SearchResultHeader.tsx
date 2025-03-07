@@ -15,5 +15,4 @@ const SearchResultHeader = ({
 }: SearchResultHeaderProps) => {
   return <Component>{`${resultCount} results for '${keyword}'`}</Component>;
 };
-
 export default SearchResultHeader;

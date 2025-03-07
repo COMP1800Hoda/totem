@@ -1,16 +1,18 @@
 import { Form } from 'react-bootstrap';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 import { Header } from '../../components/header/Header.tsx';
 import { Container } from '../../components/Container.tsx';
 import { MainTitle } from '../../components/text/MainTitle.tsx';
 import { SearchContainer } from './ManageBooks.styled.ts';
-import LazyTable from '../../components/table/manage-book-table';
+import { ManageBookTable } from '../../components/table/manage-book-table/ManageBookTable.tsx';
 
 export const ManageBooks = () => {
+  const queryClient = new QueryClient();
   return (
     <div id={'page-manage-books'} className={'page'}>
       <Header />
-      <div id="top-container" className={"container-mb"}>
+      <div id="top-container">
         <Container>
           <MainTitle text={`Manage Books`} />
           <SearchContainer>
@@ -25,8 +27,9 @@ export const ManageBooks = () => {
         </Container>
       </div>
       <div id="table-container">
-        <LazyTable/>
-
+        <QueryClientProvider client={queryClient}>
+          <ManageBookTable/>
+        </QueryClientProvider>
       </div>
     </div>
   );
