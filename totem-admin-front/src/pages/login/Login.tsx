@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Parse from "../database";
+import Parse from "../../database";
 import { Link } from "react-router-dom";
 import bcrypt from "bcryptjs";
 import { useNavigate } from "react-router-dom";
