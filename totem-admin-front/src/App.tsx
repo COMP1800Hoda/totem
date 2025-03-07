@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
@@ -14,18 +14,22 @@ import ManageBooks from './pages/manage-books/ManageBooks.tsx';
 
 const App: React.FC = () => {
   return (
-    <div className="d-flex justify-content-center align-items-center vh-100 w-100">
-      <Routes>
-        <Route path="/" element={<Login />} />
-        <Route path="/forgotPassword" element={<ForgotPassword />} />
-        <Route path="/confirmPage" element={<ConfirmPage />} />
-        <Route path="/editPassword" element={<EditPassword />} />
-        <Route path="/main" element={<HomePage />} />
-        <Route path="/manage-books" element={<ManageBooks />} />
-        <Route path="/add-book" element={<FileUpload />} />
-        <Route path="*" element={<NotFoundPage />} />
-      </Routes>
-    </div>
+    <Router>
+      {' '}
+      {/* ✅ Wrap everything inside <Router> */}
+      <div className="d-flex justify-content-center align-items-center vh-100 w-100">
+        <Routes>
+          <Route path="/" element={<Login />} />
+          <Route path="/forgotPassword" element={<ForgotPassword />} />
+          <Route path="/confirmPage" element={<ConfirmPage />} />
+          <Route path="/editPassword" element={<EditPassword />} />
+          <Route path="/main" element={<HomePage />} />
+          <Route path="/manage-books" element={<ManageBooks />} />
+          <Route path="/add-book" element={<FileUpload />} />
+          <Route path="*" element={<NotFoundPage />} />
+        </Routes>
+      </div>
+    </Router>
   );
 };
 
