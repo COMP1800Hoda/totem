@@ -3,10 +3,15 @@ import { Storybook } from '../../../types/Storybook.ts';
 
 export const bookColumns: ColumnDef<Storybook>[] = [
   {
-    accessorKey: 'storybook_id',
-    header: 'ID',
-    size: 100,
-    cell: (info) => <span>{info.getValue() as string}</span>,
+    accessorKey: 'index',
+    header: 'Index',
+    size: 60,
+    cell: (info) =>
+      (<span style={{
+        width: "100%",
+        textAlign: 'center',
+        display: "block"
+      }}>{info.getValue() as string}</span>),
   },
   {
     accessorKey: 'cover_image_url',
@@ -21,15 +26,21 @@ export const bookColumns: ColumnDef<Storybook>[] = [
     ),
   },
   {
+    accessorKey: 'storybook_id',
+    header: 'Book ID',
+    size: 200,
+    cell: (info) => <span>{info.getValue() as string}</span>,
+  },
+  {
     accessorKey: 'storybook_title',
     header: 'Title',
     minSize: 200,
-    cell: (info) => <span>{info.getValue() as string}</span>,
+    cell: (info) => <span className={"rtl"}>{info.getValue() as string}</span>,
   },
   {
     accessorKey: 'genre',
     header: 'Genre',
-    size: 200,
+    size: 150,
     cell: (info) => (
       <span>{(info.getValue() as string[])?.join(', ') || 'N/A'}</span>
     ),
@@ -37,26 +48,26 @@ export const bookColumns: ColumnDef<Storybook>[] = [
   {
     accessorKey: 'published',
     header: 'Published Date',
-    size: 120,
-    cell: (info) => <span>{info.getValue() as string}</span>,
+    size: 130,
+    cell: (info) => <span className={"rtl"}>{info.getValue() as string}</span>,
   },
   {
     accessorKey: 'publisher',
     header: 'Publisher',
-    size: 150,
-    cell: (info) => <span>{info.getValue() as string}</span>,
+    size: 200,
+    cell: (info) => <span className={"rtl"}>{info.getValue() as string}</span>,
   },
   {
     accessorKey: 'ISBN',
     header: 'ISBN',
-    size: 120,
+    size: 160,
     cell: (info) => <span>{info.getValue() as string}</span>,
   },
   {
     accessorKey: 'contributed_by',
     header: 'Contributed By',
     size: 200,
-    cell: (info) => <span>{info.getValue() as string}</span>,
+    cell: (info) => <span className={"rtl"}>{info.getValue() as string}</span>,
   },
   {
     accessorKey: 'paid_storybook',
