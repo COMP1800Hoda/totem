@@ -12,7 +12,7 @@ export const Header: React.FC<HeaderSearchProps> = ({
   return (
     <HeaderContainer hideBorder={false}>
       <Inner>
-        <h1>Totem</h1>
+        <h1 style={{ fontSize: 20 }}>Totem</h1>
         <IconMenu2 color={COLORS.darkGray} size={24} stroke={1.5} />
       </Inner>
     </HeaderContainer>
