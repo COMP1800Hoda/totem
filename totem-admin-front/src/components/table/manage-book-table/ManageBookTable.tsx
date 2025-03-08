@@ -1,14 +1,31 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from 'react';
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useReactTable, getCoreRowModel, flexRender } from "@tanstack/react-table";
 import { fetchStorybooks } from '../../../api/fetchStorybooks.ts';
 import { bookColumns } from './bookColumns.tsx';
 import { StyledManageBookTable, TableContainer } from './ManageBookTable.styled.ts';
 import { Container } from '../../Container.tsx';
+import SearchResultHeader from './SearchResultHeader.tsx';
+import { fetchStorybookCount } from '../../../api/fetchStorybookCount.ts';
 
 const PAGE_SIZE = 30; // Number of items to fetch per page
 
 export const ManageBookTable: React.FC = () => {
+  const [totalStorybooks, setTotalStorybooks] = useState<number>(0); // State to store the total count
+
+  // Fetch the total storybook count on component mount
+  useEffect(() => {
+    const getTotalCount = async () => {
+      try {
+        const count = await fetchStorybookCount();
+        setTotalStorybooks(count);
+      } catch (error) {
+        console.error("Error fetching total storybook count:", error);
+      }
+    };
+    getTotalCount();
+  }, []);
+
   const loaderRef = useRef<HTMLDivElement | null>(null);
 
   const {
@@ -71,6 +88,7 @@ export const ManageBookTable: React.FC = () => {
 
   return (
     <TableContainer>
+      <SearchResultHeader resultCount={totalStorybooks}/>
       <StyledManageBookTable className="table">
         <thead>
         {table.getHeaderGroups().map((headerGroup) => (

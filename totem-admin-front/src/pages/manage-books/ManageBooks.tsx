@@ -4,8 +4,9 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Header } from '../../components/header/Header.tsx';
 import { Container } from '../../components/Container.tsx';
 import { MainTitle } from '../../components/text/MainTitle.tsx';
-import { SearchContainer } from './ManageBooks.styled.ts';
+// import { SearchContainer } from './ManageBooks.styled.ts';
 import { ManageBookTable } from '../../components/table/manage-book-table/ManageBookTable.tsx';
+import { SearchContainer } from './ManageBooks.styled.ts';
 
 export const ManageBooks = () => {
   const queryClient = new QueryClient();

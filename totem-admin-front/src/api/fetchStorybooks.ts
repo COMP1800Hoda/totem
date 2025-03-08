@@ -1,4 +1,4 @@
-import Parse from '../../src/database'; // Make sure Parse is initialized correctly
+import Parse from '../../src/database';
 import { Storybook } from '../types/Storybook.ts';
 
 export async function fetchStorybooks(page: number, pageSize: number = 30): Promise<Storybook[]> {
@@ -6,10 +6,10 @@ export async function fetchStorybooks(page: number, pageSize: number = 30): Prom
   const limit = pageSize;
 
   try {
-    const query = new Parse.Query('storybookTesting');
-    // const query = new Parse.Query('storybook');
+    const query = new Parse.Query('storybook');
     query.limit(limit);
     query.skip(skip);
+    query.ascending('index');
 
     // Execute the query
     const results = await query.find();
@@ -20,7 +20,7 @@ export async function fetchStorybooks(page: number, pageSize: number = 30): Prom
     }
 
     // Return the results as an array of Storybook objects
-    return results.map(result => result.toJSON() as Storybook);
+    return results.map((result:Parse.Object) => result.toJSON() as Storybook);
   } catch (error) {
     console.error("Error fetching storybooks:", error);
     throw error; // Rethrow the error to be handled by the caller

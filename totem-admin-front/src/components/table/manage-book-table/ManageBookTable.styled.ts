@@ -11,5 +11,9 @@ export const StyledManageBookTable = styled.table`
     font-size: 14px;
     text-wrap: nowrap;
   }
+  td {
+    font-size: 14px;
+    //word-break: break-all;
+  }
   
 `
