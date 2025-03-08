@@ -25,5 +25,9 @@ export const StyledMenuSubItem = styled.li`
     display: flex;
     align-items: center;
     justify-content: space-between;
+    padding: 0 8px;
+    &:hover {
+      background-color: var(--color-primary-hover);
+    }
   }
 `

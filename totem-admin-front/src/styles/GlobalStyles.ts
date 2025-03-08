@@ -31,6 +31,7 @@ const GlobalStyles = createGlobalStyle`
   :root {
     // colors
     --color-primary: ${COLORS.primary};
+    --color-primary-hover: #f3e3d1;
     --color-background: ${COLORS.background};
     --color-text-primary: ${COLORS.darkGray};
     --color-border-gray: #d1d1d1;
@@ -81,17 +82,17 @@ const GlobalStyles = createGlobalStyle`
     white-space: nowrap;
     border: 0;
   }
-  
-  h1,h2,h3,h4 {
-    color:inherit;
+
+  h1, h2, h3, h4 {
+    color: inherit;
   }
 
   .page {
     padding-top: 56px;
   }
-  
+
   .container-mb {
-    display: flex; 
+    display: flex;
     flex-direction: column;
     align-items: center;
   }
@@ -102,6 +103,11 @@ const GlobalStyles = createGlobalStyle`
     font-size: 50px;
     line-height: 1.2;
     margin-bottom: 0.3em;
+  }
+  
+  .rtl {
+    display: block;
+    text-align: right;
   }
 
 `;
