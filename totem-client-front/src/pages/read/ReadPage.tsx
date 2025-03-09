@@ -1,8 +1,9 @@
+// flipping animation from https://www.npmjs.com/package/page-flip
+
 import React, { useState, useRef, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import HTMLFlipBook from "react-pageflip";
 import { ChevronLeft } from "lucide-react";
-
 import {
   Container,
   TopNavBar,
