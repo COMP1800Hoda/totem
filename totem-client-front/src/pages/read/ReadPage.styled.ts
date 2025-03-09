@@ -112,7 +112,7 @@ export const ReadingContainer = styled.div`
   top: 8%;
   bottom: 10%;
   width: 100%;
-  height: calc(100vh - 120px);
+  height: calc(100vh - 18%);
   display: flex;
   align-items: center;
   justify-content: center;
