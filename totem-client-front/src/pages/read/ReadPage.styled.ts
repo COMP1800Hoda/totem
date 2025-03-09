@@ -208,6 +208,7 @@ export const SliderContainer = styled.div`
 
 
 
+
 /* 🔹 Page Indicator */
 export const PageIndicator = styled.span`
   margin-right: 10px;

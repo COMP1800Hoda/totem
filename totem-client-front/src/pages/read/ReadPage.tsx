@@ -14,6 +14,7 @@ import {
   PageIndicator,
   BottomNavButton
 } from "./ReadPage.styled";
+
 import samplePage1 from "../../assets/sample-page-1.jpg";
 import samplePage2 from "../../assets/sample-page-2.jpg";
 import samplePage3 from "../../assets/sample-page-3.jpg";
@@ -27,6 +28,7 @@ const ReadPage: React.FC = () => {
   const [isPortrait, setIsPortrait] = useState(window.innerWidth < 1024);
 
   const flipBookRef = useRef<HTMLDivElement>(null);
+  const sliderRef = useRef<HTMLInputElement>(null);
 
   const pageImages = [samplePage1, samplePage2, samplePage3, samplePage4];
 
@@ -38,6 +40,14 @@ const ReadPage: React.FC = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  // 🔹 Update Slider Background When Page Changes
+  useEffect(() => {
+    if (sliderRef.current) {
+      const progress = ((currentPage - 1) / (pageImages.length - 1)) * 100;
+      sliderRef.current.style.setProperty("--progress", `${progress}%`);
+    }
+  }, [currentPage]);
+
   const handleToggleNav = () => setShowNav((prev) => !prev);
 
   const handlePageClick = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -46,7 +56,7 @@ const ReadPage: React.FC = () => {
     const clickX = clientX / width;
 
     if (clickX < 0.2) {
-      setCurrentPage((prev) => Math.min(prev + 1, 4));
+      setCurrentPage((prev) => Math.min(prev + 1, pageImages.length));
     } else if (clickX > 0.8) {
       setCurrentPage((prev) => Math.max(prev - 1, 1));
     } else {
@@ -61,9 +71,6 @@ const ReadPage: React.FC = () => {
           <NavButton onClick={() => navigate(`/books/${id}`)} style={{ background: "none", border: "none", color: "#8F857D" }}>
             <ChevronLeft size={30} />
           </NavButton>
-
-
-
           <Title>آدم برفي و مترسك</Title>
         </TopNavBar>
       )}
@@ -105,32 +112,26 @@ const ReadPage: React.FC = () => {
 
       {showNav && (
         <BottomNavBar>
-        <BottomNavButton onClick={() => setCurrentPage((prev) => Math.min(prev + 1, 4))}>
-          بعدی
-        </BottomNavButton>
-      
-        <SliderContainer>
-          <input
-            type="range"
-            min="1"
-            max="4"
-            value={currentPage}
-            onInput={(e) => {
-              const value = Number((e.target as HTMLInputElement).value);
-              setCurrentPage(value);
-              (e.target as HTMLInputElement).style.setProperty(
-                "--progress",
-                `${((value - 1) / (pageImages.length - 1)) * 100}%`
-              );
-            }}
-          />
-          <PageIndicator>{currentPage}/4</PageIndicator>
-        </SliderContainer>
-      
-        <BottomNavButton onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}>
-          قبلی
-        </BottomNavButton>
-      </BottomNavBar>      
+          <BottomNavButton onClick={() => setCurrentPage((prev) => Math.min(prev + 1, pageImages.length))}>
+            بعدی
+          </BottomNavButton>
+
+          <SliderContainer>
+            <input
+              ref={sliderRef}
+              type="range"
+              min="1"
+              max={pageImages.length}
+              value={currentPage}
+              onInput={(e) => setCurrentPage(Number((e.target as HTMLInputElement).value))}
+            />
+            <PageIndicator>{currentPage}/{pageImages.length}</PageIndicator>
+          </SliderContainer>
+
+          <BottomNavButton onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}>
+            قبلی
+          </BottomNavButton>
+        </BottomNavBar>
       )}
     </Container>
   );
