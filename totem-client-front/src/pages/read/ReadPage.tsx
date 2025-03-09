@@ -72,7 +72,7 @@ const ReadPage: React.FC = () => {
         <HTMLFlipBook
           ref={flipBookRef}
           width={isPortrait ? 700 : 600}
-          height={isPortrait ? 900 : 800}
+          height={isPortrait ? 700 : 800}
           size="fixed"
           minWidth={300}
           minHeight={400}
