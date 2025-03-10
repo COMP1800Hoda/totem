@@ -58,7 +58,7 @@ const EditPassword = () => {
         setSuccess(true);
         console.log('Password updated successfully');
         setTimeout(() => {
-          navigate('/confirmPage');
+          navigate('/confirm-page');
         }, 2000);
       });
     } catch (error) {
