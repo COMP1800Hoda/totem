@@ -1,14 +1,23 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Parse from '../../database';
 import { Link } from 'react-router-dom';
 import bcrypt from 'bcryptjs';
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
+
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (success) {
+      navigate('/main'); // Navigate only when success is true
+    }
+  }, [success, navigate]);
+
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError('');
@@ -80,7 +89,7 @@ const Login = () => {
 
           {/* Forgot Password Link */}
           <div className="mb-3 text-end text-primary text-decoration-underline">
-            <Link to="/forgotPassword">Forgot password?</Link>
+            <Link to="/forgot-password">Forgot password?</Link>
           </div>
 
           {/* Login Button */}
