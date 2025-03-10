@@ -2,7 +2,6 @@ import { Header } from '../../components/header/Header.tsx';
 import { Container } from '../../components/Container.tsx';
 import { MainTitle } from '../../components/text/MainTitle.tsx';
 import { Menu } from '../../components/menu/Menu.tsx';
-import Parse from '../../database';
 
 export const HomePage = () => {
   const username = 'admin';
