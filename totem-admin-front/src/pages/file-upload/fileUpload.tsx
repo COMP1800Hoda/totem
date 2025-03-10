@@ -1,7 +1,9 @@
-import React, { useState, useRef, useEffect } from 'react';
-import ImageKit from 'imagekit';
-import Parse from '../../database';
-import './fileUpload.css';
+import React, { useState, useRef, useEffect } from "react";
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import ImageKit from "imagekit";
+import Parse from "../../database.js";
+import "./fileUpload.css";
+import DraggingIcon from "../../assets/draggingdot.svg";
 
 interface FileData {
   file: File;
@@ -9,38 +11,37 @@ interface FileData {
   size: string;
   url: string; // For image previews
 }
-// initializeParse();
 
 // Initialize ImageKit
 const imagekit = new ImageKit({
-  publicKey: 'public_P17LRkYTu9e3UdN3WnyzbodiT1U=',
-  urlEndpoint: 'https://ik.imagekit.io/Comp3800Group12',
-  privateKey: 'private_PeSFDBIdeSuhtUZaec1saMxjqoU=',
+  publicKey: "public_P17LRkYTu9e3UdN3WnyzbodiT1U=",
+  urlEndpoint: "https://ik.imagekit.io/Comp3800Group12",
+  privateKey: "private_PeSFDBIdeSuhtUZaec1saMxjqoU=",
 });
 
 const FileUpload: React.FC = () => {
-  const [bookTitle, setBookTitle] = useState<string>('');
-  const [bookId, setBookId] = useState<string>('');
-  const [age, setAge] = useState<string>('0~2');
+  const [bookTitle, setBookTitle] = useState<string>("");
+  const [bookId, setBookId] = useState<string>("");
+  const [age, setAge] = useState<string>("0~2");
   const [genres, setGenres] = useState([
-    'Action Adventure',
-    'Historical Fiction',
+    "Action Adventure",
+    "Historical Fiction",
   ]);
 
   // default creators
   const initialCreators = [
-    { role: 'Author', name: 'John Doe', customRole: '' },
+    { role: "Author", name: "John Doe", customRole: "" },
   ];
   const initialRoles = [
-    { value: 'Author', label: 'Author' },
-    { value: 'Illustrator', label: 'Illustrator' },
+    { value: "Author", label: "Author" },
+    { value: "Illustrator", label: "Illustrator" },
   ];
   const [creators, setCreators] = useState(initialCreators);
   const [roles, setRoles] = useState(initialRoles);
-  const [published, setPublished] = useState<string>('');
-  const [publisher, setPublisher] = useState<string>('');
-  const [isbn, setISBN] = useState<string>('');
-  const [abstract, setAbstract] = useState<string>('');
+  const [published, setPublished] = useState<string>("");
+  const [publisher, setPublisher] = useState<string>("");
+  const [isbn, setISBN] = useState<string>("");
+  const [abstract, setAbstract] = useState<string>("");
   const [coverImage, setCoverImage] = useState<File | null>(null);
   const [files, setFiles] = useState<FileData[]>([]);
   const [folderName, setFolderName] = useState<string | null>(null);
@@ -62,7 +63,7 @@ const FileUpload: React.FC = () => {
   };
 
   const handleAddGenre = (): void => {
-    setGenres([...genres, '']); // Add an empty genre
+    setGenres([...genres, ""]); // Add an empty genre
   };
 
   const handleRemoveGenre = (index: number): void => {
@@ -73,15 +74,15 @@ const FileUpload: React.FC = () => {
     const newCreators = creators.map((creator, i) => {
       if (i === index) {
         // If the field is 'customRole', update the customRole field
-        if (field === 'customRole') {
+        if (field === "customRole") {
           return { ...creator, customRole: value }; // Update customRole without changing the role
         }
         // If the role is changed to 'Other', initialize customRole if it doesn't exist
-        if (field === 'role' && value === 'Other') {
+        if (field === "role" && value === "Other") {
           return {
             ...creator,
             role: value,
-            customRole: creator.customRole || '',
+            customRole: creator.customRole || "",
           };
         }
         // Handle updates to all other fields
@@ -93,30 +94,60 @@ const FileUpload: React.FC = () => {
   };
 
   const handleAddCreator = () => {
-    const defaultRole = roles.length > 0 ? roles[0].value : 'Author';
-    setCreators([...creators, { role: defaultRole, name: '', customRole: '' }]);
+    const defaultRole = roles.length > 0 ? roles[0].value : "Author";
+    setCreators([...creators, { role: defaultRole, name: "", customRole: "" }]);
   };
 
   const handleRemoveCreator = (index: number) => {
     setCreators(creators.filter((_, i) => i !== index));
   };
-
+  //Handle cover image
   const handleCoverChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
       setCoverImage(event.target.files[0]);
     }
   };
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    console.log('Selecting files');
-    const fileList = event.target.files;
-    console.log(fileList);
+  //Handle drag and drop effect 
+  const handleDragOver = (event: React.DragEvent<HTMLDivElement>) => {
+    event.preventDefault(); // Prevent default behavior (prevent file from being opened)
+    event.currentTarget.classList.add('drag-over');
+  };
 
-    if (fileList && fileList.length > 0) {
-      const filesArray = Array.from(fileList);
+  const handleDragEnter = (event: React.DragEvent<HTMLDivElement>) => {
+    event.preventDefault();
+    // Optional: Add visual cues or classes
+  };
+
+  const handleDragLeave = (event: React.DragEvent<HTMLDivElement>) => {
+    event.currentTarget.classList.remove('drag-over'); // Remove the visual cue on leaving drag area
+  };
+
+  const handleDrop = (event: React.DragEvent<HTMLDivElement>) => {
+    event.preventDefault();
+    event.currentTarget.classList.remove('drag-over');
+
+    const files = event.dataTransfer.files;
+    handleFileChange(files); // Pass the FileList directly
+  };
+
+  const onInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files) {
+      handleFileChange(event.target.files);
+    }
+    // Reset the value of the input to allow for re-upload of the same file if necessary
+    event.target.value = '';
+  };
+
+
+  const handleFileChange = (files: FileList) => {
+    console.log("Selecting files");
+
+    if (files.length > 0) {
+      const filesArray = Array.from(files);
 
       const firstFile = filesArray[0];
-      const isFolderUpload = firstFile.webkitRelativePath !== '';
+      const isFolderUpload = firstFile.webkitRelativePath !== "";
 
       if (isFolderUpload) {
         setFolderName(bookId);
@@ -124,19 +155,43 @@ const FileUpload: React.FC = () => {
         setFolderName(null);
       }
 
-      const filesData = filesArray.map((file) => ({
-        file: file, // Store the actual File object
+
+      const updatedFilesData = filesArray.map((file) => ({
+        file: file,
         name: file.name,
-        size: `${(file.size / 1024).toFixed(2)}kb`, // Convert size to KB
-        url: URL.createObjectURL(file), // Generate preview URL
+        size: `${(file.size / 1024).toFixed(2)}kb`,
+        url: URL.createObjectURL(file),
       }));
 
-      setFiles(filesData);
+      setFiles((prevFiles) => [...prevFiles, ...updatedFilesData]);
     }
   };
+
+
+  const onDragEnd = (result: { destination: any; source: any; }) => {
+    const { destination, source } = result;
+    if (!destination) {
+      return;
+    }
+
+    if (
+      destination.droppableId === source.droppableId &&
+      destination.index === source.index
+    ) {
+      return;
+    }
+
+    const newFiles = Array.from(files);
+    const [moved] = newFiles.splice(source.index, 1);
+    newFiles.splice(destination.index, 0, moved);
+
+    setFiles(newFiles);
+  };
+
+
   useEffect(() => {
     if (isUploading && coverimageurl && contentimageurl.length > 0) {
-      // Both coverimageurl and contentimageurl are updated
+
       handleAddToDB();
       setIsUploading(false); // Reset the uploading state
     }
@@ -171,21 +226,18 @@ const FileUpload: React.FC = () => {
               });
               const coverimageUrl = response.url;
               setUrl(coverimageUrl); // Update coverimageurl state
-              console.log(
-                'Cover image uploaded successfully. URL:',
-                coverimageUrl
-              );
+              console.log("Cover image uploaded successfully. URL:", coverimageUrl);
               resolve();
             } catch (error) {
-              console.error('Error uploading cover image:', error);
+              console.error("Error uploading cover image:", error);
               alert(`Error uploading cover image: ${(error as Error).message}`);
               reject(error);
             }
           }
         };
         reader.onerror = (error) => {
-          console.error('Error reading cover image:', error);
-          alert('Error reading cover image');
+          console.error("Error reading cover image:", error);
+          alert("Error reading cover image");
           reject(error);
         };
         reader.readAsDataURL(coverImage);
@@ -195,67 +247,54 @@ const FileUpload: React.FC = () => {
 
     // Upload content images
     for (const fileData of files) {
-      const contentUploadPromise = new Promise<void>(
-        async (resolve, reject) => {
-          const reader = new FileReader();
-          reader.onload = async (loadEvent) => {
-            const base64Data = loadEvent.target?.result as string;
-            if (base64Data) {
-              try {
-                const response = await imagekit.upload({
-                  file: base64Data,
-                  fileName: fileData.name,
-                  folder: contentImagesFolder,
-                  tags: [bookId],
-                });
-                const imageUrl = response.url;
-                setimageUrl((prevUrls) => [...prevUrls, imageUrl]); // Update contentimageurl state
-                console.log(
-                  'Content image uploaded successfully. URL:',
-                  imageUrl
-                );
-                resolve();
-              } catch (error) {
-                console.error(
-                  `Error uploading content image ${fileData.name}:`,
-                  error
-                );
-                alert(
-                  `Error uploading content image ${fileData.name}: ${(error as Error).message}`
-                );
-                reject(error);
-              }
+      const contentUploadPromise = new Promise<void>(async (resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = async (loadEvent) => {
+          const base64Data = loadEvent.target?.result as string;
+          if (base64Data) {
+            try {
+              const response = await imagekit.upload({
+                file: base64Data,
+                fileName: fileData.name,
+                folder: contentImagesFolder,
+                tags: [bookId],
+              });
+              const imageUrl = response.url;
+              setimageUrl((prevUrls) => [...prevUrls, imageUrl]);
+              console.log("Content image uploaded successfully. URL:", imageUrl);
+              resolve();
+            } catch (error) {
+              console.error(`Error uploading content image ${fileData.name}:`, error);
+              alert(
+                `Error uploading content image ${fileData.name}: ${(error as Error).message}`
+              );
+              reject(error);
             }
-          };
-          reader.onerror = (error) => {
-            console.error(
-              `Error reading content image ${fileData.name}:`,
-              error
-            );
-            alert(`Error reading content image ${fileData.name}`);
-            reject(error);
-          };
-          reader.readAsDataURL(fileData.file);
-        }
-      );
+          }
+        };
+        reader.onerror = (error) => {
+          console.error(`Error reading content image ${fileData.name}:`, error);
+          alert(`Error reading content image ${fileData.name}`);
+          reject(error);
+        };
+        reader.readAsDataURL(fileData.file);
+      });
       uploadPromises.push(contentUploadPromise);
     }
 
     try {
       // Wait for all uploads to complete
       await Promise.all(uploadPromises);
-      console.log('All files uploaded successfully');
+      console.log("All files uploaded successfully");
     } catch (error) {
-      console.error('Error during upload:', error);
-      alert('An error occurred during the upload process. Please try again.');
+      console.error("Error during upload:", error);
+      alert("An error occurred during the upload process. Please try again.");
       setIsUploading(false); // Reset the uploading state on error
     }
   };
 
   // add one function to add storybook metadata to database
   const handleAddToDB = async () => {
-    // just checking, you should change it and add more variables to check
-    // should have an alert pop up to notify the admin
     if (
       !bookTitle ||
       !bookId ||
@@ -269,29 +308,29 @@ const FileUpload: React.FC = () => {
       !coverimageurl ||
       !contentimageurl
     ) {
-      console.log('Please fill in all required fields');
+      console.log("Please fill in all required fields");
       return;
     }
 
-    const Storybook = Parse.Object.extend('StoryBook_Admin');
+    const Storybook = Parse.Object.extend("StoryBook_Admin");
     const storybook = new Storybook();
-    storybook.set('BookTitle', bookTitle);
-    storybook.set('BookID', bookId);
-    storybook.set('Age', age);
-    storybook.set('Genre', genres);
-    storybook.set('CreatedBy', creators);
-    storybook.set('Publisher', publisher);
-    storybook.set('Published', published);
-    storybook.set('ISBN', isbn);
-    storybook.set('Abstract', abstract);
-    storybook.set('CoverImgUrl', coverimageurl);
-    storybook.set('ContentImgUrl', contentimageurl);
+    storybook.set("BookTitle", bookTitle);
+    storybook.set("BookID", bookId);
+    storybook.set("Age", age);
+    storybook.set("Genre", genres);
+    storybook.set("CreatedBy", creators);
+    storybook.set("Publisher", publisher);
+    storybook.set("Published", published);
+    storybook.set("ISBN", isbn);
+    storybook.set("Abstract", abstract);
+    storybook.set("CoverImgUrl", coverimageurl);
+    storybook.set("ContentImgUrl", contentimageurl);
 
     try {
       await storybook.save();
-      console.log('Book metadata saved successfully!');
+      console.log("Book metadata saved successfully!");
     } catch (error) {
-      console.log('Error saving metadata:', error);
+      console.log("Error saving metadata:", error);
     }
   };
   // Function to handle file removal
@@ -309,25 +348,33 @@ const FileUpload: React.FC = () => {
             type="text"
             value={bookTitle}
             onChange={(e) => setBookTitle(e.target.value)}
-            //required
+
           />
         </div>
 
         <div className="form-group">
           <label>Book ID</label>
-          <input
-            type="text"
-            value={bookId}
-            onChange={(e) => setBookId(e.target.value)}
-            //required
-          />
+          <div className="form-row">
+            <input
+              type="text"
+              value={bookId}
+              onChange={(e) => setBookId(e.target.value)}
+              style={{ marginRight: "10px", width: "90%" }}
+            />
+            <button className="Generatebutton">Generate</button>
+          </div>
+          <div style={{ fontSize: "12px" }}>
+            <span style={{ fontWeight: "bold" }}>Book ID</span> consists of English letters, numbers, and underscores (e.g., cropson_00390039).
+            It is used as the folder path in the image CDN.<span style={{ fontWeight: "bold" }}> Once generated, it cannot be changed.</span> Click “Generate” to create a random ID.
+          </div>
+
         </div>
         <div className="form-group">
           <label>Age</label>
           <select
             value={age}
             onChange={(e) => setAge(e.target.value)}
-            style={{ width: '530px' }}
+            style={{ width: "530px" }}
           >
             <option value="0~2">0~2</option>
             <option value="3~4">3~4</option>
@@ -341,9 +388,9 @@ const FileUpload: React.FC = () => {
             <div
               key={index}
               style={{
-                display: 'flex',
-                alignItems: 'center',
-                marginBottom: '5px',
+                display: "flex",
+                alignItems: "center",
+                marginBottom: "5px",
               }}
             >
               <input
@@ -351,7 +398,7 @@ const FileUpload: React.FC = () => {
                 value={genre}
                 onChange={(e) => handleGenreInputChange(index, e.target.value)}
                 placeholder="Enter genre..."
-                style={{ marginRight: '10px' }}
+                style={{ marginRight: "10px" }}
               />
               <div className="input-with-icon">
                 <button
@@ -366,7 +413,7 @@ const FileUpload: React.FC = () => {
             </div>
           ))}
 
-          <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+          <div style={{ display: "flex", justifyContent: "flex-end" }}>
             <button
               type="button"
               onClick={handleAddGenre}
@@ -383,28 +430,28 @@ const FileUpload: React.FC = () => {
               key={index}
               className="form-row"
               style={{
-                display: 'flex',
-                alignItems: 'center',
-                marginBottom: '5px',
+                display: "flex",
+                alignItems: "center",
+                marginBottom: "7px",
               }}
             >
-              {creator.role === 'Other' ? (
+              {creator.role === "Other" ? (
                 <>
                   <input
                     type="text"
                     placeholder="Custom role name"
-                    value={creator.customRole || ''}
+                    value={creator.customRole || ""}
                     onChange={(e) =>
-                      handleCreatorChange(index, 'customRole', e.target.value)
+                      handleCreatorChange(index, "customRole", e.target.value)
                     }
-                    style={{ marginRight: '5px' }}
+                    style={{ marginRight: "5px" }}
                   />
                   <input
                     type="text"
                     placeholder="Name"
                     value={creator.name}
                     onChange={(e) =>
-                      handleCreatorChange(index, 'name', e.target.value)
+                      handleCreatorChange(index, "name", e.target.value)
                     }
                   />
                 </>
@@ -413,9 +460,9 @@ const FileUpload: React.FC = () => {
                   <select
                     value={creator.role}
                     onChange={(e) =>
-                      handleCreatorChange(index, 'role', e.target.value)
+                      handleCreatorChange(index, "role", e.target.value)
                     }
-                    style={{ marginRight: '5px' }}
+                    style={{ marginRight: "5px" }}
                   >
                     <option value="">Select role</option>
                     <option value="Author">Author</option>
@@ -431,9 +478,9 @@ const FileUpload: React.FC = () => {
                     placeholder="Name"
                     value={creator.name}
                     onChange={(e) =>
-                      handleCreatorChange(index, 'name', e.target.value)
+                      handleCreatorChange(index, "name", e.target.value)
                     }
-                    style={{ marginRight: '3px' }}
+                    style={{ marginRight: "3px" }}
                   />
                 </>
               )}
@@ -448,7 +495,7 @@ const FileUpload: React.FC = () => {
               </div>
             </div>
           ))}
-          <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+          <div style={{ display: "flex", justifyContent: "flex-end" }}>
             <button
               type="button"
               onClick={handleAddCreator}
@@ -473,8 +520,7 @@ const FileUpload: React.FC = () => {
             type="text"
             value={published}
             onChange={(e) => setPublished(e.target.value)}
-            placeholder="Published"
-          />
+            placeholder="Published" />
         </div>
 
         <div className="form-group">
@@ -509,51 +555,91 @@ const FileUpload: React.FC = () => {
       </div>
       <div className="form-group">
         <label>Book Content images</label>
-        <div className="file-input-container">
-          <i className="fas fa-cloud-upload-alt icon"></i>
-          <label htmlFor="file-upload" className="custom-file-choose">
-            Select Folder
-          </label>
+        <label htmlFor="file-upload" className="full-width-label">
+          <div
+            className="file-input-container"
 
-          <input
-            ref={contentInputRef}
-            id="file-upload"
-            type="file"
-            onChange={handleFileChange}
-            style={{ display: 'none' }}
-            accept="image/*"
-            multiple
-            required
-          />
-        </div>
+            onDrop={handleDrop}
+            onDragOver={handleDragOver}
+            onDragEnter={handleDragEnter}
+            onDragLeave={handleDragLeave}
+          >
+            <input
+              ref={contentInputRef}
+              id="file-upload"
+              type="file"
+              onChange={onInputChange}
+              style={{ display: "none" }}
+              accept="image/*"
+              multiple
+              required
+            />
+            <i className="fas fa-cloud-upload-alt icon"></i>
+            <span style={{ fontSize: "16px" }}>Drag and drop images to upload, or click to browse</span>
+          </div>
+        </label>
+
       </div>
-      <div className="upload-container">
-        {folderName && <p>Selected Folder: {folderName}</p>}
-        <div>
-          {files.map((file, index) => (
-            <div key={index} className="preview-container">
-              <span>{file.name}</span>
-              <div style={{ display: 'flex', alignItems: 'center' }}>
-                <span style={{ fontSize: '16px', marginRight: '10px' }}>
-                  {file.size}{' '}
-                </span>
-                <button
-                  onClick={() => handleRemove(index)}
-                  className="preview-remove-Button"
-                >
-                  <i className="fa-solid fa-xmark"></i>
-                </button>
+      <DragDropContext onDragEnd={onDragEnd}>
+        {files.length > 0 ? (
+          <Droppable droppableId="filesList" isDropDisabled={false} isCombineEnabled={false} ignoreContainerClipping={false}>
+            {(provided) => (
+              <div
+                {...provided.droppableProps}
+                ref={provided.innerRef}
+
+                style={{ display: "flex", flexDirection: "column" }}
+              >
+                {files.map((file, index) => (
+                  <Draggable key={file.name} draggableId={file.name} index={index}>
+                    {(provided) => (
+                      <div
+                        ref={provided.innerRef}
+                        {...provided.draggableProps}
+                        {...provided.dragHandleProps}
+
+                      >
+                        <div className="preview-container">
+                          <div style = {{display: "flex", alignItems: "center"}}>
+                            <img src={DraggingIcon} alt="Dragging Icon" style={{ width: "24px", height: "24px" }} />
+                            <span>{file.name}</span>
+                            </div>
+                          <div style={{ display: "flex", alignItems: "center" }}>
+                            <span style={{ fontSize: "16px", marginRight: "10px" }}>
+                              {file.size}{' '}
+                            </span>
+                            <button
+                              onClick={() => handleRemove(index)}
+                              className="preview-remove-Button"
+                            >
+                              <i className="fa-solid fa-xmark"></i>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </Draggable>
+                ))}
+                {provided.placeholder}
               </div>
-            </div>
-          ))}
-        </div>
-      </div>
+            )}
+          </Droppable>
+        ) : (
+          <div style={{ padding: 15, textAlign: "center", fontSize: "14px", marginBottom: 10 }}>
+            No images uploaded or selected. Please upload some images.
+          </div>
+        )}
+      </DragDropContext>
+
+
+
       <div className="button-row ">
-        <button type="submit">Preview</button>
-        <button type="submit" onClick={handleSubmit}>
+        <button type="submit" className="SubPrebutton">Preview</button>
+        <button type="submit" onClick={handleSubmit} className="SubPrebutton">
           Upload
         </button>
       </div>
+
     </div>
   );
 };
