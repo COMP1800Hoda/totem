@@ -4,7 +4,7 @@ import { MainTitle } from '../../components/text/MainTitle.tsx';
 import { Menu } from '../../components/menu/Menu.tsx';
 
 export const HomePage = () => {
-  const username = "admin"
+  const username = 'admin';
   return (
     <div id={'page-home'} className={'page'}>
       <Header />
