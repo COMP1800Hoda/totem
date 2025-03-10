@@ -24,7 +24,7 @@ const menuItems = [
   {
     title: 'Account Settings',
     links: [
-      { name: 'Change Password', path: '/change-password' },
+      { name: 'Change Password', path: '/edit-password' },
       // when admin log out, it will return to log in page
       { name: 'Log Out', path: '/' },
     ],

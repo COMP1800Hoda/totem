@@ -28,7 +28,11 @@ app.post('/reset-password', async(req, res) => {
         return res.status(400).json({message: "Email is required"});
     }
 
+<<<<<<< HEAD
     const resetLink = `http://localhost:5178/edit-password?email=${encodeURIComponent(email)}`;
+=======
+    const resetLink = `http://localhost:5177/edit-password?email=${encodeURIComponent(email)}`;
+>>>>>>> 29f16eb4274a0bdbb3a3ad0e0950bce1e59376dd
     //Set up email data
     const mailOptions = {
         from: process.env.EMAIL,
