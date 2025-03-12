@@ -5,6 +5,7 @@
   padding: 20px;
   text-align: left;
   color: black;
+  padding-top:20px;
 }
 
 .upload_header {
@@ -13,6 +14,8 @@
   font-weight: bold;
   font-size: 25px;
   margin-bottom: 15px;
+  Gap: 50px;
+  margin-top: 50px;
 }
 
 .form-row {
