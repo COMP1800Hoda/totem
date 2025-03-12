@@ -340,8 +340,10 @@ const FileUpload: React.FC = () => {
   };
 
   return (
+  <div>
+   <div style={{ gap: "50px"}}><Header /></div> 
     <div className="App">
-      <Header />
+      
       <h2 className="upload_header">Upload New Book</h2>
       <form onSubmit={handleSubmit}>
         <div className="form-group">
@@ -642,6 +644,7 @@ const FileUpload: React.FC = () => {
         </button>
       </div>
 
+    </div>
     </div>
   );
 };
