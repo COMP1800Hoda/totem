@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import { Header } from '../../components/header/Header.tsx';
 import ImageKit from "imagekit";
 import Parse from "../../database.js";
 import "./fileUpload.css";
@@ -340,6 +341,7 @@ const FileUpload: React.FC = () => {
 
   return (
     <div className="App">
+      <Header />
       <h2 className="upload_header">Upload New Book</h2>
       <form onSubmit={handleSubmit}>
         <div className="form-group">
