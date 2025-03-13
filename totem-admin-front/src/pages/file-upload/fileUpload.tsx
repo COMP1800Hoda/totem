@@ -1,7 +1,10 @@
-import React, { useState, useRef,useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import { Header } from '../../components/header/Header.tsx';
 import ImageKit from "imagekit";
 import Parse from "../../database.js";
 import "./fileUpload.css";
+import DraggingIcon from "../../assets/draggingdot.svg";
 
 interface FileData {
   file: File;
@@ -9,7 +12,6 @@ interface FileData {
   size: string;
   url: string; // For image previews
 }
-// initializeParse();
 
 // Initialize ImageKit
 const imagekit = new ImageKit({
@@ -100,44 +102,97 @@ const FileUpload: React.FC = () => {
   const handleRemoveCreator = (index: number) => {
     setCreators(creators.filter((_, i) => i !== index));
   };
-
+  //Handle cover image
   const handleCoverChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
       setCoverImage(event.target.files[0]);
     }
   };
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    console.log("Selecting files");
-    const fileList = event.target.files;
-    console.log(fileList);
+  //Handle drag and drop effect 
+  const handleDragOver = (event: React.DragEvent<HTMLDivElement>) => {
+    event.preventDefault(); // Prevent default behavior (prevent file from being opened)
+    event.currentTarget.classList.add('drag-over');
+  };
 
-    if (fileList && fileList.length > 0) {
-      const filesArray = Array.from(fileList);
+  const handleDragEnter = (event: React.DragEvent<HTMLDivElement>) => {
+    event.preventDefault();
+    // Optional: Add visual cues or classes
+  };
+
+  const handleDragLeave = (event: React.DragEvent<HTMLDivElement>) => {
+    event.currentTarget.classList.remove('drag-over'); // Remove the visual cue on leaving drag area
+  };
+
+  const handleDrop = (event: React.DragEvent<HTMLDivElement>) => {
+    event.preventDefault();
+    event.currentTarget.classList.remove('drag-over');
+
+    const files = event.dataTransfer.files;
+    handleFileChange(files); // Pass the FileList directly
+  };
+
+  const onInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files) {
+      handleFileChange(event.target.files);
+    }
+    // Reset the value of the input to allow for re-upload of the same file if necessary
+    event.target.value = '';
+  };
+
+
+  const handleFileChange = (files: FileList) => {
+    console.log("Selecting files");
+
+    if (files.length > 0) {
+      const filesArray = Array.from(files);
 
       const firstFile = filesArray[0];
       const isFolderUpload = firstFile.webkitRelativePath !== "";
 
       if (isFolderUpload) {
-  
         setFolderName(bookId);
       } else {
         setFolderName(null);
       }
 
-      const filesData = filesArray.map((file) => ({
-        file: file, // Store the actual File object
+
+      const updatedFilesData = filesArray.map((file) => ({
+        file: file,
         name: file.name,
-        size: `${(file.size / 1024).toFixed(2)}kb`, // Convert size to KB
-        url: URL.createObjectURL(file), // Generate preview URL
+        size: `${(file.size / 1024).toFixed(2)}kb`,
+        url: URL.createObjectURL(file),
       }));
 
-      setFiles(filesData);
+      setFiles((prevFiles) => [...prevFiles, ...updatedFilesData]);
     }
   };
+
+
+  const onDragEnd = (result: { destination: any; source: any; }) => {
+    const { destination, source } = result;
+    if (!destination) {
+      return;
+    }
+
+    if (
+      destination.droppableId === source.droppableId &&
+      destination.index === source.index
+    ) {
+      return;
+    }
+
+    const newFiles = Array.from(files);
+    const [moved] = newFiles.splice(source.index, 1);
+    newFiles.splice(destination.index, 0, moved);
+
+    setFiles(newFiles);
+  };
+
+
   useEffect(() => {
     if (isUploading && coverimageurl && contentimageurl.length > 0) {
-      // Both coverimageurl and contentimageurl are updated
+
       handleAddToDB();
       setIsUploading(false); // Reset the uploading state
     }
@@ -206,7 +261,7 @@ const FileUpload: React.FC = () => {
                 tags: [bookId],
               });
               const imageUrl = response.url;
-              setimageUrl((prevUrls) => [...prevUrls, imageUrl]); // Update contentimageurl state
+              setimageUrl((prevUrls) => [...prevUrls, imageUrl]);
               console.log("Content image uploaded successfully. URL:", imageUrl);
               resolve();
             } catch (error) {
@@ -241,8 +296,6 @@ const FileUpload: React.FC = () => {
 
   // add one function to add storybook metadata to database
   const handleAddToDB = async () => {
-    // just checking, you should change it and add more variables to check
-    // should have an alert pop up to notify the admin
     if (
       !bookTitle ||
       !bookId ||
@@ -252,8 +305,8 @@ const FileUpload: React.FC = () => {
       !publisher ||
       !published ||
       !isbn ||
-      !abstract||
-      !coverimageurl||
+      !abstract ||
+      !coverimageurl ||
       !contentimageurl
     ) {
       console.log("Please fill in all required fields");
@@ -287,8 +340,11 @@ const FileUpload: React.FC = () => {
   };
 
   return (
+  <div>
+   <div style={{ gap: "50px"}}><Header /></div> 
     <div className="App">
-      <h2 className = "upload_header">Upload New Book</h2>
+      
+      <h2 className="upload_header">Upload New Book</h2>
       <form onSubmit={handleSubmit}>
         <div className="form-group">
           <label>Book Title</label>
@@ -296,18 +352,26 @@ const FileUpload: React.FC = () => {
             type="text"
             value={bookTitle}
             onChange={(e) => setBookTitle(e.target.value)}
-          //required
+
           />
         </div>
 
         <div className="form-group">
           <label>Book ID</label>
-          <input
-            type="text"
-            value={bookId}
-            onChange={(e) => setBookId(e.target.value)}
-          //required
-          />
+          <div className="form-row">
+            <input
+              type="text"
+              value={bookId}
+              onChange={(e) => setBookId(e.target.value)}
+              style={{ marginRight: "10px", width: "90%" }}
+            />
+            <button className="Generatebutton">Generate</button>
+          </div>
+          <div style={{ fontSize: "12px" }}>
+            <span style={{ fontWeight: "bold" }}>Book ID</span> consists of English letters, numbers, and underscores (e.g., cropson_00390039).
+            It is used as the folder path in the image CDN.<span style={{ fontWeight: "bold" }}> Once generated, it cannot be changed.</span> Click “Generate” to create a random ID.
+          </div>
+
         </div>
         <div className="form-group">
           <label>Age</label>
@@ -321,7 +385,7 @@ const FileUpload: React.FC = () => {
             <option value="5~6">5~6</option>
           </select>
         </div>
-      
+
         <div className="form-group">
           <label>Genre</label>
           {genres.map((genre, index) => (
@@ -372,7 +436,7 @@ const FileUpload: React.FC = () => {
               style={{
                 display: "flex",
                 alignItems: "center",
-                marginBottom: "5px",
+                marginBottom: "7px",
               }}
             >
               {creator.role === "Other" ? (
@@ -462,7 +526,7 @@ const FileUpload: React.FC = () => {
             onChange={(e) => setPublished(e.target.value)}
             placeholder="Published" />
         </div>
-  
+
         <div className="form-group">
           <label>ISBN</label>
           <input
@@ -472,7 +536,7 @@ const FileUpload: React.FC = () => {
             onChange={(e) => setISBN(e.target.value)}
           />
         </div>
-       
+
         <div className="form-group">
           <label>Abstract</label>
           <textarea
@@ -495,52 +559,92 @@ const FileUpload: React.FC = () => {
       </div>
       <div className="form-group">
         <label>Book Content images</label>
-        <div className="file-input-container">
-          <i className="fas fa-cloud-upload-alt icon"></i>
-          <label htmlFor="file-upload" className="custom-file-choose">
-            Select Folder
-          </label>
+        <label htmlFor="file-upload" className="full-width-label">
+          <div
+            className="file-input-container"
 
-          <input
-            ref={contentInputRef}
-            id="file-upload"
-            type="file"
-            onChange={handleFileChange}
-            style={{ display: "none" }}
-            accept="image/*"
-            multiple
-            required
-          />
-        </div>
+            onDrop={handleDrop}
+            onDragOver={handleDragOver}
+            onDragEnter={handleDragEnter}
+            onDragLeave={handleDragLeave}
+          >
+            <input
+              ref={contentInputRef}
+              id="file-upload"
+              type="file"
+              onChange={onInputChange}
+              style={{ display: "none" }}
+              accept="image/*"
+              multiple
+              required
+            />
+            <i className="fas fa-cloud-upload-alt icon"></i>
+            <span style={{ fontSize: "16px" }}>Drag and drop images to upload, or click to browse</span>
+          </div>
+        </label>
+
       </div>
-      <div className="upload-container">
-        {folderName && <p>Selected Folder: {folderName}</p>}
-        <div>
-          {files.map((file, index) => (
-            <div key={index} className="preview-container">
-              <span>{file.name}</span>
-              <div style={{ display: "flex", alignItems: "center" }}>
-                <span style={{ fontSize: "16px", marginRight: "10px" }}>
-                  {file.size}{" "}
-                </span>
-                <button
-                  onClick={() => handleRemove(index)}
-                  className="preview-remove-Button"
-                >
-                  <i className="fa-solid fa-xmark"></i>
-                </button>
+      <DragDropContext onDragEnd={onDragEnd}>
+        {files.length > 0 ? (
+          <Droppable droppableId="filesList" isDropDisabled={false} isCombineEnabled={false} ignoreContainerClipping={false}>
+            {(provided) => (
+              <div
+                {...provided.droppableProps}
+                ref={provided.innerRef}
+
+                style={{ display: "flex", flexDirection: "column" }}
+              >
+                {files.map((file, index) => (
+                  <Draggable key={file.name} draggableId={file.name} index={index}>
+                    {(provided) => (
+                      <div
+                        ref={provided.innerRef}
+                        {...provided.draggableProps}
+                        {...provided.dragHandleProps}
+
+                      >
+                        <div className="preview-container">
+                          <div style = {{display: "flex", alignItems: "center"}}>
+                            <img src={DraggingIcon} alt="Dragging Icon" style={{ width: "24px", height: "24px" }} />
+                            <span>{file.name}</span>
+                            </div>
+                          <div style={{ display: "flex", alignItems: "center" }}>
+                            <span style={{ fontSize: "16px", marginRight: "10px" }}>
+                              {file.size}{' '}
+                            </span>
+                            <button
+                              onClick={() => handleRemove(index)}
+                              className="preview-remove-Button"
+                            >
+                              <i className="fa-solid fa-xmark"></i>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </Draggable>
+                ))}
+                {provided.placeholder}
               </div>
-            </div>
-          ))}
-        </div>
-      </div>
+            )}
+          </Droppable>
+        ) : (
+          <div style={{ padding: 15, textAlign: "center", fontSize: "14px", marginBottom: 10 }}>
+            No images uploaded or selected. Please upload some images.
+          </div>
+        )}
+      </DragDropContext>
+
+
+
       <div className="button-row ">
-        <button type="submit">Preview</button>
-        <button type="submit" onClick={handleSubmit}>
+        <button type="submit" className="SubPrebutton">Preview</button>
+        <button type="submit" onClick={handleSubmit} className="SubPrebutton">
           Upload
         </button>
       </div>
-      
+
+    </div>
     </div>
   );
 };
