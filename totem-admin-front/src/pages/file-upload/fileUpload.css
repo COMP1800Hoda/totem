@@ -1,18 +1,18 @@
 .App {
-  font-family: 'Arial', sans-serif;
+  /* font-family: 'Arial', sans-serif; */
   max-width: 570px;
   margin: 0 auto;
   padding: 20px;
   text-align: left;
-  color: black;
+  color: 5c5552;
   padding-top:20px;
 }
 
 .upload_header {
   text-align: left;
-  color: black;
+  color: 5c5552;
   font-weight: bold;
-  font-size: 25px;
+  font-size: 24px;
   margin-bottom: 15px;
   Gap: 50px;
   margin-top: 50px;

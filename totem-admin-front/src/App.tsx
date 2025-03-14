@@ -11,6 +11,7 @@ import NotFoundPage from './pages/not-found/NotFoundPage.tsx';
 import HomePage from './pages/homepage/HomePage.tsx';
 import FileUpload from './pages/file-upload/fileUpload.tsx';
 import ManageBooks from './pages/manage-books/ManageBooks.tsx';
+import Preview from './pages/preview/preview.tsx';
 
 const App: React.FC = () => {
   return (
@@ -23,6 +24,7 @@ const App: React.FC = () => {
         <Route path="/main" element={<HomePage />} />
         <Route path="/manage-books" element={<ManageBooks />} />
         <Route path="/add-book" element={<FileUpload />} />
+        <Route path="/preview" element={<Preview />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </Router>

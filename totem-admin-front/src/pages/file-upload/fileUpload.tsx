@@ -13,6 +13,22 @@ interface FileData {
   url: string; // For image previews
 }
 
+interface PreviewData {
+  bookTitle: string;
+  bookId: string;
+  age: string;
+  genres: string[];
+  creators: { role: string; name: string; customRole: string }[];
+  publisher: string;
+  published: string;
+  isbn: string;
+  abstract: string;
+  coverImage: string | null;
+  contentImages: string[];
+  coverImageName: string;
+  contentImageName: string[];
+}
+
 // Initialize ImageKit
 const imagekit = new ImageKit({
   publicKey: "public_P17LRkYTu9e3UdN3WnyzbodiT1U=",
@@ -51,7 +67,8 @@ const FileUpload: React.FC = () => {
   const [isUploading, setIsUploading] = useState(false);
   const coverInputRef = useRef<HTMLInputElement | null>(null);
   const contentInputRef = useRef<HTMLInputElement | null>(null);
-
+  const [previewData, setPreviewData] = useState<PreviewData | null>(null);
+  const [imageNames, setImageNames] = useState<string[]>([]);
   //handle Genre
   const handleGenreInputChange = (index: number, value: string): void => {
     const newGenres = genres.map((genre, i) => {
@@ -200,15 +217,12 @@ const FileUpload: React.FC = () => {
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    setIsUploading(true); // Set uploading state to true
+    setIsUploading(true); 
 
-    // Folder for cover images
     const coverImageFolder = `/book-cover-images/${bookId}/`;
 
-    // Folder for content images
     const contentImagesFolder = `/book-images/${bookId}/`;
 
-    // Array to track upload promises
     const uploadPromises: Promise<void>[] = [];
 
     // Upload cover image
@@ -260,6 +274,8 @@ const FileUpload: React.FC = () => {
                 folder: contentImagesFolder,
                 tags: [bookId],
               });
+              
+              console.log(fileData.name);
               const imageUrl = response.url;
               setimageUrl((prevUrls) => [...prevUrls, imageUrl]);
               console.log("Content image uploaded successfully. URL:", imageUrl);
@@ -326,6 +342,7 @@ const FileUpload: React.FC = () => {
     storybook.set("Abstract", abstract);
     storybook.set("CoverImgUrl", coverimageurl);
     storybook.set("ContentImgUrl", contentimageurl);
+    console.log(storybook);
 
     try {
       await storybook.save();
@@ -339,312 +356,391 @@ const FileUpload: React.FC = () => {
     setFiles((prev) => prev.filter((_, i) => i !== index)); // Remove file by index
   };
 
+
+  const handlePreview = async () => {
+    console.log('Cover image state:', coverImage); // Debugging
+
+    if (!coverImage) {
+      alert('Please upload a cover image.');
+      return;
+    }
+
+    let coverImageBase64: string | null = null;
+
+    if (coverImage.type.startsWith('image/')) {
+      try {
+        coverImageBase64 = await convertFileToBase64(coverImage); // Convert to Base64
+        console.log('Base64 cover image:', coverImageBase64); // Debugging
+      } catch (error) {
+        console.error('Error converting cover image to Base64:', error);
+        alert('Failed to process the cover image. Please try again.');
+        return;
+      }
+    }
+
+    // Convert content images to Base64
+    const contentImagesBase64: string[] = [];
+    const newImageNames: string[] = []; 
+  
+    for (const fileData of files) {
+      const imageName = fileData.file.name;
+      console.log(imageName);
+      newImageNames.push(imageName); 
+  
+      if (fileData.file.type.startsWith('image/')) {
+        try {
+          const base64 = await convertFileToBase64(fileData.file);
+          contentImagesBase64.push(base64);
+          console.log('Base64 content image:', base64); 
+        } catch (error) {
+          console.error('Error converting content image to Base64:', error);
+          alert('Failed to process a content image. Please try again.');
+          return;
+        }
+      }
+    }
+  
+    setImageNames(newImageNames); 
+    console.log('Stored image names:', newImageNames); 
+  
+    const previewData: PreviewData = {
+      bookTitle,
+      bookId,
+      age,
+      genres,
+      creators,
+      publisher,
+      published,
+      isbn,
+      abstract,
+      coverImage: coverImageBase64,
+      contentImages: contentImagesBase64,
+      coverImageName: coverImage.name,
+      contentImageName: newImageNames
+    }
+
+    console.log('Preview data:', previewData); // Debugging
+
+    setPreviewData(previewData);
+    localStorage.setItem('previewBook', JSON.stringify(previewData));
+    window.location.href = '/preview';
+  };
+
+  const convertFileToBase64 = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = (error) => reject(error);
+      reader.readAsDataURL(file);
+    });
+  };
+
   return (
-  <div>
-   <div style={{ gap: "50px"}}><Header /></div> 
-    <div className="App">
-      
-      <h2 className="upload_header">Upload New Book</h2>
-      <form onSubmit={handleSubmit}>
-        <div className="form-group">
-          <label>Book Title</label>
-          <input
-            type="text"
-            value={bookTitle}
-            onChange={(e) => setBookTitle(e.target.value)}
+    <div>
+      <div style={{ gap: "50px" }}><Header /></div>
+      <div className="App">
 
-          />
-        </div>
-
-        <div className="form-group">
-          <label>Book ID</label>
-          <div className="form-row">
+        <h2 className="upload_header">Add New Book</h2>
+        <form onSubmit={handleSubmit}>
+          <div className="form-group">
+            <label>Book Title</label>
             <input
               type="text"
-              value={bookId}
-              onChange={(e) => setBookId(e.target.value)}
-              style={{ marginRight: "10px", width: "90%" }}
+              value={bookTitle}
+              onChange={(e) => setBookTitle(e.target.value)}
+
             />
-            <button className="Generatebutton">Generate</button>
-          </div>
-          <div style={{ fontSize: "12px" }}>
-            <span style={{ fontWeight: "bold" }}>Book ID</span> consists of English letters, numbers, and underscores (e.g., cropson_00390039).
-            It is used as the folder path in the image CDN.<span style={{ fontWeight: "bold" }}> Once generated, it cannot be changed.</span> Click “Generate” to create a random ID.
           </div>
 
-        </div>
-        <div className="form-group">
-          <label>Age</label>
-          <select
-            value={age}
-            onChange={(e) => setAge(e.target.value)}
-            style={{ width: "530px" }}
-          >
-            <option value="0~2">0~2</option>
-            <option value="3~4">3~4</option>
-            <option value="5~6">5~6</option>
-          </select>
-        </div>
-
-        <div className="form-group">
-          <label>Genre</label>
-          {genres.map((genre, index) => (
-            <div
-              key={index}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                marginBottom: "5px",
-              }}
-            >
+          <div className="form-group">
+            <label>Book ID</label>
+            <div className="form-row">
               <input
                 type="text"
-                value={genre}
-                onChange={(e) => handleGenreInputChange(index, e.target.value)}
-                placeholder="Enter genre..."
-                style={{ marginRight: "10px" }}
+                value={bookId}
+                onChange={(e) => setBookId(e.target.value)}
+                style={{ marginRight: "10px", width: "90%" }}
               />
-              <div className="input-with-icon">
-                <button
-                  type="button"
-                  className="delete-button"
-                  onClick={() => handleRemoveGenre(index)}
-                  aria-label="Remove genre"
-                >
-                  <i className="fa-solid fa-trash"></i>
-                </button>
-              </div>
+              <button className="Generatebutton">Generate</button>
             </div>
-          ))}
-
-          <div style={{ display: "flex", justifyContent: "flex-end" }}>
-            <button
-              type="button"
-              onClick={handleAddGenre}
-              className="Addbutton"
-            >
-              Add
-            </button>
-          </div>
-        </div>
-        <div className="form-group">
-          <label>Created by</label>
-          {creators.map((creator, index) => (
-            <div
-              key={index}
-              className="form-row"
-              style={{
-                display: "flex",
-                alignItems: "center",
-                marginBottom: "7px",
-              }}
-            >
-              {creator.role === "Other" ? (
-                <>
-                  <input
-                    type="text"
-                    placeholder="Custom role name"
-                    value={creator.customRole || ""}
-                    onChange={(e) =>
-                      handleCreatorChange(index, "customRole", e.target.value)
-                    }
-                    style={{ marginRight: "5px" }}
-                  />
-                  <input
-                    type="text"
-                    placeholder="Name"
-                    value={creator.name}
-                    onChange={(e) =>
-                      handleCreatorChange(index, "name", e.target.value)
-                    }
-                  />
-                </>
-              ) : (
-                <>
-                  <select
-                    value={creator.role}
-                    onChange={(e) =>
-                      handleCreatorChange(index, "role", e.target.value)
-                    }
-                    style={{ marginRight: "5px" }}
-                  >
-                    <option value="">Select role</option>
-                    <option value="Author">Author</option>
-                    <option value="Poet">Poet</option>
-                    <option value="Illustrator">Illustrator</option>
-                    <option value="Book Cover Designer">
-                      Book Cover Designer
-                    </option>
-                    <option value="Other">Other</option>
-                  </select>
-                  <input
-                    type="text"
-                    placeholder="Name"
-                    value={creator.name}
-                    onChange={(e) =>
-                      handleCreatorChange(index, "name", e.target.value)
-                    }
-                    style={{ marginRight: "3px" }}
-                  />
-                </>
-              )}
-              <div className="input-with-icon">
-                <button
-                  className="delete-button"
-                  type="button"
-                  onClick={() => handleRemoveCreator(index)}
-                >
-                  <i className="fa-solid fa-trash"></i>
-                </button>
-              </div>
+            <div style={{ fontSize: "12px" }}>
+              <span style={{ fontWeight: "bold" }}>Book ID</span> consists of English letters, numbers, and underscores (e.g., cropson_00390039).
+              It is used as the folder path in the image CDN.<span style={{ fontWeight: "bold" }}> Once generated, it cannot be changed.</span> Click “Generate” to create a random ID.
             </div>
-          ))}
-          <div style={{ display: "flex", justifyContent: "flex-end" }}>
-            <button
-              type="button"
-              onClick={handleAddCreator}
-              className="Addbutton"
+
+          </div>
+          <div className="form-group">
+            <label>Age</label>
+            <select
+              value={age}
+              onChange={(e) => setAge(e.target.value)}
+              style={{ width: "530px" }}
             >
-              Add
-            </button>
+              <option value="0~2">0~2</option>
+              <option value="3~4">3~4</option>
+              <option value="5~6">5~6</option>
+            </select>
           </div>
-        </div>
-        <div className="form-group">
-          <label>Publisher</label>
-          <input
-            type="text"
-            placeholder="Publisher"
-            value={publisher}
-            onChange={(e) => setPublisher(e.target.value)}
-          />
-        </div>
-        <div className="form-group">
-          <label>Published</label>
-          <input
-            type="text"
-            value={published}
-            onChange={(e) => setPublished(e.target.value)}
-            placeholder="Published" />
-        </div>
 
-        <div className="form-group">
-          <label>ISBN</label>
-          <input
-            type="text"
-            value={isbn}
-            placeholder="ISBN"
-            onChange={(e) => setISBN(e.target.value)}
-          />
-        </div>
-
-        <div className="form-group">
-          <label>Abstract</label>
-          <textarea
-            value={abstract}
-            placeholder="Abstract"
-            onChange={(e) => setAbstract(e.target.value)}
-          />
-        </div>
-      </form>
-
-      <div className="form-group">
-        <label>Book Cover</label>
-        <input
-          type="file"
-          ref={coverInputRef}
-          onChange={handleCoverChange}
-          accept="image/*"
-          required
-        />
-      </div>
-      <div className="form-group">
-        <label>Book Content images</label>
-        <label htmlFor="file-upload" className="full-width-label">
-          <div
-            className="file-input-container"
-
-            onDrop={handleDrop}
-            onDragOver={handleDragOver}
-            onDragEnter={handleDragEnter}
-            onDragLeave={handleDragLeave}
-          >
-            <input
-              ref={contentInputRef}
-              id="file-upload"
-              type="file"
-              onChange={onInputChange}
-              style={{ display: "none" }}
-              accept="image/*"
-              multiple
-              required
-            />
-            <i className="fas fa-cloud-upload-alt icon"></i>
-            <span style={{ fontSize: "16px" }}>Drag and drop images to upload, or click to browse</span>
-          </div>
-        </label>
-
-      </div>
-      <DragDropContext onDragEnd={onDragEnd}>
-        {files.length > 0 ? (
-          <Droppable droppableId="filesList" isDropDisabled={false} isCombineEnabled={false} ignoreContainerClipping={false}>
-            {(provided) => (
+          <div className="form-group">
+            <label>Genre</label>
+            {genres.map((genre, index) => (
               <div
-                {...provided.droppableProps}
-                ref={provided.innerRef}
-
-                style={{ display: "flex", flexDirection: "column" }}
+                key={index}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  marginBottom: "5px",
+                }}
               >
-                {files.map((file, index) => (
-                  <Draggable key={file.name} draggableId={file.name} index={index}>
-                    {(provided) => (
-                      <div
-                        ref={provided.innerRef}
-                        {...provided.draggableProps}
-                        {...provided.dragHandleProps}
+                <input
+                  type="text"
+                  value={genre}
+                  onChange={(e) => handleGenreInputChange(index, e.target.value)}
+                  placeholder="Enter genre..."
+                  style={{ marginRight: "10px" }}
+                />
+                <div className="input-with-icon">
+                  <button
+                    type="button"
+                    className="delete-button"
+                    onClick={() => handleRemoveGenre(index)}
+                    aria-label="Remove genre"
+                  >
+                    <i className="fa-solid fa-trash"></i>
+                  </button>
+                </div>
+              </div>
+            ))}
 
-                      >
-                        <div className="preview-container">
-                          <div style = {{display: "flex", alignItems: "center"}}>
-                            <img src={DraggingIcon} alt="Dragging Icon" style={{ width: "24px", height: "24px" }} />
-                            <span>{file.name}</span>
+            <div style={{ display: "flex", justifyContent: "flex-end" }}>
+              <button
+                type="button"
+                onClick={handleAddGenre}
+                className="Addbutton"
+              >
+                Add
+              </button>
+            </div>
+          </div>
+          <div className="form-group">
+            <label>Created by</label>
+            {creators.map((creator, index) => (
+              <div
+                key={index}
+                className="form-row"
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  marginBottom: "7px",
+                }}
+              >
+                {creator.role === "Other" ? (
+                  <>
+                    <input
+                      type="text"
+                      placeholder="Custom role name"
+                      value={creator.customRole || ""}
+                      onChange={(e) =>
+                        handleCreatorChange(index, "customRole", e.target.value)
+                      }
+                      style={{ marginRight: "5px" }}
+                    />
+                    <input
+                      type="text"
+                      placeholder="Name"
+                      value={creator.name}
+                      onChange={(e) =>
+                        handleCreatorChange(index, "name", e.target.value)
+                      }
+                    />
+                  </>
+                ) : (
+                  <>
+                    <select
+                      value={creator.role}
+                      onChange={(e) =>
+                        handleCreatorChange(index, "role", e.target.value)
+                      }
+                      style={{ marginRight: "5px" }}
+                    >
+                      <option value="">Select role</option>
+                      <option value="Author">Author</option>
+                      <option value="Poet">Poet</option>
+                      <option value="Illustrator">Illustrator</option>
+                      <option value="Book Cover Designer">
+                        Book Cover Designer
+                      </option>
+                      <option value="Other">Other</option>
+                    </select>
+                    <input
+                      type="text"
+                      placeholder="Name"
+                      value={creator.name}
+                      onChange={(e) =>
+                        handleCreatorChange(index, "name", e.target.value)
+                      }
+                      style={{ marginRight: "3px" }}
+                    />
+                  </>
+                )}
+                <div className="input-with-icon">
+                  <button
+                    className="delete-button"
+                    type="button"
+                    onClick={() => handleRemoveCreator(index)}
+                  >
+                    <i className="fa-solid fa-trash"></i>
+                  </button>
+                </div>
+              </div>
+            ))}
+            <div style={{ display: "flex", justifyContent: "flex-end" }}>
+              <button
+                type="button"
+                onClick={handleAddCreator}
+                className="Addbutton"
+              >
+                Add
+              </button>
+            </div>
+          </div>
+          <div className="form-group">
+            <label>Publisher</label>
+            <input
+              type="text"
+              placeholder="Publisher"
+              value={publisher}
+              onChange={(e) => setPublisher(e.target.value)}
+            />
+          </div>
+          <div className="form-group">
+            <label>Published</label>
+            <input
+              type="text"
+              value={published}
+              onChange={(e) => setPublished(e.target.value)}
+              placeholder="Published" />
+          </div>
+
+          <div className="form-group">
+            <label>ISBN</label>
+            <input
+              type="text"
+              value={isbn}
+              placeholder="ISBN"
+              onChange={(e) => setISBN(e.target.value)}
+            />
+          </div>
+
+          <div className="form-group">
+            <label>Abstract</label>
+            <textarea
+              value={abstract}
+              placeholder="Abstract"
+              onChange={(e) => setAbstract(e.target.value)}
+            />
+          </div>
+        </form>
+
+        <div className="form-group">
+          <label>Book Cover</label>
+          <input
+            type="file"
+            ref={coverInputRef}
+            onChange={handleCoverChange}
+            accept="image/*"
+            required
+          />
+        </div>
+        <div className="form-group">
+          <label>Book Content images</label>
+          <label htmlFor="file-upload" className="full-width-label">
+            <div
+              className="file-input-container"
+
+              onDrop={handleDrop}
+              onDragOver={handleDragOver}
+              onDragEnter={handleDragEnter}
+              onDragLeave={handleDragLeave}
+            >
+              <input
+                ref={contentInputRef}
+                id="file-upload"
+                type="file"
+                onChange={onInputChange}
+                style={{ display: "none" }}
+                accept="image/*"
+                multiple
+                required
+              />
+              <i className="fas fa-cloud-upload-alt icon"></i>
+              <span style={{ fontSize: "16px" }}>Drag and drop images to upload, or click to browse</span>
+            </div>
+          </label>
+
+        </div>
+        <DragDropContext onDragEnd={onDragEnd}>
+          {files.length > 0 ? (
+            <Droppable droppableId="filesList" isDropDisabled={false} isCombineEnabled={false} ignoreContainerClipping={false}>
+              {(provided) => (
+                <div
+                  {...provided.droppableProps}
+                  ref={provided.innerRef}
+
+                  style={{ display: "flex", flexDirection: "column" }}
+                >
+                  {files.map((file, index) => (
+                    <Draggable key={file.name} draggableId={file.name} index={index}>
+                      {(provided) => (
+                        <div
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
+
+                        >
+                          <div className="preview-container">
+                            <div style={{ display: "flex", alignItems: "center" }}>
+                              <img src={DraggingIcon} alt="Dragging Icon" style={{ width: "24px", height: "24px" }} />
+                              <span>{file.name}</span>
                             </div>
-                          <div style={{ display: "flex", alignItems: "center" }}>
-                            <span style={{ fontSize: "16px", marginRight: "10px" }}>
-                              {file.size}{' '}
-                            </span>
-                            <button
-                              onClick={() => handleRemove(index)}
-                              className="preview-remove-Button"
-                            >
-                              <i className="fa-solid fa-xmark"></i>
-                            </button>
+                            <div style={{ display: "flex", alignItems: "center" }}>
+                              <span style={{ fontSize: "16px", marginRight: "10px" }}>
+                                {file.size}{' '}
+                              </span>
+                              <button
+                                onClick={() => handleRemove(index)}
+                                className="preview-remove-Button"
+                              >
+                                <i className="fa-solid fa-xmark"></i>
+                              </button>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    )}
-                  </Draggable>
-                ))}
-                {provided.placeholder}
-              </div>
-            )}
-          </Droppable>
-        ) : (
-          <div style={{ padding: 15, textAlign: "center", fontSize: "14px", marginBottom: 10 }}>
-            No images uploaded or selected. Please upload some images.
-          </div>
-        )}
-      </DragDropContext>
+                      )}
+                    </Draggable>
+                  ))}
+                  {provided.placeholder}
+                </div>
+              )}
+            </Droppable>
+          ) : (
+            <div style={{ padding: 15, textAlign: "center", fontSize: "14px", marginBottom: 10 }}>
+              No images uploaded or selected. Please upload some images.
+            </div>
+          )}
+        </DragDropContext>
 
 
 
-      <div className="button-row ">
-        <button type="submit" className="SubPrebutton">Preview</button>
-        <button type="submit" onClick={handleSubmit} className="SubPrebutton">
-          Upload
-        </button>
+        <div className="button-row ">
+          <button type="submit" onClick={handlePreview} className="SubPrebutton">Preview</button>
+          <button type="submit" onClick={handleSubmit} className="SubPrebutton">
+            Upload
+          </button>
+        </div>
+
       </div>
-
-    </div>
     </div>
   );
 };
