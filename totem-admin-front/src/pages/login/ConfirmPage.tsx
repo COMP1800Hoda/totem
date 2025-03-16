@@ -26,14 +26,15 @@ const ConfirmPage = () => {
         </div>
 
         <h3 className="fw-bold">Password Changed!</h3>
-        <p className="text-muted">
-          Your password has been changed successfully.
+
+        <p className="text-muted mt-3">
+          Password has been changed successfully.
         </p>
 
         {/* Confirm Button */}
         <button
           type="submit"
-          className="btn btn-primary w-100 p-3"
+          className="btn btn-primary w-100 p-3 mt-3"
           onClick={() => navigate('/')}
           style={{
             color: '#000000',
