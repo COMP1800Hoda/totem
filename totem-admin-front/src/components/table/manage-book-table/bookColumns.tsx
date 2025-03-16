@@ -66,7 +66,7 @@ export const bookColumns: ColumnDef<Storybook>[] = [
   {
     accessorKey: 'contributed_by',
     header: 'Contributed By',
-    size: 200,
+    size: 160,
     cell: (info) => <span className={"rtl"}>{info.getValue() as string}</span>,
   },
   {

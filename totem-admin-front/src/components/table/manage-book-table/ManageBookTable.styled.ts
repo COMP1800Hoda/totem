@@ -7,6 +7,9 @@ export const TableContainer = styled.div`
 
 export const StyledManageBookTable = styled.table`
   table-layout: fixed;
+  tbody{
+    vertical-align: middle;
+  }
   th {
     font-size: 14px;
     text-wrap: nowrap;
