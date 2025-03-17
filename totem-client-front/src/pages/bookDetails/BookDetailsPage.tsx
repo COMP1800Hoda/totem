@@ -1,149 +1,106 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { 
   BookContainer, BackButton, BookCard, BookCover, BookDetails, 
-  BookTitle, BookMeta, BookTags, Tag, ReadButton, Synopsis, BookInfo 
+  BookTitle, BookMeta, BookTags, Tag, ReadButton, Synopsis, BookInfo,
+  AuthorInfo, PublisherInfo
 } from "./BookDetailsPage.styled";
 
-interface BookProps {
-  id: string;
-  title: string;
-  author: string;
-  illustrator: string;
-  ageGroup: string;
-  genre: string;
-  synopsis: string;
-  publishedIn: string;
-  isbn: string;
-  contributor: string;
-  coverImage: string;
+interface Author {
+  name: string;
+  role: string;
 }
 
-const mockBooks: BookProps[] = [
-  {
-    id: "1",
-    title: "Example Book",
-    author: "John Doe",
-    illustrator: "Jane Smith",
-    ageGroup: "Age 4-6",
-    genre: "Fantasy",
-    synopsis: "This is a story about...",
-    publishedIn: "Iran",
-    isbn: "964-505-078-2",
-    contributor: "شابيز",
-    coverImage: "/path-to-image.jpg",
-  }, 
-  {
-    id: "2",
-    title: "Example Book",
-    author: "John Doe",
-    illustrator: "Jane Smith",
-    ageGroup: "Age 4-6",
-    genre: "Fantasy",
-    synopsis: "This is a story about...",
-    publishedIn: "Iran",
-    isbn: "964-505-078-2",
-    contributor: "شابيز",
-    coverImage: "/path-to-image.jpg",
-  },
-  {
-    id: "2",
-    title: "Example Book",
-    author: "John Doe",
-    illustrator: "Jane Smith",
-    ageGroup: "Age 4-6",
-    genre: "Fantasy",
-    synopsis: "This is a story about...",
-    publishedIn: "Iran",
-    isbn: "964-505-078-2",
-    contributor: "شابيز",
-    coverImage: "/path-to-image.jpg",
-  },
-  {
-    id: "3",
-    title: "Example Book",
-    author: "John Doe",
-    illustrator: "Jane Smith",
-    ageGroup: "Age 4-6",
-    genre: "Fantasy",
-    synopsis: "This is a story about...",
-    publishedIn: "Iran",
-    isbn: "964-505-078-2",
-    contributor: "شابيز",
-    coverImage: "/path-to-image.jpg",
-  },
-  {
-    id: "4",
-    title: "Example Book",
-    author: "John Doe",
-    illustrator: "Jane Smith",
-    ageGroup: "Age 4-6",
-    genre: "Fantasy",
-    synopsis: "This is a story about...",
-    publishedIn: "Iran",
-    isbn: "964-505-078-2",
-    contributor: "شابيز",
-    coverImage: "/path-to-image.jpg",
-  },
-  {
-    id: "5",
-    title: "Example Book",
-    author: "John Doe",
-    illustrator: "Jane Smith",
-    ageGroup: "Age 4-6",
-    genre: "Fantasy",
-    synopsis: "This is a story about...",
-    publishedIn: "Iran",
-    isbn: "964-505-078-2",
-    contributor: "شابيز",
-    coverImage: "/path-to-image.jpg",
-  },
-  {
-    id: "6",
-    title: "Example Book",
-    author: "John Doe",
-    illustrator: "Jane Smith",
-    ageGroup: "Age 4-6",
-    genre: "Fantasy",
-    synopsis: "This is a story about...",
-    publishedIn: "Iran",
-    isbn: "964-505-078-2",
-    contributor: "شابيز",
-    coverImage: "/path-to-image.jpg",
-  },
-];
+interface BookProps {
+  objectId: string;
+  storybook_title: string;
+  cover_image_url: string;
+  genre: string[];
+  language: string;
+  published: string;
+  storybook_description: string;
+  contributed_by: string;
+  ISBN: string;
+  created_by: Author[];
+  publisher: string;
+}
 
 const BookPage: React.FC = () => {
-  const { id } = useParams<{ id: string }>(); // Get the book ID from the URL
-  const book = mockBooks.find((b) => b.id === id);
+  const { id } = useParams<{ id: string }>(); // Get book ID from URL
+  const [book, setBook] = useState<BookProps | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
-  if (!book) {
-    return <p>Book not found.</p>;
-  }
+  useEffect(() => {
+    const fetchBook = async () => {
+      try {
+        const response = await fetch(
+          `https://parseapi.back4app.com/classes/storybook/${id}`, 
+          {
+            method: "GET",
+            headers: {
+              "X-Parse-Application-Id": "XWNVzANvs7w6pYMl4fZWLCcikgXdMvCZhEnI48sH",
+              "X-Parse-REST-API-Key": "mRZK1BOLh5EIaOR9Ircc2OhX5OU28aidSsZAtyJP",
+              "Content-Type": "application/json"
+            }
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch book details");
+        }
+
+        const data = await response.json();
+        setBook(data);
+      } catch (error) {
+        setError("Error fetching book details. Please try again.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchBook();
+  }, [id]);
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>{error}</p>;
+  if (!book) return <p>Book not found.</p>;
 
   return (
     <BookContainer>
       <BackButton onClick={() => window.history.back()}>&lt; Back</BackButton>
-      <BookCard>
-        <BookCover src={book.coverImage} alt="Book Cover" />
+      <BookCard style={{ flexDirection: "row-reverse" }}>
+        <BookCover src={book.cover_image_url} alt="Book Cover" />
         <BookDetails>
-          <BookTitle>{book.title}</BookTitle>
-          <BookMeta>Author: {book.author}</BookMeta>
-          <BookMeta>Illustrator: {book.illustrator}</BookMeta>
+          <BookTitle>{book.storybook_title}</BookTitle>
+          <BookMeta>Published: {book.published}</BookMeta>
           <BookTags>
-            <Tag>{book.ageGroup}</Tag>
-            <Tag>{book.genre}</Tag>
+            {book.genre.length > 0 ? (
+              book.genre.map((tag, index) => <Tag key={index}>{tag}</Tag>)
+            ) : (
+              <Tag>No genre available</Tag>
+            )}
           </BookTags>
+          <BookMeta>Language: {book.language}</BookMeta>
+          <PublisherInfo>
+            <p>Publisher: {book.publisher}</p>
+            <p>Contributed by: {book.contributed_by}</p>
+          </PublisherInfo>
         </BookDetails>
       </BookCard>
       <ReadButton>Read this book</ReadButton>
       <Synopsis>
-        <p>{book.synopsis}</p>
+        <p>{book.storybook_description}</p>
       </Synopsis>
       <BookInfo>
-        <p>Published in: {book.publishedIn}</p>
-        <p>ISBN: {book.isbn}</p>
-        <p>Contributed by: {book.contributor}</p>
+        <p>ISBN: {book.ISBN || "N/A"}</p>
+        {book.created_by && book.created_by.length > 0 && (
+          <AuthorInfo>
+            {book.created_by.map((author, index) => (
+              <p key={index}>{author.role}: {author.name}</p>
+            ))}
+          </AuthorInfo>
+        )}
       </BookInfo>
     </BookContainer>
   );

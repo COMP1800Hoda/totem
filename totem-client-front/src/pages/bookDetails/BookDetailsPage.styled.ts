@@ -68,21 +68,28 @@ export const Tag = styled.span`
 
 export const ReadButton = styled.button`
   width: 100%;
-  margin-top: 16px;
+  margin-top: 1em;
   background: #8b5a2b;
   color: white;
-  padding: 10px;
+  padding: 0.6em;
   border: none;
-  border-radius: 5px;
+  border-radius: 0.5em;
   cursor: pointer;
 `;
 
 export const Synopsis = styled.div`
-  margin-top: 16px;
+  margin-top: 1em;
 `;
 
 export const BookInfo = styled.div`
-  margin-top: 16px;
-  font-size: 14px;
+  margin-top: 1em;
+  font-size: 0.8em;
   color: #666;
+`;
+export const AuthorInfo = styled.div`
+  margin-top: 1em;
+`;
+
+export const PublisherInfo = styled.div`
+  margin-top: 1em;
 `;
