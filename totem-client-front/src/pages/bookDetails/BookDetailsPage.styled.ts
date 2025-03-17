@@ -72,7 +72,7 @@ export const ReadButton = styled.button`
   background: #8b5a2b;
   color: white;
   padding: 0.6em;
-  border: none;
+  border: none; 
   border-radius: 0.5em;
   cursor: pointer;
 `;
@@ -92,4 +92,28 @@ export const AuthorInfo = styled.div`
 
 export const PublisherInfo = styled.div`
   margin-top: 1em;
+`;
+
+export const ShowMoreButton = styled.button`
+  background: #f0f0f0; // Light grey background
+  border: 0.05em solid #ccc; // Grey border
+  color: #333; // Dark grey text
+  cursor: pointer;
+  font-size: 0.8em; // Smaller font size
+  padding: 0.25em 0.5em; // Compact padding
+  border-radius: 0.25em; // Rounded corners
+  transition: background 0.2s ease, color 0.2s ease;
+  &:hover {
+    background: #e0e0e0; // Slightly darker grey on hover
+    color: #000; // Darker text on hover
+  }
+
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25); // Focus ring for accessibility
+  }
+
+  &:active {
+    background: #d0d0d0; // Even darker grey when clicked
+  }
 `;

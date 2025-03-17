@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react";
-import { useParams } from "react-router";
-import { 
-  BookContainer, BackButton, BookCard, BookCover, BookDetails, 
+import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router';
+import {
+  BookContainer, BackButton, BookCard, BookCover, BookDetails,
   BookTitle, BookMeta, BookTags, Tag, ReadButton, Synopsis, BookInfo,
-  AuthorInfo, PublisherInfo
-} from "./BookDetailsPage.styled";
+  AuthorInfo, PublisherInfo, ShowMoreButton
+} from './BookDetailsPage.styled';
+import Modal from '../../components/modal'; // Import the Modal component
 
 interface Author {
   name: string;
@@ -26,16 +27,17 @@ interface BookProps {
 }
 
 const BookPage: React.FC = () => {
-  const { id } = useParams<{ id: string }>(); // Get book ID from URL
+  const { id } = useParams<{ id: string }>();
   const [book, setBook] = useState<BookProps | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false); // State for modal
 
   useEffect(() => {
     const fetchBook = async () => {
       try {
         const response = await fetch(
-          `https://parseapi.back4app.com/classes/storybook/${id}`, 
+          `https://parseapi.back4app.com/classes/storybook/${id}`,
           {
             method: "GET",
             headers: {
@@ -62,9 +64,15 @@ const BookPage: React.FC = () => {
     fetchBook();
   }, [id]);
 
+  const toggleModal = () => {
+    setIsModalOpen(!isModalOpen);
+  };
+
   if (loading) return <p>Loading...</p>;
   if (error) return <p>{error}</p>;
   if (!book) return <p>Book not found.</p>;
+
+  const authors = book.created_by || [];
 
   return (
     <BookContainer>
@@ -86,6 +94,18 @@ const BookPage: React.FC = () => {
             <p>Publisher: {book.publisher}</p>
             <p>Contributed by: {book.contributed_by}</p>
           </PublisherInfo>
+          {authors.length > 0 && (
+            <AuthorInfo>
+              {authors.slice(0, 2).map((author, index) => (
+                <p key={index}>{author.role}: {author.name}</p>
+              ))}
+              {authors.length > 2 && (
+                <ShowMoreButton onClick={toggleModal}>
+                  Show all ...
+                </ShowMoreButton>
+              )}
+            </AuthorInfo>
+          )}
         </BookDetails>
       </BookCard>
       <ReadButton>Read this book</ReadButton>
@@ -94,14 +114,15 @@ const BookPage: React.FC = () => {
       </Synopsis>
       <BookInfo>
         <p>ISBN: {book.ISBN || "N/A"}</p>
-        {book.created_by && book.created_by.length > 0 && (
-          <AuthorInfo>
-            {book.created_by.map((author, index) => (
-              <p key={index}>{author.role}: {author.name}</p>
-            ))}
-          </AuthorInfo>
-        )}
       </BookInfo>
+
+      {/* Modal for showing all authors */}
+      <Modal isOpen={isModalOpen} onClose={toggleModal}>
+        <h3>Authors and Illustrators</h3>
+        {authors.map((author, index) => (
+          <p key={index}>{author.role}: {author.name}</p>
+        ))}
+      </Modal>
     </BookContainer>
   );
 };
