@@ -13,6 +13,7 @@ import AudioPage from './pages/audio/AudioPage.tsx';
 import MyAudioPage from './pages/myAudio/MyAudioPage.tsx';
 import SearchPage from './pages/search/SearchPage.tsx';
 import BookDetailsPage from './pages/bookDetails/BookDetailsPage.tsx';
+import ChangePassword from './pages/changePassword/changePassword.tsx';  // Import ChangePassword component
 
 const App: React.FC = () => (
   <Router>
@@ -28,9 +29,8 @@ const App: React.FC = () => (
       <Route path="/books" element={<BooksPage />} />
       <Route path="/books/:id" element={<BookDetailsPage />} />
       <Route path="/read/:id" element={<ReadPage />} />
-
+      <Route path="/change-password" element={<ChangePassword />} /> {/* Add ChangePassword route */}
     </Routes>
-
   </Router>
 );
 
