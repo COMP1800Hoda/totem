@@ -16,21 +16,21 @@ const ModalOverlay = styled.div`
 
 const ModalContent = styled.div`
   background: white;
-  padding: 20px;
-  border-radius: 8px;
-  max-width: 400px;
+  padding: 1.2em;
+  border-radius: 0.5em;
+  max-width: 25em;
   width: 100%;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0.125em 0.7em rgba(0, 0, 0, 0.1);
 `;
 
 const CloseButton = styled.button`
   background: #007bff;
   color: white;
   border: none;
-  padding: 8px 16px;
-  border-radius: 4px;
+  padding: 0.5em 1em;
+  border-radius: 0.25em;
   cursor: pointer;
-  margin-top: 16px;
+  margin-top: 1em;
 
   &:hover {
     background: #0056b3;

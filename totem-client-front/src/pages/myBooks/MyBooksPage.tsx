@@ -82,7 +82,7 @@ const MyBooksPage: React.FC = () => {
     <MyBooksContainer>
       <Header />
       <div style={{ padding: '20px', marginTop: '80px', textAlign: 'center' }}>
-        <h1>This is the MyBooks page.</h1>
+        <h1>Recently opened books.</h1>
         <button
           onClick={toggleLayout}
           style={{ margin: '20px', padding: '10px 20px', cursor: 'pointer' }}

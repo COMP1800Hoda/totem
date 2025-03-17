@@ -27,16 +27,16 @@ const Footer: React.FC = () => {
             <span>Search</span>
           </IconStyle>
         </Link>
-        <Link to="/my-audio">
+        <Link to="/audio">
           <IconStyle>
             <HeadphonesIcon />
-            <span>My Audio</span>
+            <span>Audio</span>
           </IconStyle>
         </Link>
-        <Link to="/my-books">
+        <Link to="/books">
           <IconStyle>
             <BookOpenIcon />
-            <span>My Books</span>
+            <span>Books</span>
           </IconStyle>
         </Link>
         <Link to="/">

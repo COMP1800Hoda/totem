@@ -3,8 +3,9 @@ import { useParams } from 'react-router';
 import {
   BookContainer, BackButton, BookCard, BookCover, BookDetails,
   BookTitle, BookMeta, BookTags, Tag, ReadButton, Synopsis, BookInfo,
-  AuthorInfo, PublisherInfo, ShowMoreButton
+  AuthorInfo, PublisherInfo, ShowMoreButton, FooterWrapper
 } from './BookDetailsPage.styled';
+import Footer from '../../components/footer/Footer'; // Import the Footer component
 import Modal from '../../components/modal'; // Import the Modal component
 
 interface Author {
@@ -123,6 +124,9 @@ const BookPage: React.FC = () => {
           <p key={index}>{author.role}: {author.name}</p>
         ))}
       </Modal>
+      <FooterWrapper>
+        <Footer />
+      </FooterWrapper>
     </BookContainer>
   );
 };
