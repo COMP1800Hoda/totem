@@ -28,18 +28,19 @@ const PreviewPage: React.FC = () => {
   const [isUploading, setIsUploading] = useState(false);
   const [coverimageurl, setUrl] = useState<string | null>(null);
   const [contentimageurl, setimageUrl] = useState<string[]>([]);
-
+  const [isDataSaved, setIsDataSaved] = useState(false);
 
   useEffect(() => {
-    if (isUploading) {
+    if (coverimageurl && contentimageurl.length > 0 && !isDataSaved) {
       handleAddToDB();
+      setIsDataSaved(true); 
     }
-  }, [isUploading]);
+  }, [coverimageurl, contentimageurl, isDataSaved]);
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     setIsUploading(true); // Set uploading state to true
-
+    setIsDataSaved(false);
     const coverImageFolder = `/book-cover-images/${previewData.bookId}/`;
 
     const contentImagesFolder = `/book-images/${previewData.bookId}/`;
@@ -91,7 +92,6 @@ const PreviewPage: React.FC = () => {
       });
       uploadPromises.push(contentUploadPromise);
 
-
     }
 
     try {
@@ -100,6 +100,14 @@ const PreviewPage: React.FC = () => {
 
       console.log("All files uploaded and metadata saved successfully");
       alert("Book uploaded and metadata saved successfully!");
+      const metaData = {
+        bookTitle: previewData.bookTitle,
+        bookId: previewData.bookId
+      };
+      localStorage.setItem('Metadata', JSON.stringify(metaData));
+
+      
+      window.location.href = '/success';
     } catch (error) {
       console.error("Error during upload:", error);
       alert("An error occurred during the upload process. Please try again.");
@@ -120,7 +128,9 @@ const PreviewPage: React.FC = () => {
       !previewData.publisher ||
       !previewData.published ||
       !previewData.isbn ||
-      !previewData.abstract
+      !previewData.abstract||
+      !coverimageurl ||
+      !contentimageurl
 
 
     ) {
@@ -158,7 +168,7 @@ const PreviewPage: React.FC = () => {
     storybook.set("Abstract", previewData.abstract);
     storybook.set("CoverImgUrl", coverimageurl);
     storybook.set("ContentImgUrl", contentimageurl);
-    // console.log(storybook);
+    console.log(storybook);
     try {
       // Save the metadata to the database
       await storybook.save();
