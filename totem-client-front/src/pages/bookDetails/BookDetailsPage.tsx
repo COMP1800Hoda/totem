@@ -7,6 +7,7 @@ import {
 } from './BookDetailsPage.styled';
 import Footer from '../../components/footer/Footer'; // Import the Footer component
 import Modal from '../../components/modal'; // Import the Modal component
+import { Header } from '../../components/header/Header'; // Import the Header component
 
 interface Author {
   name: string;
@@ -54,6 +55,7 @@ const BookPage: React.FC = () => {
         }
 
         const data = await response.json();
+        console.log(data);
         setBook(data);
       } catch (error) {
         setError("Error fetching book details. Please try again.");
@@ -77,6 +79,7 @@ const BookPage: React.FC = () => {
 
   return (
     <BookContainer>
+      <Header />
       <BackButton onClick={() => window.history.back()}>&lt; Back</BackButton>
       <BookCard style={{ flexDirection: "row-reverse" }}>
         <BookCover src={book.cover_image_url} alt="Book Cover" />

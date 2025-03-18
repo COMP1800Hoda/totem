@@ -17,11 +17,31 @@ export const BookContainer = styled.div`
 export const BackButton = styled.button`
   display: flex;
   align-items: center;
+  gap: 0.5em; // Space between icon and text
+  z-index: 99;
   color: #555;
   margin-bottom: 1em;
+  max-width: 5em;
   background: none;
   border: none;
   cursor: pointer;
+  font-size: 1em;
+  border-radius: 0.25em;
+  transition: background-color 0.3s ease, color 0.3s ease;
+
+  &:hover {
+    background-color: #f0f0f0; // Light gray background on hover
+    color: #000; // Darker text on hover
+  }
+
+  &:active {
+    background-color: #e0e0e0; // Slightly darker background on click
+  }
+
+  &:focus {
+    outline: none; // Remove default focus outline
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.5); // Add a custom focus outline
+  }
 `;
 
 export const BookCard = styled.div`
