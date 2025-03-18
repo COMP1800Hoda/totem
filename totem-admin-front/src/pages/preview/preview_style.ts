@@ -56,8 +56,10 @@ export const BookTitle = styled.h2`
 `;
 
 export const BookMeta = styled.p`
-  font-size: 14px;
+  font-size: 12px;
   color: #555;
+  gap:0;
+  padding:0;
 `;
 
 export const BookTags = styled.div`
@@ -100,6 +102,8 @@ export const ThumbnailContainer = styled.div`
   gap: 0; /* Remove gap between items */
   padding: 0; /* Remove padding */
   margin: 0; /* Remove margin */
+  align-items: left;
+  justify-content: left;
 `;
 
 
@@ -108,7 +112,7 @@ export const ThumbnailWrapper = styled.div`
   width: 100px;
   border: none
   padding: 0;
-  text-align: center;
+  text-align: left;
 `;
 
 
@@ -117,7 +121,6 @@ export const BookContentImg = styled.img`
   height: auto;
   cursor: pointer;
   transition: transform 0.2s ease-in-out;
-
   &:hover {
     transform: scale(1.05); // Slightly enlarge on hover
   }

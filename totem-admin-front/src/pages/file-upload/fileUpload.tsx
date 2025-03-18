@@ -211,7 +211,7 @@ const FileUpload: React.FC = () => {
     if (isUploading && coverimageurl && contentimageurl.length > 0) {
 
       handleAddToDB();
-      setIsUploading(false); // Reset the uploading state
+      setIsUploading(false); 
     }
   }, [coverimageurl, contentimageurl, isUploading]);
 
@@ -240,7 +240,7 @@ const FileUpload: React.FC = () => {
                 tags: [bookId],
               });
               const coverimageUrl = response.url;
-              setUrl(coverimageUrl); // Update coverimageurl state
+              setUrl(coverimageUrl); 
               console.log("Cover image uploaded successfully. URL:", coverimageUrl);
               resolve();
             } catch (error) {
@@ -303,6 +303,16 @@ const FileUpload: React.FC = () => {
       // Wait for all uploads to complete
       await Promise.all(uploadPromises);
       console.log("All files uploaded successfully");
+
+
+      const metaData = {
+        bookTitle: bookTitle,
+        bookId: bookId
+      };
+      localStorage.setItem('Metadata', JSON.stringify(metaData));
+
+      
+      window.location.href = '/success';
     } catch (error) {
       console.error("Error during upload:", error);
       alert("An error occurred during the upload process. Please try again.");
