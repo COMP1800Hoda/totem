@@ -49,7 +49,6 @@ const AudioComponent: React.FC<Audio> = ({ objectId, cover_image_url, title   })
 const Home: React.FC = () => {
   const [books, setBooks] = useState<Book[]>([]);
   const [audios, setAudios] = useState<Audio[]>([]);
-
   useEffect(() => {
     const fetchBooks = async () => {
       try {
@@ -97,6 +96,7 @@ const Home: React.FC = () => {
       }
     };
 
+
     fetchAudios();
   }, []);
 
@@ -107,8 +107,8 @@ const Home: React.FC = () => {
 
       <Section>
         <SectionHeader>
-          <Link to="/books">See All</Link>
-          <h2>Books</h2>
+          <Link to="/my-books">See All</Link>
+          <h2>Recent Books</h2>
         </SectionHeader>
         <div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap', gap: '20px' }}>
           {books.map((book) => (
@@ -119,8 +119,8 @@ const Home: React.FC = () => {
 
       <Section>
         <SectionHeader>
-          <Link to="/audio">See All</Link>
-          <h2>Audio</h2>
+          <Link to="/my-audio">See All</Link>
+          <h2>Recent Audio</h2>
         </SectionHeader>
         <div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap', gap: '20px' }}>
           {audios.map((audio) => (

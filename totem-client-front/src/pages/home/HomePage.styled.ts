@@ -25,7 +25,7 @@ export const SectionHeader = styled.div`
   margin: 1.5vh;
 
   h2 {
-    font-size: 1.5em; /* Adjusted font size based on viewport width */
+    font-size: 1.2em; /* Adjusted font size based on viewport width */
   }
 
   a {

@@ -2,6 +2,14 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { Header } from "../../components/header/Header";
 import Footer from "../../components/footer/Footer";
+import {
+  AudioContainer,
+  AudioMetadata,
+  AudioPlayer,
+  AudioTitle,
+  BackButton,
+  FooterWrapper,
+} from "./AudioDetailsPage.styled";
 
 interface Audio {
   objectId: string;
@@ -60,23 +68,26 @@ const AudioDetailsPage: React.FC = () => {
   if (!audio) return <p>Audio not found.</p>;
 
   return (
-    <div>
+    <AudioContainer>
       <Header />
-      <div style={{ textAlign: "center", padding: "20px", marginTop: "80px" }}>
-        <h1>{audio.name}</h1>
+      <BackButton onClick={() => window.history.back()}>&lt; Back</BackButton>
+      <AudioTitle>{audio.name}</AudioTitle>
+      <AudioMetadata>
         <p>Created At: {new Date(audio.createdAt).toLocaleString()}</p>
         <p>Last Updated: {new Date(audio.updatedAt).toLocaleString()}</p>
-        {audio.audio_url ? (
-          <audio controls>
-            <source src={audio.audio_url} type="audio/mpeg" />
-            Your browser does not support the audio element.
-          </audio>
-        ) : (
-          <p>No audio file available.</p>
-        )}
-      </div>
-      <Footer />
-    </div>
+      </AudioMetadata>
+      {audio.audio_url ? (
+        <AudioPlayer controls>
+          <source src={audio.audio_url} type="audio/mpeg" />
+          Your browser does not support the audio element.
+        </AudioPlayer>
+      ) : (
+        <p>No audio file available.</p>
+      )}
+      <FooterWrapper>
+        <Footer />
+      </FooterWrapper>    
+      </AudioContainer>
   );
 };
 
