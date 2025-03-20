@@ -1,138 +1,150 @@
-import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router'; // Import useNavigate
-import {
-  BookContainer, BackButton, BookCard, BookCover, BookDetails,
-  BookTitle, BookMeta, BookTags, Tag, ReadButton, Synopsis, BookInfo,
-  AuthorInfo, PublisherInfo, ShowMoreButton, FooterWrapper
-} from './BookDetailsPage.styled';
-import Footer from '../../components/footer/Footer'; // Import the Footer component
-import Modal from '../../components/modal'; // Import the Modal component
-import { Header } from '../../components/header/Header'; // Import the Header component
-
-interface Author {
-  name: string;
-  role: string;
-}
+import React from "react";
+import { useParams } from "react-router";
+import { 
+  BookContainer, BackButton, BookCard, BookCover, BookDetails, 
+  BookTitle, BookMeta, BookTags, Tag, ReadButton, Synopsis, BookInfo 
+} from "./BookDetailsPage.styled";
 
 interface BookProps {
-  objectId: string;
-  storybook_title: string;
-  cover_image_url: string;
-  genre: string[];
-  language: string;
-  published: string;
-  storybook_description: string;
-  contributed_by: string;
-  ISBN: string;
-  created_by: Author[];
-  publisher: string;
+  id: string;
+  title: string;
+  author: string;
+  illustrator: string;
+  ageGroup: string;
+  genre: string;
+  synopsis: string;
+  publishedIn: string;
+  isbn: string;
+  contributor: string;
+  coverImage: string;
 }
 
+const mockBooks: BookProps[] = [
+  {
+    id: "1",
+    title: "Example Book",
+    author: "John Doe",
+    illustrator: "Jane Smith",
+    ageGroup: "Age 4-6",
+    genre: "Fantasy",
+    synopsis: "This is a story about...",
+    publishedIn: "Iran",
+    isbn: "964-505-078-2",
+    contributor: "شابيز",
+    coverImage: "/path-to-image.jpg",
+  }, 
+  {
+    id: "2",
+    title: "Example Book",
+    author: "John Doe",
+    illustrator: "Jane Smith",
+    ageGroup: "Age 4-6",
+    genre: "Fantasy",
+    synopsis: "This is a story about...",
+    publishedIn: "Iran",
+    isbn: "964-505-078-2",
+    contributor: "شابيز",
+    coverImage: "/path-to-image.jpg",
+  },
+  {
+    id: "2",
+    title: "Example Book",
+    author: "John Doe",
+    illustrator: "Jane Smith",
+    ageGroup: "Age 4-6",
+    genre: "Fantasy",
+    synopsis: "This is a story about...",
+    publishedIn: "Iran",
+    isbn: "964-505-078-2",
+    contributor: "شابيز",
+    coverImage: "/path-to-image.jpg",
+  },
+  {
+    id: "3",
+    title: "Example Book",
+    author: "John Doe",
+    illustrator: "Jane Smith",
+    ageGroup: "Age 4-6",
+    genre: "Fantasy",
+    synopsis: "This is a story about...",
+    publishedIn: "Iran",
+    isbn: "964-505-078-2",
+    contributor: "شابيز",
+    coverImage: "/path-to-image.jpg",
+  },
+  {
+    id: "4",
+    title: "Example Book",
+    author: "John Doe",
+    illustrator: "Jane Smith",
+    ageGroup: "Age 4-6",
+    genre: "Fantasy",
+    synopsis: "This is a story about...",
+    publishedIn: "Iran",
+    isbn: "964-505-078-2",
+    contributor: "شابيز",
+    coverImage: "/path-to-image.jpg",
+  },
+  {
+    id: "5",
+    title: "Example Book",
+    author: "John Doe",
+    illustrator: "Jane Smith",
+    ageGroup: "Age 4-6",
+    genre: "Fantasy",
+    synopsis: "This is a story about...",
+    publishedIn: "Iran",
+    isbn: "964-505-078-2",
+    contributor: "شابيز",
+    coverImage: "/path-to-image.jpg",
+  },
+  {
+    id: "6",
+    title: "Example Book",
+    author: "John Doe",
+    illustrator: "Jane Smith",
+    ageGroup: "Age 4-6",
+    genre: "Fantasy",
+    synopsis: "This is a story about...",
+    publishedIn: "Iran",
+    isbn: "964-505-078-2",
+    contributor: "شابيز",
+    coverImage: "/path-to-image.jpg",
+  },
+];
+
 const BookPage: React.FC = () => {
-  const { id } = useParams<{ id: string }>();
-  const navigate = useNavigate(); // Initialize useNavigate
-  const [book, setBook] = useState<BookProps | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false); // State for modal
+  const { id } = useParams<{ id: string }>(); // Get the book ID from the URL
+  const book = mockBooks.find((b) => b.id === id);
 
-  useEffect(() => {
-    const fetchBook = async () => {
-      try {
-        const response = await fetch(
-          `https://parseapi.back4app.com/classes/storybook/${id}`,
-          {
-            method: "GET",
-            headers: {
-              "X-Parse-Application-Id": "XWNVzANvs7w6pYMl4fZWLCcikgXdMvCZhEnI48sH",
-              "X-Parse-REST-API-Key": "mRZK1BOLh5EIaOR9Ircc2OhX5OU28aidSsZAtyJP",
-              "Content-Type": "application/json"
-            }
-          }
-        );
-
-        if (!response.ok) {
-          throw new Error("Failed to fetch book details");
-        }
-
-        const data = await response.json();
-        console.log(data);
-        setBook(data);
-      } catch (error) {
-        setError("Error fetching book details. Please try again.");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchBook();
-  }, [id]);
-
-  const toggleModal = () => {
-    setIsModalOpen(!isModalOpen);
-  };
-
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>{error}</p>;
-  if (!book) return <p>Book not found.</p>;
-
-  const authors = book.created_by || [];
+  if (!book) {
+    return <p>Book not found.</p>;
+  }
 
   return (
     <BookContainer>
-      <Header />
       <BackButton onClick={() => window.history.back()}>&lt; Back</BackButton>
-      <BookCard style={{ flexDirection: "row-reverse" }}>
-        <BookCover src={book.cover_image_url} alt="Book Cover" />
+      <BookCard>
+        <BookCover src={book.coverImage} alt="Book Cover" />
         <BookDetails>
-          <BookTitle>{book.storybook_title}</BookTitle>
-          <BookMeta>Published: {book.published}</BookMeta>
+          <BookTitle>{book.title}</BookTitle>
+          <BookMeta>Author: {book.author}</BookMeta>
+          <BookMeta>Illustrator: {book.illustrator}</BookMeta>
           <BookTags>
-            {book.genre.length > 0 ? (
-              book.genre.map((tag, index) => <Tag key={index}>{tag}</Tag>)
-            ) : (
-              <Tag>No genre available</Tag>
-            )}
+            <Tag>{book.ageGroup}</Tag>
+            <Tag>{book.genre}</Tag>
           </BookTags>
-          <BookMeta>Language: {book.language}</BookMeta>
-          <PublisherInfo>
-            <p>Publisher: {book.publisher}</p>
-            <p>Contributed by: {book.contributed_by}</p>
-          </PublisherInfo>
-          {authors.length > 0 && (
-            <AuthorInfo>
-              {authors.slice(0, 2).map((author, index) => (
-                <p key={index}>{author.role}: {author.name}</p>
-              ))}
-              {authors.length > 2 && (
-                <ShowMoreButton onClick={toggleModal}>
-                  Show all ...
-                </ShowMoreButton>
-              )}
-            </AuthorInfo>
-          )}
         </BookDetails>
       </BookCard>
-      <ReadButton onClick={() => navigate(`/read/${book.objectId}`)}>
-        Read this book
-      </ReadButton>
+      <ReadButton>Read this book</ReadButton>
       <Synopsis>
-        <p>{book.storybook_description}</p>
+        <p>{book.synopsis}</p>
       </Synopsis>
       <BookInfo>
-        <p>ISBN: {book.ISBN || "N/A"}</p>
+        <p>Published in: {book.publishedIn}</p>
+        <p>ISBN: {book.isbn}</p>
+        <p>Contributed by: {book.contributor}</p>
       </BookInfo>
-
-      {/* Modal for showing all authors */}
-      <Modal isOpen={isModalOpen} onClose={toggleModal}>
-        <h3>Authors and Illustrators</h3>
-        {authors.map((author, index) => (
-          <p key={index}>{author.role}: {author.name}</p>
-        ))}
-      </Modal>
-      <FooterWrapper>
-        <Footer />
-      </FooterWrapper>
     </BookContainer>
   );
 };

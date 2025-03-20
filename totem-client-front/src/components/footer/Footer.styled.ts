@@ -7,21 +7,21 @@ export const FooterContainer = styled.footer`
   bottom: 0;
   margin: 0;
   width: 100%;
-  height: 8vh; /* 5% of the viewport height */
+  height: 50px; /* Reduced height for compact design */
   background-color: #ffffff;
-  border-top: 0.1vw solid #ddd; /* 0.1% of the viewport width */
+  border-top: 1px solid #ddd;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 1vh 0; /* Padding based on viewport height */
+  padding: 5px 0; /* Adjusted padding */
   padding-left: 0;
 `;
 
 export const IconWrapper = styled.div`
   display: flex;
   justify-content: space-between;
-  width: 80vw; /* 80% of the viewport width */
-  max-width: 40em; /* Limits the maximum width */
+  width: 90%; /* Prevents excessive stretching */
+  max-width: 400px; /* Ensures proper alignment on mobile */
 `;
 
 export const IconStyle = styled.div`
@@ -30,7 +30,7 @@ export const IconStyle = styled.div`
   align-items: center;
   text-decoration: none;
   color: #333;
-  font-size: 1em; /* Font size based on 2% of the viewport width */
+  font-size: 10px; /* Adjusted label font size */
 
   &:hover {
     color: #007bff;
@@ -38,26 +38,26 @@ export const IconStyle = styled.div`
 `;
 
 export const Label = styled.span`
-  font-size: 0.75em; /* Font size based on 1.5% of the viewport width */
-  margin-top: 0.5em; /* Vertical spacing based on viewport height */
+  font-size: 10px; /* Smaller text for compact design */
+  margin-top: 1px;
 `;
 
 export const HomeIcon = styled(AiOutlineHome)`
-  font-size: 1.5em;
+  font-size: 20px; /* Reduced icon size */
 `;
 
 export const BookOpenIcon = styled(AiOutlineBook)`
-  font-size: 1.5em;
+  font-size: 20px;
 `;
 
 export const HeadphonesIcon = styled(MdHeadset)`
-  font-size: 1.5em;
+  font-size: 20px;
 `;
 
 export const SearchIcon = styled(AiOutlineSearch)`
-  font-size: 1.5em;
+  font-size: 20px;
 `;
 
 export const UserIcon = styled(AiOutlineUser)`
-  font-size: 1.5em;
+  font-size: 20px;
 `;

@@ -1,65 +1,29 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router'; // Import useNavigate
+import React, { useState } from 'react';
 import { Header } from '../../components/header/Header';
 import Footer from '../../components/footer/Footer';
 import { AudioContainer, AudioGrid, AudioList, AudioItem, AudioThumbnail } from './AudioPage.styled';
 
-// Define Audio type
-interface Audio {
-  objectId: string;
-  cover_image_url: string;
-  title: string;
-}
-
 // Audio item component to be reused in both grid and list views
-const AudioItemComponent = ({ src, alt, title, objectId }: { src: string; alt: string; title: string; objectId: string }) => {
-  const navigate = useNavigate(); // Use the useNavigate hook
+const AudioItemComponent = ({ src, alt, title }: { src: string; alt: string; title: string }) => (
+  <AudioItem>
+    <AudioThumbnail src={src} alt={alt} />
+    <div>{title}</div>
+  </AudioItem>
+);
 
-  const handleClick = () => {
-    navigate(`/audios/${objectId}`); // Navigate to the audio detail page
-  };
-
-  return (
-    <AudioItem onClick={handleClick}>
-      <AudioThumbnail src={src} alt={alt} />
-      <div>{title}</div>
-    </AudioItem>
-  );
-};
-
-const MyAudioPage: React.FC = () => {
+const AudioPage: React.FC = () => {
   const [isGridView, setIsGridView] = useState(true); // Default to Grid View
-  const [audios, setAudios] = useState<Audio[]>([]); // State to store fetched audios
 
   const toggleView = () => {
     setIsGridView((prev) => !prev);
   };
 
-  const fetchAudios = async () => {
-    try {
-      const response = await fetch("https://parseapi.back4app.com/classes/Audios", {
-        method: "GET",
-        headers: {
-          "X-Parse-Application-Id": "XWNVzANvs7w6pYMl4fZWLCcikgXdMvCZhEnI48sH", // Replace with your actual Application ID
-          "X-Parse-REST-API-Key": "mRZK1BOLh5EIaOR9Ircc2OhX5OU28aidSsZAtyJP", // Replace with your actual API key
-          "Content-Type": "application/json",
-        },
-      });
-      const data = await response.json();
-      if (data.results) {
-        setAudios(data.results); // Take the first 3 audios for display
-      } else {
-        console.error("Invalid data format:", data);
-      }
-    } catch (error) {
-      console.error("Error fetching audios:", error);
-    }
-  };
-
-  // Fetch audios when the component mounts
-  useEffect(() => {
-    fetchAudios();
-  }, []);
+  const audioItems = [
+    { src: 'https://placehold.co/150x150?text=Audio+1', alt: 'Audio 1', title: 'Audio 1' },
+    { src: 'https://placehold.co/150x150?text=Audio+2', alt: 'Audio 2', title: 'Audio 2' },
+    { src: 'https://placehold.co/150x150?text=Audio+3', alt: 'Audio 3', title: 'Audio 3' },
+    { src: 'https://placehold.co/150x150?text=Audio+4', alt: 'Audio 4', title: 'Audio 4' },
+  ];
 
   return (
     <AudioContainer>
@@ -73,26 +37,14 @@ const MyAudioPage: React.FC = () => {
       {/* Conditionally render either Grid or List View */}
       {isGridView ? (
         <AudioGrid>
-          {audios.map((audio) => (
-            <AudioItemComponent
-              key={audio.objectId}
-              src={audio.cover_image_url}
-              alt={audio.title}
-              title={audio.title}
-              objectId={audio.objectId} // Pass objectId to AudioItemComponent
-            />
+          {audioItems.map((item, index) => (
+            <AudioItemComponent key={index} {...item} />
           ))}
         </AudioGrid>
       ) : (
         <AudioList>
-          {audios.map((audio) => (
-            <AudioItemComponent
-              key={audio.objectId}
-              src={audio.cover_image_url}
-              alt={audio.title}
-              title={audio.title}
-              objectId={audio.objectId} // Pass objectId to AudioItemComponent
-            />
+          {audioItems.map((item, index) => (
+            <AudioItemComponent key={index} {...item} />
           ))}
         </AudioList>
       )}
@@ -101,4 +53,4 @@ const MyAudioPage: React.FC = () => {
   );
 };
 
-export default MyAudioPage;
+export default AudioPage;
