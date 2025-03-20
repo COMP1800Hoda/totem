@@ -5,21 +5,14 @@ import {
   BookTitle, BookMeta, BookTags, Tag, Synopsis, BookInfo, BookContentImg,
   ThumbnailContainer, ThumbnailWrapper, UploadButton, FileNameContainer
 } from "./preview_style";
-import ImageKit from "imagekit";
 import Parse from "../../database.js";
-
+import imagekit from "../../imagekit.js";
 interface Creator {
   role: string;
   name: string;
   customRole?: string;
 }
 
-// Initialize ImageKit
-const imagekit = new ImageKit({
-  publicKey: "public_P17LRkYTu9e3UdN3WnyzbodiT1U=",
-  urlEndpoint: "https://ik.imagekit.io/Comp3800Group12",
-  privateKey: "private_PeSFDBIdeSuhtUZaec1saMxjqoU=",
-});
 
 const PreviewPage: React.FC = () => {
   const previewData = JSON.parse(localStorage.getItem('previewBook') || '{}');
@@ -28,18 +21,32 @@ const PreviewPage: React.FC = () => {
   const [isUploading, setIsUploading] = useState(false);
   const [coverimageurl, setUrl] = useState<string | null>(null);
   const [contentimageurl, setimageUrl] = useState<string[]>([]);
-
+  const [isDataSaved, setIsDataSaved] = useState(false);
 
   useEffect(() => {
-    if (isUploading) {
+    if (coverimageurl && contentimageurl.length > 0 && !isDataSaved) {
       handleAddToDB();
+      setIsDataSaved(true); 
     }
-  }, [isUploading]);
+  }, [coverimageurl, contentimageurl, isDataSaved]);
+
+  const replaceOtherWithCustomRole = (creators: { role: string; name: string; customRole: string }[]) => {
+    return creators.map((creator) => {
+        if (creator.role === "Other" && creator.customRole) {
+            return {
+                ...creator,
+                role: creator.customRole, 
+                customRole: "",
+            };
+        }
+        return creator;
+    });
+};
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    setIsUploading(true); // Set uploading state to true
-
+    setIsUploading(true);
+    setIsDataSaved(false);
     const coverImageFolder = `/book-cover-images/${previewData.bookId}/`;
 
     const contentImagesFolder = `/book-images/${previewData.bookId}/`;
@@ -91,7 +98,6 @@ const PreviewPage: React.FC = () => {
       });
       uploadPromises.push(contentUploadPromise);
 
-
     }
 
     try {
@@ -100,17 +106,25 @@ const PreviewPage: React.FC = () => {
 
       console.log("All files uploaded and metadata saved successfully");
       alert("Book uploaded and metadata saved successfully!");
+      const metaData = {
+        bookTitle: previewData.bookTitle,
+        bookId: previewData.bookId
+      };
+      localStorage.setItem('Metadata', JSON.stringify(metaData));
+
+      
+      window.location.href = '/success';
     } catch (error) {
       console.error("Error during upload:", error);
       alert("An error occurred during the upload process. Please try again.");
     } finally {
-      setIsUploading(false); // Reset the uploading state
+      setIsUploading(false); 
     }
   };
 
-  // add one function to add storybook metadata to database
+  
   const handleAddToDB = async () => {
-    // Validate required fields
+    
     if (
       !previewData.bookTitle ||
       !previewData.bookId ||
@@ -120,21 +134,25 @@ const PreviewPage: React.FC = () => {
       !previewData.publisher ||
       !previewData.published ||
       !previewData.isbn ||
-      !previewData.abstract
+      !previewData.abstract||
+      !coverimageurl ||
+      !contentimageurl
 
 
     ) {
       console.error("Please fill in all required fields");
       return;
     }
+    const updatedCreators = replaceOtherWithCustomRole(previewData.creators);
+    console.log(updatedCreators)
 
-    // Log the data being saved for debugging
+    
     console.log("Saving metadata to database:", {
       bookTitle: previewData.bookTitle,
       bookId: previewData.bookId,
       age: previewData.age,
       genres: previewData.genres,
-      creators: previewData.creators,
+      creators: updatedCreators,
       publisher: previewData.publisher,
       published: previewData.published,
       isbn: previewData.isbn,
@@ -143,24 +161,24 @@ const PreviewPage: React.FC = () => {
       contentImageUrl: contentimageurl,
     });
 
-    const Storybook = Parse.Object.extend("StoryBook_Admin");
+    const Storybook = Parse.Object.extend("storybook");
     const storybook = new Storybook();
 
     // Set metadata fields
-    storybook.set("BookTitle", previewData.bookTitle);
-    storybook.set("BookID", previewData.bookId);
+    storybook.set("storybook_title", previewData.bookTitle);
+    storybook.set("storybook_id", previewData.bookId);
     storybook.set("Age", previewData.age);
-    storybook.set("Genre", previewData.genres);
-    storybook.set("CreatedBy", previewData.creators);
-    storybook.set("Publisher", previewData.publisher);
-    storybook.set("Published", previewData.published);
+    storybook.set("genre", previewData.genres);
+    storybook.set("created_by", updatedCreators);
+    storybook.set("publisher", previewData.publisher);
+    storybook.set("published", previewData.published);
     storybook.set("ISBN", previewData.isbn);
-    storybook.set("Abstract", previewData.abstract);
-    storybook.set("CoverImgUrl", coverimageurl);
-    storybook.set("ContentImgUrl", contentimageurl);
-    // console.log(storybook);
+    storybook.set("storybook_description", previewData.abstract);
+    storybook.set("cover_image_url", coverimageurl);
+    storybook.set("storybook_image_url", contentimageurl);
+    console.log(storybook);
     try {
-      // Save the metadata to the database
+      
       await storybook.save();
       console.log("Book metadata saved successfully!");
     } catch (error) {

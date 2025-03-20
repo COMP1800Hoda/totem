@@ -1,53 +1,43 @@
-.App {
-  /* font-family: 'Arial', sans-serif; */
+import styled from 'styled-components';
+
+export const AppContainer = styled.div`
   max-width: 570px;
   margin: 0 auto;
   padding: 20px;
   text-align: left;
-  color: 5c5552;
-  padding-top:20px;
-}
+  color: #5c5552;
+  padding-top: 20px;
+`;
 
-.upload_header {
+export const UploadHeader = styled.h2`
   text-align: left;
-  color: 5c5552;
+  color: #5c5552;
   font-weight: bold;
   font-size: 24px;
   margin-bottom: 15px;
-  Gap: 50px;
+  gap: 50px;
   margin-top: 50px;
-}
+`;
 
-.form-row {
+export const FormRow = styled.div`
   display: flex;
-  /* gap: 20px; */
   margin-bottom: 15px;
-}
+`;
 
-.button-row {
+export const ButtonRow = styled.div`
   display: flex;
   gap: 20px;
   margin-bottom: 15px;
   margin-left: 8px;
-}
+`;
 
-.form-group {
+export const FormGroup = styled.div`
   flex: 1;
   width: auto;
   margin-bottom: 10px;
-}
+`;
 
-/* label {
-  display: block;
-  margin-bottom: 5px;
-  font-weight: bold;
-  color: black;
-} */
-
-input[type="text"],
-input[type="file"],
-select,
-textarea {
+export const Input = styled.input`
   width: 100%;
   padding: 10px;
   margin-bottom: 10px;
@@ -55,11 +45,30 @@ textarea {
   border-radius: 5px;
   background-color: white;
   color: black;
-}
+`;
 
+export const Select = styled.select`
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: white;
+  color: black;
+`;
 
-.SubPrebutton {
-  background-color: #DECBB7;
+export const TextArea = styled.textarea`
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: white;
+  color: black;
+`;
+
+export const SubPreButton = styled.button`
+  background-color: #decbb7;
   color: white;
   padding: 12px 20px;
   font-size: 18px;
@@ -67,10 +76,9 @@ textarea {
   border-radius: 10px;
   cursor: pointer;
   width: 100%;
-}
+`;
 
-
-.file-input-container {
+export const FileInputContainer = styled.div`
   width: 100%;
   max-width: 560px;
   min-height: 200px;
@@ -87,44 +95,43 @@ textarea {
   margin: 2vh auto;
   margin-bottom: 10px;
   text-align: center;
-}
-.full-width-label {
+`;
+
+export const FullWidthLabel = styled.label`
   width: 100%;
   height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-}
+`;
 
-.icon-and-text {
+export const IconAndText = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-}
+`;
 
-.custom-file-choose {
+export const CustomFileChoose = styled.button`
   background-color: white;
   color: #ccc;
   padding: 12px 30px;
   font-size: 16px;
-
   border-radius: 5px;
   cursor: pointer;
   border: solid;
   margin-top: 10px;
-  /* width: 50%;  */
   transition: background-color 0.3s;
-}
+`;
 
-.icon {
-  color: #DECBB7;
+export const Icon = styled.i`
+  color: #decbb7;
   font-size: 90px;
   margin-bottom: 10px;
-}
+`;
 
-.Addbutton {
-  background-color: #DECBB7;
+export const AddButton = styled.button`
+  background-color: #decbb7;
   border: solid;
   color: white;
   padding: 6px 6px;
@@ -135,52 +142,52 @@ textarea {
   cursor: pointer;
   border-radius: 10px;
   width: 10%;
-  
-}
+`;
 
-.delete-button {
+export const DeleteButton = styled.button`
   background: none;
   border: none;
   cursor: pointer;
-  color:#DECBB7;
+  color: #decbb7;
   font-size: 24px;
   padding: 5px;
   margin-bottom: 5px;
-}
 
-.delete-button:hover {
-  color: #555;
-  /* Icon color on hover, change as needed */
-}
+  &:hover {
+    color: #555;
+  }
+`;
 
-.file-list {
+export const FileList = styled.div`
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
   margin-top: 20px;
-}
+`;
 
-.file-item {
+export const FileItem = styled.div`
   border: 1px solid #ccc;
   padding: 10px;
   text-align: center;
   width: 150px;
-}
+`;
 
-.file-preview {
+export const FilePreview = styled.img`
   max-width: 100%;
   max-height: 100px;
-}
+`;
 
-.file-icon {
+export const FileIcon = styled.i`
   font-size: 24px;
-}
+`;
 
-.file-details p {
-  margin: 5px 0;
-}
+export const FileDetails = styled.div`
+  p {
+    margin: 5px 0;
+  }
+`;
 
-.preview-container {
+export const PreviewContainer = styled.div`
   width: 100%;
   padding-left: 5px;
   height: 50px;
@@ -188,35 +195,32 @@ textarea {
   justify-content: space-between;
   align-items: stretch;
   margin-bottom: 10px;
-  transition: none; 
+  transition: none;
   gap: 10px;
   border-radius: 4px;
-}
+`;
 
-
-
-.preview-remove-Button {
-  
+export const PreviewRemoveButton = styled.button`
   border: none;
   background: none;
   cursor: pointer;
   color: black;
   font-size: 16px;
   margin-left: 10px;
-}
+`;
 
-.Generatebutton {
-  background-color: #DECBB7;
+export const GenerateButton = styled.button`
+  background-color: #decbb7;
   border: solid;
   color: white;
-  padding: 2px 4px; 
+  padding: 2px 4px;
   margin-top: 5px;
   text-align: center;
   font-size: 14px;
   cursor: pointer;
   border-radius: 10px;
-  width: 14%; 
-  height: 40px; 
-  line-height: 30px; 
-  display: inline-block; 
-}
+  width: 14%;
+  height: 40px;
+  line-height: 30px;
+  display: inline-block;
+`;
