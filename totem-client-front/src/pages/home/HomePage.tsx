@@ -49,7 +49,6 @@ const AudioComponent: React.FC<Audio> = ({ objectId, cover_image_url, title   })
 const Home: React.FC = () => {
   const [books, setBooks] = useState<Book[]>([]);
   const [audios, setAudios] = useState<Audio[]>([]);
-
   useEffect(() => {
     const fetchBooks = async () => {
       try {
@@ -96,6 +95,7 @@ const Home: React.FC = () => {
         console.error("Error fetching audios:", error);
       }
     };
+
 
     fetchAudios();
   }, []);
