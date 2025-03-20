@@ -14,13 +14,13 @@ import MyAudioPage from './pages/myAudio/MyAudioPage.tsx';
 import SearchPage from './pages/search/SearchPage.tsx';
 import BookDetailsPage from './pages/bookDetails/BookDetailsPage.tsx';
 import AudioDetailsPage from "./pages/audioDetails/AudioDetailsPage.tsx";
-import LoginPage from "./pages/login/LoginPage.tsx";
+import UserLoginPage from "./pages/login/UserLoginPage.tsx";
 
 const App: React.FC = () => (
   <Router>
     <Routes>
       <Route path="/" element={<HomePage />} />
-      <Route path="/read" element={<ReadPage />} />
+      <Route path="/read/:id" element={<ReadPage />} />
       <Route path="*" element={<NotFoundPage />} />
       <Route path="/my-books" element={<MyBooksPage />} />
       <Route path="/profile" element={<ProfilePage />} />
@@ -30,7 +30,7 @@ const App: React.FC = () => (
       <Route path="/books" element={<BooksPage />} />
       <Route path="/books/:id" element={<BookDetailsPage />} />
       <Route path="/audios/:id" element={<AudioDetailsPage />} />
-      <Route path="/login" element={<LoginPage />} />
+      <Route path="/login" element={<UserLoginPage />} />
     </Routes>
 
   </Router>

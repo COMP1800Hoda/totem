@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router';
+import { useParams, useNavigate } from 'react-router'; // Import useNavigate
 import {
   BookContainer, BackButton, BookCard, BookCover, BookDetails,
   BookTitle, BookMeta, BookTags, Tag, ReadButton, Synopsis, BookInfo,
@@ -30,6 +30,7 @@ interface BookProps {
 
 const BookPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate(); // Initialize useNavigate
   const [book, setBook] = useState<BookProps | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -112,7 +113,9 @@ const BookPage: React.FC = () => {
           )}
         </BookDetails>
       </BookCard>
-      <ReadButton>Read this book</ReadButton>
+      <ReadButton onClick={() => navigate(`/read/${book.objectId}`)}>
+        Read this book
+      </ReadButton>
       <Synopsis>
         <p>{book.storybook_description}</p>
       </Synopsis>
