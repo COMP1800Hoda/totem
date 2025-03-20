@@ -17,7 +17,6 @@ export const MyBooksContainer = styled.div`
 // Grid layout for books
 export const BookGrid = styled.div<BookGridProps>`
   display: grid;
-  direction: rtl;
   grid-template-columns: ${(props) =>
     props.layoutType === 'threeColumns' ? 'repeat(3, 1fr)' : 'repeat(2, 1fr)'};
   gap: 15px;
