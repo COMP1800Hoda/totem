@@ -78,12 +78,14 @@ const EditAdminModal: React.FC<EditAdminModalProps> = ({
         </Form>
       </Modal.Body>
       <Modal.Footer>
-        <Button variant="secondary" onClick={onClose}>
-          Cancel
-        </Button>
-        <Button variant="primary" onClick={handleEditAdmin}>
-          Save Changes
-        </Button>
+        <div className="d-flex gap-5 justify-content-center w-100">
+          <Button variant="secondary" onClick={onClose}>
+            Cancel
+          </Button>
+          <Button variant="primary" onClick={handleEditAdmin}>
+            Save Changes
+          </Button>
+        </div>
       </Modal.Footer>
     </Modal>
   );

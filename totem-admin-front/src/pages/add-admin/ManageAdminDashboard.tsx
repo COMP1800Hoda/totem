@@ -17,6 +17,8 @@ const AdminProfile = () => {
   const [showAddModal, setShowAddModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [selectedAdmin, setSelectedAdmin] = useState<Admin | null>(null);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [adminToDelete, setAdminToDelete] = useState<string | null>(null);
 
   const fetchAdmins = async () => {
     try {
@@ -41,27 +43,46 @@ const AdminProfile = () => {
     fetchAdmins();
   }, []);
 
-  const handleDelete = async (adminId: string) => {
+  const handleDelete = async () => {
+    if (!adminToDelete) return;
     try {
       const query = new Parse.Query('Admin');
-      const adminToDelete = await query.get(adminId); // find the admin by id
+      const adminToRemove = await query.get(adminToDelete); // find the admin by id
       if (adminToDelete) {
-        await adminToDelete.destroy();
-        setAdmins(admins.filter((admin) => admin.id !== adminId)); // Update state
+        await adminToRemove.destroy();
+        setAdmins(admins.filter((admin) => admin.id !== adminToDelete)); // Update state
       }
     } catch (error) {
       console.error('Error deleting admin: ', error);
+    } finally {
+      setShowConfirmModal(false);
+      setAdminToDelete(null);
     }
   };
 
   return (
     <div className="container mt-4">
       {/* Table */}
-      <div className="d-flex justify-content-between align-items-center mb-3">
-        <h2>Admin Management Dashboard</h2>
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          marginBottom: '1rem',
+        }}
+      >
+        <h2 style={{ margin: 0 }}>Admin Dashboard</h2>
         <Button
           variant="primary"
           size="sm"
+          style={{
+            width: '110px',
+            height: '40px',
+            fontSize: '14px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
           onClick={() => setShowAddModal(true)}
         >
           + Add Admin
@@ -98,7 +119,10 @@ const AdminProfile = () => {
                 <Button
                   variant="danger"
                   size="sm"
-                  onClick={() => handleDelete(admin.id)}
+                  onClick={() => {
+                    setAdminToDelete(admin.id);
+                    setShowConfirmModal(true);
+                  }}
                 >
                   DELETE
                 </Button>
@@ -121,6 +145,34 @@ const AdminProfile = () => {
           onAdminUpdated={fetchAdmins}
         />
       )}
+
+      {/* Confirm Modal */}
+      <Modal show={showConfirmModal} onHide={() => setShowConfirmModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Confirm Deletion</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          Are you sure you want to delete Admin{' '}
+          <strong>
+            {admins.find((admin) => admin.id === adminToDelete)?.name ||
+              'this admin'}
+          </strong>
+          ?
+        </Modal.Body>
+        <Modal.Footer>
+          <div className="d-flex gap-5 justify-content-center w-100">
+            <Button
+              variant="secondary"
+              onClick={() => setShowConfirmModal(false)}
+            >
+              Cancel
+            </Button>
+            <Button variant="danger" onClick={handleDelete}>
+              Delete
+            </Button>
+          </div>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 };

@@ -2,7 +2,6 @@ import React, { useState, useRef, useEffect } from 'react';
 import ImageKit from 'imagekit';
 import Parse from '../../database';
 import './fileUpload.css';
-import axios from 'axios';
 
 interface FileData {
   file: File;
@@ -136,25 +135,11 @@ const FileUpload: React.FC = () => {
     }
   };
   useEffect(() => {
-    const getData = async () => {
-      try {
-        // Ensure credentials are sent with the request
-        axios.defaults.withCredentials = true;
-
-        const response = await axios.get('http://localhost:8080/add-book');
-        console.log(response.data); // Handle the response from the axios request
-      } catch (error) {
-        console.error('Error fetching data from API: ', error);
-      }
-    };
-
     if (isUploading && coverimageurl && contentimageurl.length > 0) {
       // Both coverimageurl and contentimageurl are updated
       handleAddToDB();
       setIsUploading(false); // Reset the uploading state
     }
-
-    getData();
   }, [coverimageurl, contentimageurl, isUploading]);
 
   const handleSubmit = async (event: React.FormEvent) => {

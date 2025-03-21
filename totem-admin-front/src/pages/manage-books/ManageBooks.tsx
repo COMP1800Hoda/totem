@@ -7,24 +7,8 @@ import { MainTitle } from '../../components/text/MainTitle.tsx';
 // import { SearchContainer } from './ManageBooks.styled.ts';
 import { ManageBookTable } from '../../components/table/manage-book-table/ManageBookTable.tsx';
 import { SearchContainer } from './ManageBooks.styled.ts';
-import axios from 'axios';
-import { useEffect } from 'react';
 
 export const ManageBooks = () => {
-  useEffect(() => {
-    axios.defaults.withCredentials = true;
-
-    const getData = async () => {
-      try {
-        const response = await axios.get('http://localhost:8080/manage-books');
-        console.log(response.data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    getData();
-  }, []);
-
   const queryClient = new QueryClient();
   return (
     <div id={'page-manage-books'} className={'page'}>

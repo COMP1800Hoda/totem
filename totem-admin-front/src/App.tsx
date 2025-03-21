@@ -11,7 +11,7 @@ import NotFoundPage from './pages/not-found/NotFoundPage.tsx';
 import HomePage from './pages/homepage/HomePage.tsx';
 import FileUpload from './pages/file-upload/fileUpload.tsx';
 import ManageBooks from './pages/manage-books/ManageBooks.tsx';
-import AdminProfile from './pages/add-admin/manage-admin-dashboard.tsx';
+import AdminProfile from './pages/add-admin/ManageAdminDashboard.tsx';
 import Preview from './pages/preview/preview.tsx';
 import Success from './pages/success/success.tsx';
 const App: React.FC = () => {

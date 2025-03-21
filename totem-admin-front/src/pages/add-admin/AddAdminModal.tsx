@@ -107,12 +107,14 @@ const AddAdminModal: React.FC<AddAdminModalProps> = ({
         </Form>
       </Modal.Body>
       <Modal.Footer>
-        <Button variant="secondary" onClick={onClose}>
-          Cancel
-        </Button>
-        <Button variant="primary" onClick={handleAddAdmin}>
-          Add Admin
-        </Button>
+        <div className="d-flex gap-5 justify-content-center w-100">
+          <Button variant="secondary" onClick={onClose}>
+            Cancel
+          </Button>
+          <Button variant="primary" onClick={handleAddAdmin}>
+            Add Admin
+          </Button>
+        </div>
       </Modal.Footer>
     </Modal>
   );

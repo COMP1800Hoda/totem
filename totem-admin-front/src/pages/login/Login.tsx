@@ -25,9 +25,7 @@ const Login = () => {
     try {
       const query = new Parse.Query('Admin');
       query.equalTo('admin_email', email);
-      console.log(email);
       const admin = await query.first();
-      console.log(admin);
       if (!admin) {
         console.log('Email not found');
         setError('Email not found');
