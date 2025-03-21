@@ -26,6 +26,7 @@ const App: React.FC = () => {
         <Route path="/manage-books" element={<ManageBooks />} />
         <Route path="/manage-admins" element={<AdminProfile />} />
         <Route path="/add-book" element={<FileUpload />} />
+        <Route path="/manage-admins" element={<AdminProfile />} />
         <Route path="/preview" element={<Preview />} />
         <Route path="/success" element={<Success />} />
         <Route path="*" element={<NotFoundPage />} />
