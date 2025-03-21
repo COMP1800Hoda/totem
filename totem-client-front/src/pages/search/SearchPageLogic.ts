@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState} from 'react';
 
 export const useSearch = () => {
   const [searchQuery, setSearchQuery] = useState<string>(() => {
@@ -30,7 +30,6 @@ export const useSearch = () => {
           { storybook_title: { $regex: searchQuery, $options: 'i' } },
           { genre: { $regex: searchQuery, $options: 'i' } },
           { ISBN: { $regex: searchQuery, $options: 'i' } },
-          { contributed_by: { $regex: searchQuery, $options: 'i' } },
           { language: { $regex: searchQuery, $options: 'i' } },
           { publisher: { $regex: searchQuery, $options: 'i' } },
           { storybook_description: { $regex: searchQuery, $options: 'i' } },
