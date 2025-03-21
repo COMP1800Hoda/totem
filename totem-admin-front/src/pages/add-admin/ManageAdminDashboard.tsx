@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { InputGroup, Table, Form, Button, Modal } from 'react-bootstrap';
+import { Table, Button, Modal } from 'react-bootstrap';
 import Parse from '../../database';
 import AddAdminModal from './AddAdminModal';
 import EditAdminModal from './EditAdminModal';
@@ -61,7 +61,7 @@ const AdminProfile = () => {
   };
 
   return (
-    <div className="container mt-4">
+    <div className="container mt-4 px-4">
       {/* Table */}
       <div
         style={{
