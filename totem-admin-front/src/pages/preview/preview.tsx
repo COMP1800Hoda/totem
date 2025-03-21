@@ -80,9 +80,10 @@ const PreviewPage: React.FC = () => {
     for (const fileData of previewData.contentImages) {
       const contentUploadPromise = new Promise<void>(async (resolve, reject) => {
         try {
+          
           const response = await imagekit.upload({
-            file: fileData, // Pass base64 string directly
-            fileName: `content-${previewData.bookId}-${previewData.contentImages.indexOf(fileData) + 1}.jpg`, // Use a consistent filename
+            file: fileData, 
+            fileName: `${previewData.bookId}-${previewData.contentImages.indexOf(fileData) + 1}.jpg`,
             folder: contentImagesFolder,
             tags: [previewData.bookId],
           });
@@ -176,6 +177,8 @@ const PreviewPage: React.FC = () => {
     storybook.set("storybook_description", previewData.abstract);
     storybook.set("cover_image_url", coverimageurl);
     storybook.set("storybook_image_url", contentimageurl);
+    storybook.set("cover_image_name", previewData.coverImageName);
+    storybook.set("storybook_image_name", previewData.contentImageName);
     console.log(storybook);
     try {
       
