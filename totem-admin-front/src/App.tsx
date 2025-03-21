@@ -11,6 +11,7 @@ import NotFoundPage from './pages/not-found/NotFoundPage.tsx';
 import HomePage from './pages/homepage/HomePage.tsx';
 import FileUpload from './pages/file-upload/fileUpload.tsx';
 import ManageBooks from './pages/manage-books/ManageBooks.tsx';
+import AdminProfile from './pages/add-admin/manage-admin-dashboard.tsx';
 import Preview from './pages/preview/preview.tsx';
 import Success from './pages/success/success.tsx';
 const App: React.FC = () => {
@@ -23,6 +24,7 @@ const App: React.FC = () => {
         <Route path="/edit-password" element={<EditPassword />} />
         <Route path="/main" element={<HomePage />} />
         <Route path="/manage-books" element={<ManageBooks />} />
+        <Route path="/manage-admins" element={<AdminProfile />} />
         <Route path="/add-book" element={<FileUpload />} />
         <Route path="/preview" element={<Preview />} />
         <Route path="/success" element={<Success />} />

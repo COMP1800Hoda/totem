@@ -5,7 +5,7 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 
 const app = express();
-const PORT = 8080;
+const PORT = 3000;
 
 app.use(cors());
 app.use(express.json());
@@ -28,7 +28,7 @@ app.post('/reset-password', async(req, res) => {
         return res.status(400).json({message: "Email is required"});
     }
 
-    const resetLink = `http://localhost:5178/edit-password?email=${encodeURIComponent(email)}`;
+    const resetLink = `http://localhost:5183/edit-password?email=${encodeURIComponent(email)}`;
     //Set up email data
     const mailOptions = {
         from: process.env.EMAIL,

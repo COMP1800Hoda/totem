@@ -37,6 +37,7 @@ const Login = () => {
       //Get the hashed password from db
       const hashedPassword = admin.get('admin_hashed_password');
       const isMatch = await bcrypt.compare(password, hashedPassword);
+
       if (isMatch) {
         console.log('Login successful');
         setSuccess(true);
