@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { AiOutlineHome, AiOutlineBook, AiOutlineSearch, AiOutlineUser } from 'react-icons/ai';
 import { MdHeadset } from 'react-icons/md';
+import { COLORS } from '../../constants/colors.ts';
 
 export const FooterContainer = styled.footer`
   position: fixed;
@@ -8,8 +9,8 @@ export const FooterContainer = styled.footer`
   margin: 0;
   width: 100%;
   height: 8vh; /* 5% of the viewport height */
-  background-color: #ffffff;
-  border-top: 0.1vw solid #ddd; /* 0.1% of the viewport width */
+  background-color: ${COLORS.Lightest};
+  border-top: 0.05px solid ${COLORS.Light}; /* 0.1% of the viewport width */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -29,11 +30,11 @@ export const IconStyle = styled.div`
   flex-direction: column;
   align-items: center;
   text-decoration: none;
-  color: #333;
+  color: ${COLORS.Dark};
   font-size: 1em; /* Font size based on 2% of the viewport width */
 
   &:hover {
-    color: #007bff;
+    color: ${COLORS.Darkest};
   }
 `;
 
