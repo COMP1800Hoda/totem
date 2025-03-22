@@ -4,6 +4,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import HTMLFlipBook from "react-pageflip";
 import { ChevronLeft } from "lucide-react";
+
 import {
   Container,
   TopNavBar,
@@ -54,6 +55,10 @@ const ReadPage: React.FC = () => {
       handleToggleNav();
     }
   };
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>{error}</p>;
+  if (!book) return <p>Book not found.</p>;
 
   return (
     <Container>

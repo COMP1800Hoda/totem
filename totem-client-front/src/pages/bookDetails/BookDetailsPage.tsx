@@ -5,122 +5,52 @@ import {
   BookTitle, BookMeta, BookTags, Tag, ReadButton, Synopsis, BookInfo 
 } from "./BookDetailsPage.styled";
 
-interface BookProps {
-  id: string;
-  title: string;
-  author: string;
-  illustrator: string;
-  ageGroup: string;
-  genre: string;
-  synopsis: string;
-  publishedIn: string;
-  isbn: string;
-  contributor: string;
-  coverImage: string;
+
+interface Author {
+  name: string;
+  role: string;
 }
 
-const mockBooks: BookProps[] = [
-  {
-    id: "1",
-    title: "Example Book",
-    author: "John Doe",
-    illustrator: "Jane Smith",
-    ageGroup: "Age 4-6",
-    genre: "Fantasy",
-    synopsis: "This is a story about...",
-    publishedIn: "Iran",
-    isbn: "964-505-078-2",
-    contributor: "شابيز",
-    coverImage: "/path-to-image.jpg",
-  }, 
-  {
-    id: "2",
-    title: "Example Book",
-    author: "John Doe",
-    illustrator: "Jane Smith",
-    ageGroup: "Age 4-6",
-    genre: "Fantasy",
-    synopsis: "This is a story about...",
-    publishedIn: "Iran",
-    isbn: "964-505-078-2",
-    contributor: "شابيز",
-    coverImage: "/path-to-image.jpg",
-  },
-  {
-    id: "2",
-    title: "Example Book",
-    author: "John Doe",
-    illustrator: "Jane Smith",
-    ageGroup: "Age 4-6",
-    genre: "Fantasy",
-    synopsis: "This is a story about...",
-    publishedIn: "Iran",
-    isbn: "964-505-078-2",
-    contributor: "شابيز",
-    coverImage: "/path-to-image.jpg",
-  },
-  {
-    id: "3",
-    title: "Example Book",
-    author: "John Doe",
-    illustrator: "Jane Smith",
-    ageGroup: "Age 4-6",
-    genre: "Fantasy",
-    synopsis: "This is a story about...",
-    publishedIn: "Iran",
-    isbn: "964-505-078-2",
-    contributor: "شابيز",
-    coverImage: "/path-to-image.jpg",
-  },
-  {
-    id: "4",
-    title: "Example Book",
-    author: "John Doe",
-    illustrator: "Jane Smith",
-    ageGroup: "Age 4-6",
-    genre: "Fantasy",
-    synopsis: "This is a story about...",
-    publishedIn: "Iran",
-    isbn: "964-505-078-2",
-    contributor: "شابيز",
-    coverImage: "/path-to-image.jpg",
-  },
-  {
-    id: "5",
-    title: "Example Book",
-    author: "John Doe",
-    illustrator: "Jane Smith",
-    ageGroup: "Age 4-6",
-    genre: "Fantasy",
-    synopsis: "This is a story about...",
-    publishedIn: "Iran",
-    isbn: "964-505-078-2",
-    contributor: "شابيز",
-    coverImage: "/path-to-image.jpg",
-  },
-  {
-    id: "6",
-    title: "Example Book",
-    author: "John Doe",
-    illustrator: "Jane Smith",
-    ageGroup: "Age 4-6",
-    genre: "Fantasy",
-    synopsis: "This is a story about...",
-    publishedIn: "Iran",
-    isbn: "964-505-078-2",
-    contributor: "شابيز",
-    coverImage: "/path-to-image.jpg",
-  },
-];
+interface BookProps {
+  objectId: string;
+  storybook_title: string;
+  cover_image_url: string;
+  genre: string[];
+  language: string;
+  published: string;
+  storybook_description: string;
+  contributed_by: string;
+  ISBN: string;
+  created_by: Author[];
+  publisher: string;
+}
 
 const BookPage: React.FC = () => {
   const { id } = useParams<{ id: string }>(); // Get the book ID from the URL
   const navigate = useNavigate(); // Added useNavigate for navigation from ReadButton to ReadPage
   const book = mockBooks.find((b) => b.id === id);
+        const data = await response.json();
+        console.log(data);
+        setBook(data);
+      } catch (error) {
+        setError("Error fetching book details. Please try again.");
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  if (!book) {
-    return <p>Book not found.</p>;
-  }
+    fetchBook();
+  }, [id]);
+
+  const toggleModal = () => {
+    setIsModalOpen(!isModalOpen);
+  };
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>{error}</p>;
+  if (!book) return <p>Book not found.</p>;
+
+  const authors = book.created_by || [];
 
   return (
     <BookContainer>
@@ -128,24 +58,52 @@ const BookPage: React.FC = () => {
       <BookCard>
         <BookCover src={book.coverImage} alt="Book Cover" />
         <BookDetails>
-          <BookTitle>{book.title}</BookTitle>
-          <BookMeta>Author: {book.author}</BookMeta>
-          <BookMeta>Illustrator: {book.illustrator}</BookMeta>
+          <BookTitle>{book.storybook_title}</BookTitle>
+          <BookMeta>Published: {book.published}</BookMeta>
           <BookTags>
-            <Tag>{book.ageGroup}</Tag>
-            <Tag>{book.genre}</Tag>
+            {book.genre.length > 0 ? (
+              book.genre.map((tag, index) => <Tag key={index}>{tag}</Tag>)
+            ) : (
+              <Tag>No genre available</Tag>
+            )}
           </BookTags>
+          <BookMeta>Language: {book.language}</BookMeta>
+          <PublisherInfo>
+            <p>Publisher: {book.publisher}</p>
+            <p>Contributed by: {book.contributed_by}</p>
+          </PublisherInfo>
+          {authors.length > 0 && (
+            <AuthorInfo>
+              {authors.slice(0, 2).map((author, index) => (
+                <p key={index}>{author.role}: {author.name}</p>
+              ))}
+              {authors.length > 2 && (
+                <ShowMoreButton onClick={toggleModal}>
+                  Show all ...
+                </ShowMoreButton>
+              )}
+            </AuthorInfo>
+          )}
         </BookDetails>
       </BookCard>
       <ReadButton onClick={() => navigate(`/read/${book.id}`)}>Read this book</ReadButton> /* Changed to use navigate */
       <Synopsis>
-        <p>{book.synopsis}</p>
+        <p>{book.storybook_description}</p>
       </Synopsis>
       <BookInfo>
-        <p>Published in: {book.publishedIn}</p>
-        <p>ISBN: {book.isbn}</p>
-        <p>Contributed by: {book.contributor}</p>
+        <p>ISBN: {book.ISBN || "N/A"}</p>
       </BookInfo>
+
+      {/* Modal for showing all authors */}
+      <Modal isOpen={isModalOpen} onClose={toggleModal}>
+        <h3>Authors and Illustrators</h3>
+        {authors.map((author, index) => (
+          <p key={index}>{author.role}: {author.name}</p>
+        ))}
+      </Modal>
+      <FooterWrapper>
+        <Footer />
+      </FooterWrapper>
     </BookContainer>
   );
 };
