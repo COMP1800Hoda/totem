@@ -67,6 +67,7 @@ const FileUpload: React.FC = () => {
     const contentInputRef = useRef<HTMLInputElement | null>(null);
     const [previewData, setPreviewData] = useState<PreviewData | null>(null);
     const [imageNames, setImageNames] = useState<string[]>([]);
+    const [coverimagename, setCoverImagename] = useState<string | null>(null);
     //handle Genre
     const handleGenreInputChange = (index: number, value: string): void => {
         const newGenres = genres.map((genre, i) => {
@@ -235,7 +236,8 @@ const FileUpload: React.FC = () => {
         const contentImagesFolder = `/book-images/${bookId}/`;
 
         const uploadPromises: Promise<void>[] = [];
-
+        
+        const contentImageNames: string[] = [];
         // Upload cover image
         if (coverImage) {
             const coverUploadPromise = new Promise<void>(async (resolve, reject) => {
@@ -252,6 +254,8 @@ const FileUpload: React.FC = () => {
                             });
                             const coverimageUrl = response.url;
                             setUrl(coverimageUrl);
+                            const covername = coverImage.name;
+                            setCoverImagename(covername);
                             console.log("Cover image uploaded successfully. URL:", coverimageUrl);
                             resolve();
                         } catch (error) {
@@ -286,7 +290,10 @@ const FileUpload: React.FC = () => {
                                 tags: [bookId],
                             });
 
-                            console.log(fileData.name);
+                            const imageName = fileData.file.name;
+                            console.log(imageName);
+                            contentImageNames.push(imageName);
+                            setImageNames(contentImageNames);
                             const imageUrl = response.url;
                             setimageUrl((prevUrls) => [...prevUrls, imageUrl]);
                             console.log("Content image uploaded successfully. URL:", imageUrl);
@@ -364,6 +371,8 @@ const FileUpload: React.FC = () => {
         storybook.set("storybook_description", abstract);
         storybook.set("cover_image_url", coverimageurl);
         storybook.set("storybook_image_url", contentimageurl);
+        storybook.set("cover_image_name", coverimagename);
+        storybook.set("storybook_image_name", imageNames);
         console.log(storybook);
 
         try {
