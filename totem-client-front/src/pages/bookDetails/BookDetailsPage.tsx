@@ -56,7 +56,6 @@ const BookPage: React.FC = () => {
         }
 
         const data = await response.json();
-        console.log(data);
         setBook(data);
       } catch (error) {
         setError("Error fetching book details. Please try again.");
