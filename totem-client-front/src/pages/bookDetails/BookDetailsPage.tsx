@@ -1,13 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router'; // Import useNavigate
-import {
-  BookContainer, BackButton, BookCard, BookCover, BookDetails,
-  BookTitle, BookMeta, BookTags, Tag, ReadButton, Synopsis, BookInfo,
-  AuthorInfo, PublisherInfo, ShowMoreButton, FooterWrapper
-} from './BookDetailsPage.styled';
-import Footer from '../../components/footer/Footer'; // Import the Footer component
-import Modal from '../../components/modal'; // Import the Modal component
-import { Header } from '../../components/header/Header'; // Import the Header component
+import React from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { 
+  BookContainer, BackButton, BookCard, BookCover, BookDetails, 
+  BookTitle, BookMeta, BookTags, Tag, ReadButton, Synopsis, BookInfo 
+} from "./BookDetailsPage.styled";
+
 
 interface Author {
   name: string;
@@ -29,32 +26,9 @@ interface BookProps {
 }
 
 const BookPage: React.FC = () => {
-  const { id } = useParams<{ id: string }>();
-  const navigate = useNavigate(); // Initialize useNavigate
-  const [book, setBook] = useState<BookProps | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false); // State for modal
-
-  useEffect(() => {
-    const fetchBook = async () => {
-      try {
-        const response = await fetch(
-          `https://parseapi.back4app.com/classes/storybook/${id}`,
-          {
-            method: "GET",
-            headers: {
-              "X-Parse-Application-Id": "XWNVzANvs7w6pYMl4fZWLCcikgXdMvCZhEnI48sH",
-              "X-Parse-REST-API-Key": "mRZK1BOLh5EIaOR9Ircc2OhX5OU28aidSsZAtyJP",
-              "Content-Type": "application/json"
-            }
-          }
-        );
-
-        if (!response.ok) {
-          throw new Error("Failed to fetch book details");
-        }
-
+  const { id } = useParams<{ id: string }>(); // Get the book ID from the URL
+  const navigate = useNavigate(); // Added useNavigate for navigation from ReadButton to ReadPage
+  const book = mockBooks.find((b) => b.id === id);
         const data = await response.json();
         console.log(data);
         setBook(data);
@@ -80,10 +54,9 @@ const BookPage: React.FC = () => {
 
   return (
     <BookContainer>
-      <Header />
-      <BackButton onClick={() => window.history.back()}>&lt; Back</BackButton>
-      <BookCard style={{ flexDirection: "row-reverse" }}>
-        <BookCover src={book.cover_image_url} alt="Book Cover" />
+      <BackButton onClick={() => navigate("/")}> &lt; Back</BackButton>
+      <BookCard>
+        <BookCover src={book.coverImage} alt="Book Cover" />
         <BookDetails>
           <BookTitle>{book.storybook_title}</BookTitle>
           <BookMeta>Published: {book.published}</BookMeta>
@@ -113,9 +86,7 @@ const BookPage: React.FC = () => {
           )}
         </BookDetails>
       </BookCard>
-      <ReadButton onClick={() => navigate(`/read/${book.objectId}`)}>
-        Read this book
-      </ReadButton>
+      <ReadButton onClick={() => navigate(`/read/${book.id}`)}>Read this book</ReadButton> /* Changed to use navigate */
       <Synopsis>
         <p>{book.storybook_description}</p>
       </Synopsis>
