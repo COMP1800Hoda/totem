@@ -1,45 +1,58 @@
-import React, { useState } from "react";
-// @ts-ignore
-import Parse from "../../database.d.ts";
-import { useNavigate } from 'react-router';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import React, { useState, useEffect } from 'react';
+import Parse from '../../database';
+import { Link, useNavigate } from 'react-router-dom';
+import bcrypt from 'bcryptjs';
 
 const Login = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
+
   const navigate = useNavigate();
+  useEffect(() => {
+    if (success) {
+      navigate('/main'); // Navigate only when success is true
+    }
+  }, [success, navigate]);
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setError("");
+    setError('');
     setSuccess(false);
 
     try {
-      const query = new Parse.Query("Admin");
-      query.equalTo("admin_email", email);
-      query.equalTo("admin_hashed_password", password);
-      const result = await query.first();
-
-      if (result) {
-        console.log("Login successful");
-        setSuccess(true);
-        navigate('/main')
-
-      } else {
-        console.log("Invalid email or password");
-        setError("Invalid email or password");
+      const query = new Parse.Query('Admin');
+      query.equalTo('admin_email', email);
+      const admin = await query.first();
+      if (!admin) {
+        console.log('Email not found');
+        setError('Email not found');
+        return;
       }
-    } catch {
-      console.log("An error occured");
-      setError("An error occured");
+
+      //Get the hashed password from db
+      const hashedPassword = admin.get('admin_hashed_password');
+      const isMatch = await bcrypt.compare(password, hashedPassword);
+
+      if (isMatch) {
+        console.log('Login successful');
+        setSuccess(true);
+      } else {
+        console.log('Incorrect password');
+        setError('Incorrect password');
+      }
+    } catch (error) {
+      console.log('An error occured: ', error);
+      setError('An error occured. Please try again');
     }
   };
   return (
     <div className="d-flex justify-content-center align-items-center vh-100 w-100">
       <div
         className="card p-4 shadow-lg"
-        style={{ width: "100%", maxWidth: "450px" }}
+        style={{ width: '100%', maxWidth: '450px', backgroundColor: '#F8F0E9' }}
       >
         <h2 className="text-center mb-4">Log in to your account</h2>
         {error && <div className="alert alert-danger">{error}</div>}
@@ -51,8 +64,8 @@ const Login = () => {
             <label className="form-label">Email:</label>
             <input
               type="email"
-              className="form-control"
-              placeholder="Enter email"
+              className="form-control p-2"
+              placeholder="Enter your email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
@@ -64,19 +77,30 @@ const Login = () => {
             <label className="form-label">Password:</label>
             <input
               type="password"
-              className="form-control"
-              placeholder="Enter password"
+              className="form-control p-2"
+              placeholder="Enter your password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
             />
           </div>
 
+          {/* Forgot Password Link */}
+          <div className="mb-3 text-end text-primary text-decoration-underline">
+            <Link to="/forgot-password">Forgot password?</Link>
+          </div>
+
           {/* Login Button */}
           <button
             type="submit"
-            className="btn btn-primary mx-auto d-block"
-            style={{ width: "100px" }}
+            className="btn mx-auto d-block"
+            style={{
+              color: '#000000',
+              width: '120px',
+              height: '50px',
+              fontSize: '18px',
+              backgroundColor: '#DECBB7',
+            }}
           >
             Log in
           </button>

@@ -2,29 +2,6 @@ import { createGlobalStyle } from 'styled-components';
 import { COLORS } from '../constants/colors.ts';
 
 const GlobalStyles = createGlobalStyle`
-  /* http://meyerweb.com/eric/tools/css/reset/
-     v2.0 | 20110126
-     License: none (public domain)
-  */
-  html, body, div, span, applet, object, iframe,
-  h1, h2, h3, h4, h5, h6, p, blockquote, pre,
-  a, abbr, acronym, address, big, cite, code,
-  del, dfn, em, img, ins, kbd, q, s, samp,
-  small, strike, strong, sub, sup, tt, var,
-  b, u, i, center,
-  dl, dt, dd, ol, ul, li,
-  fieldset, form, label, legend,
-  table, caption, tbody, tfoot, thead, tr, th, td,
-  article, aside, canvas, details, embed,
-  figure, figcaption, footer, header, hgroup,
-  menu, nav, output, ruby, section, summary,
-  time, mark, audio, video {
-    margin: 0;
-    padding: 0;
-    border: 0;
-    font-size: 100%;
-    vertical-align: baseline;
-  }
 
   /* HTML5 display-role reset for older browsers */
   article, aside, details, figcaption, figure,
@@ -54,6 +31,7 @@ const GlobalStyles = createGlobalStyle`
   :root {
     // colors
     --color-primary: ${COLORS.primary};
+    --color-primary-hover: #f3e3d1;
     --color-background: ${COLORS.background};
     --color-text-primary: ${COLORS.darkGray};
     --color-border-gray: #d1d1d1;
@@ -105,8 +83,18 @@ const GlobalStyles = createGlobalStyle`
     border: 0;
   }
 
+  h1, h2, h3, h4 {
+    color: inherit;
+  }
+
   .page {
-    padding-top: 50px;
+    padding-top: 56px;
+  }
+
+  .container-mb {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
 
   .text-highlight {
@@ -116,6 +104,12 @@ const GlobalStyles = createGlobalStyle`
     line-height: 1.2;
     margin-bottom: 0.3em;
   }
+  
+  .rtl {
+    display: block;
+    text-align: right;
+  }
+    
 
 `;
 
