@@ -9,7 +9,7 @@ export const HeaderContainer = styled.header<{
   top: 0;
   right: 0;
   width: 100%;
-  height: 56px;
+  height: 3.5em;
   background-color: white;
   border-bottom: ${({ hideBorder }) =>
           hideBorder
@@ -18,11 +18,11 @@ export const HeaderContainer = styled.header<{
 `;
 
 export const Inner = styled.div`
-  height: 56px;
+  height: 3em;
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
-  gap: 30px;
+  gap: 2em;
 `;
 
 export const SearchContainer = styled.div`
