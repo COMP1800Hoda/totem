@@ -17,14 +17,14 @@ const Footer: React.FC = () => {
       <IconWrapper>
         <Link to="/profile">
           <IconStyle>
-          <UserIcon />
-          <span>Profile</span>
+            <UserIcon />
+            <span>Profile</span>
           </IconStyle>
         </Link>
         <Link to="/search">
           <IconStyle>
-          <SearchIcon />
-          <span>Search</span>
+            <SearchIcon />
+            <span>Search</span>
           </IconStyle>
         </Link>
         <Link to="/audio">
@@ -35,14 +35,14 @@ const Footer: React.FC = () => {
         </Link>
         <Link to="/books">
           <IconStyle>
-          <BookOpenIcon />
-          <span>Books</span>
+            <BookOpenIcon />
+            <span>Books</span>
           </IconStyle>
         </Link>
         <Link to="/">
           <IconStyle>
-          <HomeIcon />
-          <span>Home</span>
+            <HomeIcon />
+            <span>Home</span>
           </IconStyle>
         </Link>
       </IconWrapper>
