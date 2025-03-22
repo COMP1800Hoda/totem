@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router'; // Import useNavigate
 import { Header } from '../../components/header/Header';
 import Footer from '../../components/footer/Footer';
 import { AudioContainer, AudioGrid, AudioList, AudioItem, AudioThumbnail } from './AudioPage.styled';
+import { COLORS } from '../../constants/colors.ts';
 
 // Define Audio type
 interface Audio {
@@ -66,7 +67,7 @@ const MyAudioPage: React.FC = () => {
       <Header />
       <div style={{ padding: '20px', marginTop: '80px', textAlign: 'center' }}>
         <h1>This is the Audio page.</h1>
-        <button onClick={toggleView} style={{ margin: '20px', padding: '10px 20px', cursor: 'pointer' }}>
+        <button onClick={toggleView} style={{ margin: '20px', padding: '10px 20px', cursor: 'pointer', color: COLORS.Dark, backgroundColor: COLORS.Lightest , borderRadius: '6px', border: `2px solid ${COLORS.Dark}`}}>
           Toggle {isGridView ? 'List' : 'Grid'} View
         </button>
       </div>

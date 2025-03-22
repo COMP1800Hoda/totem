@@ -44,7 +44,7 @@ export const SectionTitle = styled.p`
   font-weight: bold;
   font-size: 16px;
   margin-bottom: 5px;
-  color: ${COLORS.Darkest};
+  color: ${COLORS.Dark};
 `;
 
 export const SectionContent = styled.p`

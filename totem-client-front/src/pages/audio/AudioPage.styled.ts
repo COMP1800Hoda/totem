@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { COLORS } from '../../constants/colors.ts';
 
 export const AudioContainer = styled.div`
   display: flex;
@@ -6,7 +7,8 @@ export const AudioContainer = styled.div`
   min-height: 100vh; /* Ensure the container takes the full height of the viewport */
   padding: 0;
   margin: 0;
-  background-color: #f8f8f8; /* Light background color for the page */
+  background-color: ${COLORS.Lightest}; /* Light background color for the page */
+  color: ${COLORS.Dark}; /* Dark text color */
 
   /* If you want the content to stretch and fill available space */
   main {

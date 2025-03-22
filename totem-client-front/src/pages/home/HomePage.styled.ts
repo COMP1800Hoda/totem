@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { COLORS } from '../../constants/colors.ts';
 
 export const HomeContainer = styled.div`
   display: flex;
@@ -6,7 +7,8 @@ export const HomeContainer = styled.div`
   min-height: 100vh; /* Ensure the container takes the full height of the viewport */
   padding: 0;
   margin: 0;
-  background-color: #f8f8f8; /* Light background color for the page */
+  background-color: ${COLORS.Lightest}; /* Light background color for the page */
+  color: ${COLORS.Darkest}; /* Dark text color */
 `;
 
 export const Section = styled.section`
@@ -26,12 +28,13 @@ export const SectionHeader = styled.div`
 
   h2 {
     font-size: 1.2em; /* Adjusted font size based on viewport width */
+    color: ${COLORS.Darkest}; 
   }
 
   a {
     font-size: 1em; /* Adjusted font size based on viewport width */
     text-decoration: none;
-    color: #007bff;
+    color: ${COLORS.Dark};
 
     &:hover {
       text-decoration: underline;

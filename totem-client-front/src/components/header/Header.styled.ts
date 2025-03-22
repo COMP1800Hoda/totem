@@ -24,7 +24,7 @@ export const Inner = styled.div`
   justify-content: flex-end;
   align-items: center;
   gap: 2em;
-  padding: 0 5%;
+  padding: 0 1.5em;
   color: ${COLORS.Dark};
 `;
 

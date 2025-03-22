@@ -69,7 +69,7 @@ export const Button = styled.button<{ cancel?: boolean }>`
   padding: 10px;
   font-size: 14px;
   border-radius: 8px;
-  border: 1px solid ${({ cancel }) => (cancel ? '${COLORS.Dark}' : '${COLORS.Darkest}')}; /* Thinner border */
+  border: 0.01px solid ${({ cancel }) => (cancel ? '${COLORS.Dark}' : '${COLORS.Darkest}')}; /* Thinner border */
   background: ${({ cancel }) => (cancel ? 'none' : '#decbb7')};
   color: ${({ cancel }) => (cancel ? '${COLORS.Dark}' : '${COLORS.Darkest}')};
   font-weight: ${({ cancel }) => (cancel ? 'normal' : 'bold')};
