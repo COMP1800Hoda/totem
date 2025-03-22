@@ -110,6 +110,7 @@ const PreviewPage: React.FC = () => {
             alert(`Error uploading content image: ${(error as Error).message}`);
             reject(error);
           }
+
         }
       );
       uploadPromises.push(contentUploadPromise);
@@ -174,6 +175,7 @@ const PreviewPage: React.FC = () => {
     const storybook = new Storybook();
 
     // Set metadata fields
+
     storybook.set('storybook_title', previewData.bookTitle);
     storybook.set('storybook_id', previewData.bookId);
     storybook.set('Age', previewData.age);
@@ -185,6 +187,7 @@ const PreviewPage: React.FC = () => {
     storybook.set('storybook_description', previewData.abstract);
     storybook.set('cover_image_url', coverimageurl);
     storybook.set('storybook_image_url', contentimageurl);
+
     console.log(storybook);
     try {
       await storybook.save();
