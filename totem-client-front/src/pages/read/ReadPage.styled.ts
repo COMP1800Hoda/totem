@@ -1,6 +1,14 @@
 import styled, { keyframes } from "styled-components";
 
-// Define the slide-in animations
+const slideOutLeft = keyframes`
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+`;
+
 const slideInForward = keyframes`
   0% {
     transform: translateX(100%);
@@ -108,7 +116,7 @@ export const ReadingContainer = styled.div`
   justify-content: center;
   cursor: pointer;
   overflow: hidden;
-
+  
   .page-container {
     position: absolute;
     width: 100%;
@@ -116,6 +124,10 @@ export const ReadingContainer = styled.div`
     background-size: cover;
     background-position: center;
     transition: transform 0.5s ease-in-out; /* Smooth transition */
+  }
+
+  .page-container.slide-out-left {
+    animation: ${slideOutLeft} 0.5s ease-in-out; /* Slide out left animation */
   }
 
   .page-container.slide-in-forward {
