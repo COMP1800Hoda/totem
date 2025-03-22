@@ -5,24 +5,23 @@ import {
   BookTitle, BookMeta, BookTags, Tag, ReadButton, Synopsis, BookInfo 
 } from "./BookDetailsPage.styled";
 
-
 interface Author {
   name: string;
   role: string;
 }
 
 interface BookProps {
-  objectId: string;
-  storybook_title: string;
-  cover_image_url: string;
-  genre: string[];
-  language: string;
-  published: string;
-  storybook_description: string;
-  contributed_by: string;
-  ISBN: string;
-  created_by: Author[];
-  publisher: string;
+  id: string;
+  title: string;
+  author: string;
+  illustrator: string;
+  ageGroup: string;
+  genre: string;
+  synopsis: string;
+  publishedIn: string;
+  isbn: string;
+  contributor: string;
+  coverImage: string;
 }
 
 const BookPage: React.FC = () => {
@@ -50,7 +49,10 @@ const BookPage: React.FC = () => {
   if (error) return <p>{error}</p>;
   if (!book) return <p>Book not found.</p>;
 
-  const authors = book.created_by || [];
+
+  if (!book) {
+    return <p>Book not found.</p>;
+  }
 
   return (
     <BookContainer>
@@ -58,52 +60,24 @@ const BookPage: React.FC = () => {
       <BookCard>
         <BookCover src={book.coverImage} alt="Book Cover" />
         <BookDetails>
-          <BookTitle>{book.storybook_title}</BookTitle>
-          <BookMeta>Published: {book.published}</BookMeta>
+          <BookTitle>{book.title}</BookTitle>
+          <BookMeta>Author: {book.author}</BookMeta>
+          <BookMeta>Illustrator: {book.illustrator}</BookMeta>
           <BookTags>
-            {book.genre.length > 0 ? (
-              book.genre.map((tag, index) => <Tag key={index}>{tag}</Tag>)
-            ) : (
-              <Tag>No genre available</Tag>
-            )}
+            <Tag>{book.ageGroup}</Tag>
+            <Tag>{book.genre}</Tag>
           </BookTags>
-          <BookMeta>Language: {book.language}</BookMeta>
-          <PublisherInfo>
-            <p>Publisher: {book.publisher}</p>
-            <p>Contributed by: {book.contributed_by}</p>
-          </PublisherInfo>
-          {authors.length > 0 && (
-            <AuthorInfo>
-              {authors.slice(0, 2).map((author, index) => (
-                <p key={index}>{author.role}: {author.name}</p>
-              ))}
-              {authors.length > 2 && (
-                <ShowMoreButton onClick={toggleModal}>
-                  Show all ...
-                </ShowMoreButton>
-              )}
-            </AuthorInfo>
-          )}
         </BookDetails>
       </BookCard>
       <ReadButton onClick={() => navigate(`/read/${book.id}`)}>Read this book</ReadButton> /* Changed to use navigate */
       <Synopsis>
-        <p>{book.storybook_description}</p>
+        <p>{book.synopsis}</p>
       </Synopsis>
       <BookInfo>
-        <p>ISBN: {book.ISBN || "N/A"}</p>
+        <p>Published in: {book.publishedIn}</p>
+        <p>ISBN: {book.isbn}</p>
+        <p>Contributed by: {book.contributor}</p>
       </BookInfo>
-
-      {/* Modal for showing all authors */}
-      <Modal isOpen={isModalOpen} onClose={toggleModal}>
-        <h3>Authors and Illustrators</h3>
-        {authors.map((author, index) => (
-          <p key={index}>{author.role}: {author.name}</p>
-        ))}
-      </Modal>
-      <FooterWrapper>
-        <Footer />
-      </FooterWrapper>
     </BookContainer>
   );
 };

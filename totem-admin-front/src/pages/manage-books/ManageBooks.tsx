@@ -17,19 +17,27 @@ export const ManageBooks = () => {
         <Container>
           <MainTitle text={`Manage Books`} />
           <SearchContainer>
-            <Form.Select size={'sm'} aria-label="select search type" defaultValue={"title"}>
+            <Form.Select
+              size={'sm'}
+              aria-label="select search type"
+              defaultValue={'title'}
+            >
               <option value="title">Title</option>
               <option value="bookid">Book ID</option>
               <option value="genre">Genre</option>
               <option value="contributed">Contributed by</option>
             </Form.Select>
-            <Form.Control size="sm" type="text" placeholder="Search by keywords" />
+            <Form.Control
+              size="sm"
+              type="text"
+              placeholder="Search by keywords"
+            />
           </SearchContainer>
         </Container>
       </div>
       <div id="table-container">
         <QueryClientProvider client={queryClient}>
-          <ManageBookTable/>
+          <ManageBookTable />
         </QueryClientProvider>
       </div>
     </div>

@@ -2,7 +2,6 @@ import React from "react";
 import { BrowserRouter as Router, Route, Routes } from 'react-router';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
-
 import HomePage from './pages/home/HomePage.tsx';
 import NotFoundPage from './pages/not-found/NotFoundPage.tsx';
 import ReadPage from './pages/read/ReadPage.tsx';
@@ -15,11 +14,12 @@ import SearchPage from './pages/search/SearchPage.tsx';
 import BookDetailsPage from './pages/bookDetails/BookDetailsPage.tsx';
 import ChangePassword from './pages/changePassword/changePassword.tsx';  // Import ChangePassword component
 
+
 const App: React.FC = () => (
   <Router>
     <Routes>
       <Route path="/" element={<HomePage />} />
-      <Route path="/read/:id" element={<ReadPage />} />
+      <Route path="/read" element={<ReadPage />} />
       <Route path="*" element={<NotFoundPage />} />
       <Route path="/my-books" element={<MyBooksPage />} />
       <Route path="/profile" element={<ProfilePage />} />
@@ -30,6 +30,7 @@ const App: React.FC = () => (
       <Route path="/books/:id" element={<BookDetailsPage />} />
       <Route path="/read/:id" element={<ReadPage />} />
       <Route path="/change-password" element={<ChangePassword />} /> {/* Add ChangePassword route */}
+
     </Routes>
   </Router>
 );
