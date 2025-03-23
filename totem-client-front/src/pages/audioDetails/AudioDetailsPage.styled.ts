@@ -4,8 +4,10 @@ import { COLORS } from "../../constants/colors";
 export const PageContainer = styled.div`
   text-align: center;
   padding: 20px;
-  margin-top: 80px;
+  margin-top: 55px;
+  min-height: 100vh;
   color: ${COLORS.Darkest};
+  background-color: ${COLORS.Lightest};
 `;
 
 export const AudioPlayer = styled.audio`
