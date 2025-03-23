@@ -24,7 +24,8 @@ const ModalContent = styled.div`
 `;
 
 const CloseButton = styled.button`
-  background: #007bff;
+  text-align: center;
+  background: var(--color-primary);
   color: white;
   border: none;
   padding: 0.5em 1em;
@@ -32,7 +33,7 @@ const CloseButton = styled.button`
   cursor: pointer;
   margin-top: 1em;
   &:hover {
-    background: #0056b3;
+    background: var(--color-primary-hover);
   }
 `;
 
@@ -40,14 +41,15 @@ interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
   children: React.ReactNode;
+  className: string | null;
 }
 
-const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
+const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children, className ='' }) => {
   if (!isOpen) return null;
 
   return (
     <ModalOverlay>
-      <ModalContent>
+      <ModalContent className={className || ''}>
         {children}
         <CloseButton onClick={onClose}>Close</CloseButton>
       </ModalContent>

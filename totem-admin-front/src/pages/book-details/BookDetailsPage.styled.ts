@@ -68,6 +68,7 @@ export const BookCover = styled.img`
   width: 7.5em;
   height: 13.5em;
   border-radius: 0.5em;
+  object-fit: contain;
 `;
 
 export const BookDetails = styled.div`
