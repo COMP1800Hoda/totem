@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { Header } from "../../components/header/Header";
 import Footer from "../../components/footer/Footer";
+import { PageContainer, AudioPlayer} from "./AudioDetailsPage.styled";
 
 interface Audio {
   objectId: string;
@@ -12,7 +13,7 @@ interface Audio {
 }
 
 const AudioDetailsPage: React.FC = () => {
-  const { id } = useParams<{ id: string }>(); // Get audio ID from URL
+  const { id } = useParams<{ id: string }>();
   const [audio, setAudio] = useState<Audio | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -25,8 +26,8 @@ const AudioDetailsPage: React.FC = () => {
           {
             method: "GET",
             headers: {
-              "X-Parse-Application-Id": "XWNVzANvs7w6pYMl4fZWLCcikgXdMvCZhEnI48sH", // Replace with your actual Application ID
-              "X-Parse-REST-API-Key": "mRZK1BOLh5EIaOR9Ircc2OhX5OU28aidSsZAtyJP", // Replace with your actual API key
+              "X-Parse-Application-Id": "XWNVzANvs7w6pYMl4fZWLCcikgXdMvCZhEnI48sH",
+              "X-Parse-REST-API-Key": "mRZK1BOLh5EIaOR9Ircc2OhX5OU28aidSsZAtyJP",
               "Content-Type": "application/json",
             },
           }
@@ -37,14 +38,13 @@ const AudioDetailsPage: React.FC = () => {
         }
 
         const data = await response.json();
-        const fetchedAudio: Audio = {
+        setAudio({
           objectId: data.objectId,
           name: data.Name,
           audio_url: data.AudioURL,
           createdAt: data.createdAt,
           updatedAt: data.updatedAt,
-        };
-        setAudio(fetchedAudio);
+        });
       } catch (error) {
         setError("Error fetching audio details. Please try again.");
       } finally {
@@ -62,19 +62,19 @@ const AudioDetailsPage: React.FC = () => {
   return (
     <div>
       <Header />
-      <div style={{ textAlign: "center", padding: "20px", marginTop: "80px" }}>
+      <PageContainer>
         <h1>{audio.name}</h1>
         <p>Created At: {new Date(audio.createdAt).toLocaleString()}</p>
         <p>Last Updated: {new Date(audio.updatedAt).toLocaleString()}</p>
         {audio.audio_url ? (
-          <audio controls>
-            <source src={audio.audio_url} type="audio/mpeg" />
-            Your browser does not support the audio element.
-          </audio>
+            <AudioPlayer controls>
+              <source src={audio.audio_url} type="audio/mpeg" />
+              Your browser does not support the audio element.
+            </AudioPlayer>
         ) : (
           <p>No audio file available.</p>
         )}
-      </div>
+      </PageContainer>
       <Footer />
     </div>
   );

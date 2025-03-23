@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { COLORS } from '../../constants/colors.ts';
 
 export const SearchContainer = styled.div`
   display: flex;
@@ -6,7 +7,8 @@ export const SearchContainer = styled.div`
   min-height: 100vh; /* Ensure the container takes the full height of the viewport */
   padding: 0;
   margin: 0;
-  background-color: #f8f8f8; /* Light background color for the page */
+  background-color: ${COLORS.Lightest}; /* Light background color for the page */
+  color: ${COLORS.Dark}; /* Dark text color */
 
   /* If you want the content to stretch and fill available space */
   main {
@@ -47,7 +49,7 @@ export const BookCover = styled.img<BookGridProps>`
 export const BookText = styled.div<BookGridProps>`
   margin-top: 5px;
   font-size: ${(props) => (props.layoutType === 'threeColumns' ? '14px' : '16px')};
-  color: #333;
+  color: ${COLORS.Darkest};
   text-align: center;
   line-height: 1.3;
 `;
@@ -58,7 +60,7 @@ export const SearchInput = styled.input`
   width: 300px;
   margin-right: 10px;
   border-radius: 5px;
-  border: 1px solid #ccc;
+  border: 1px solid ${COLORS.Light};
 `;
 
 export const SearchButton = styled.button`
@@ -67,9 +69,9 @@ export const SearchButton = styled.button`
   font-size: 16px;
   cursor: pointer;
   border-radius: 5px;
-  border: 1px solid #ccc;
-  background-color: #007bff;
-  color: white;
+  border: 1px solid ${COLORS.Darkest};
+  background-color: ${COLORS.Light};
+  color: ${COLORS.Darkest};
 `;
 
 export const SearchResults = styled.ul`

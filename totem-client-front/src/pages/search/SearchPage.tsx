@@ -3,6 +3,7 @@ import { Header } from '../../components/header/Header';
 import Footer from '../../components/footer/Footer';
 import { useNavigate } from 'react-router';
 import { useSearch } from './SearchPageLogic.ts';
+import { COLORS } from '../../constants/colors.ts';
 import {
   SearchContainer,
   SearchInput,
@@ -41,7 +42,7 @@ const SearchPage: React.FC = () => {
         </div>
 
         {/* Layout Toggle Button */}
-        <button onClick={toggleLayout} style={{ margin: '20px', padding: '10px 20px', cursor: 'pointer' }}>
+        <button onClick={toggleLayout} style={{ margin: '20px', padding: '10px 20px', cursor: 'pointer', color: COLORS.Dark, backgroundColor: COLORS.Lightest , borderRadius: '6px', border: `2px solid ${COLORS.Dark}` }}>
           Toggle {layoutType === 'threeColumns' ? 'Two' : 'Three'} Columns
         </button>
 

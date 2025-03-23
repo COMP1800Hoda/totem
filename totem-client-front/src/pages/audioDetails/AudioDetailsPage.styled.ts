@@ -11,17 +11,11 @@ export const PageContainer = styled.div`
 export const AudioPlayer = styled.audio`
   width: 100%;
   max-width: 400px;
-  margin-top: 15px;
-  background-color: ${COLORS.Primary}; /* Customize */
   border-radius: 10px;
-`;
 
-export const AudioContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  background-color: ${COLORS.Light}; /* Customize */
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  /* Apply styles to WebKit-based browsers */
+  &::-webkit-media-controls-panel {
+    background-color: ${COLORS.Light}; /* Change to desired color */
+    border-radius: 10px;
+  }
 `;

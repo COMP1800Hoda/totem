@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router';
 import { MyBooksContainer, BookGrid, BookCover, BookText } from './MyBooksPage.styled';
 import { Header } from '../../components/header/Header';
 import Footer from '../../components/footer/Footer';
+import { COLORS } from '../../constants/colors.ts';
 
 // Define types for the book data
 interface Book {
@@ -85,7 +86,7 @@ const MyBooksPage: React.FC = () => {
         <h1>Recently opened books.</h1>
         <button
           onClick={toggleLayout}
-          style={{ margin: '20px', padding: '10px 20px', cursor: 'pointer' }}
+          style={{ margin: '20px', padding: '10px 20px', cursor: 'pointer', color: COLORS.Dark, backgroundColor: COLORS.Lightest , borderRadius: '6px', border: `2px solid ${COLORS.Dark}`}}
         >
           Toggle {layoutType === 'threeColumns' ? 'Two' : 'Three'} Columns
         </button>
@@ -113,7 +114,7 @@ const MyBooksPage: React.FC = () => {
 <div style={{ textAlign: 'center', margin: '20px', marginBottom: '100px' }}>
   <button
     onClick={loadMoreBooks}
-    style={{ padding: '10px 20px', cursor: 'pointer' }}
+    style={{ padding: '10px 20px', cursor: 'pointer', color: COLORS.Dark, backgroundColor: COLORS.Lightest , borderRadius: '6px', border: `2px solid ${COLORS.Dark}` }}
   >
     Load More
   </button>
