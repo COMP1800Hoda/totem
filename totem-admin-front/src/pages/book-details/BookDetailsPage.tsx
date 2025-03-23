@@ -117,6 +117,8 @@ const BookPage: React.FC = () => {
           </Synopsis>
           <BookInfo>
             <p>ISBN: {book.ISBN || "N/A"}</p>
+            <p>Book index in DB: {book.index || "N/A"}</p>
+            <p>Book ID: {book.storybook_id || "N/A"}</p>
           </BookInfo>
 
           {/* Modal for showing all authors */}
