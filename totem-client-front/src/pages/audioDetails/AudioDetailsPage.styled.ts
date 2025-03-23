@@ -1,29 +1,27 @@
 import styled from "styled-components";
-import { COLORS } from '../../constants/colors.ts';
+import { COLORS } from "../../constants/colors";
+
+export const PageContainer = styled.div`
+  text-align: center;
+  padding: 20px;
+  margin-top: 80px;
+  color: ${COLORS.Darkest};
+`;
+
+export const AudioPlayer = styled.audio`
+  width: 100%;
+  max-width: 400px;
+  margin-top: 15px;
+  background-color: ${COLORS.Primary}; /* Customize */
+  border-radius: 10px;
+`;
 
 export const AudioContainer = styled.div`
   display: flex;
   flex-direction: column;
-  min-height: 100vh; /* Ensure the container takes the full height of the viewport */
-  padding: 0;
-  margin: 0;
-  background-color: ${COLORS.Lightest}; /* Light background color for the page */
-  color: red; 
-`;
-
-export const AudioTitle = styled.h1`
-  font-size: 2rem;
-  margin-bottom: 10px;
-`;
-
-export const AudioMetadata = styled.p`
-  font-size: 1rem;
-  color: #555;
-  margin-bottom: 10px;
-`;
-
-export const AudioPlayer = styled.audio`
-  margin-top: 15px;
-  width: 100%;
-  max-width: 400px;
+  align-items: center;
+  background-color: ${COLORS.Light}; /* Customize */
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
 `;
