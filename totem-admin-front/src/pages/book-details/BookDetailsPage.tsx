@@ -1,5 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {useParams} from 'react-router';
+import {Spinner} from "react-bootstrap";
+
 import {
   AuthorInfo,
   BookCard,
@@ -19,14 +21,14 @@ import Modal from '../../components/modal';
 import {Header} from '../../components/header/Header';
 import {fetchStorybookById} from "../../api/fetchStorybookById.ts";
 import {Storybook} from "../../types/Storybook.ts";
-import {Container} from "../../components/Container.tsx"; //
+import {Container} from "../../components/Container.tsx";
 
 const BookPage: React.FC = () => {
   const {id} = useParams<{ id: string }>();
   const [book, setBook] = useState<Storybook | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false); // State for modal
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
   useEffect(() => {
     (async () => {
@@ -48,12 +50,30 @@ const BookPage: React.FC = () => {
     setIsModalOpen(!isModalOpen);
   };
 
-  if (!id) return <p>Invalid book ID.</p>;
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>{error}</p>;
-  if (!book) return <p>Book not found.</p>;
+  const authors = book?.created_by || [];
 
-  const authors = book.created_by || [];
+  if (loading || error) {
+    return (
+      <div className="page">
+        <Header/>
+        <BookContainer>
+          {loading && (<Spinner/>)}
+          {error && (<p>{error}</p>)}
+        </BookContainer>
+      </div>
+    )
+  }
+
+  if (!book) {
+    return (
+      <div className="page">
+        <Header/>
+        <BookContainer>
+          Cannot find book
+        </BookContainer>
+      </div>
+    )
+  }
 
   return (
     <div className="page">
@@ -97,10 +117,12 @@ const BookPage: React.FC = () => {
           </Synopsis>
           <BookInfo>
             <p>ISBN: {book.ISBN || "N/A"}</p>
+            <p>Book index in DB: {book.index || "N/A"}</p>
+            <p>Book ID: {book.storybook_id || "N/A"}</p>
           </BookInfo>
 
           {/* Modal for showing all authors */}
-          <Modal isOpen={isModalOpen} onClose={toggleModal}>
+          <Modal isOpen={isModalOpen} onClose={toggleModal} className="modal-author">
             <h3>Authors and Illustrators</h3>
             {authors.map((author, index) => (
               <p key={index}>{author.role}: {author.name}</p>

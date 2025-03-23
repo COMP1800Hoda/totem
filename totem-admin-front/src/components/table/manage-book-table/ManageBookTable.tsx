@@ -32,14 +32,19 @@ import {Container} from '../../Container.tsx';
 import SearchResultHeader from './SearchResultHeader.tsx';
 import {MainTitle} from "../../text/MainTitle.tsx";
 import {Table} from "./Table.tsx";
+import AlertMessage from "../../AlertMessage.tsx";
 
 
 const PAGE_SIZE = 30; // Number of items to fetch per page
 
 export const ManageBookTable: React.FC = () => {
   const [totalStorybooks, setTotalStorybooks] = useState<number>(0); // State to store the total count
-  const [searchType, setSearchType] = useState('title');
+  // interactive states
+  const [searchType, setSearchType] = useState('storybook_title');
   const [searchKeyword, setSearchKeyword] = useState('');
+  // states used for actual search when clicks 'submit' button
+  const [searchResultType, setSearchResultType] = useState('storybook_title');
+  const [searchResultKeyword, setSearchResultKeyword] = useState(''); // will be shown in search header (# results for '##')
 
   const onChangeSearchType = (e: { target: { value: React.SetStateAction<string>; }; }) => {
     setSearchType(e.target.value)
@@ -52,14 +57,14 @@ export const ManageBookTable: React.FC = () => {
   useEffect(() => {
     const getTotalCount = async () => {
       try {
-        const count = await fetchStorybookCount();
+        const count = await fetchStorybookCount(searchResultType, searchResultKeyword);
         setTotalStorybooks(count);
       } catch (error) {
         console.error("Error fetching total storybook count:", error);
       }
     };
     getTotalCount();
-  }, []);
+  }, [searchResultKeyword]);
 
   const loaderRef = useRef<HTMLDivElement | null>(null);
 
@@ -72,11 +77,18 @@ export const ManageBookTable: React.FC = () => {
     isError,
     error,
   } = useInfiniteQuery({
-    queryKey: ["storybooks"],
-    queryFn: ({pageParam = 0}) => fetchStorybooks(pageParam, PAGE_SIZE),
+    queryKey: ["storybooks", searchResultKeyword, searchResultType],
+    queryFn: ({pageParam = 0}) => {
+      return fetchStorybooks(
+        pageParam,
+        searchResultType,
+        searchResultKeyword,
+        PAGE_SIZE
+      )
+    },
     getNextPageParam: (lastPage, allPages) => {
       // If the last page has fewer items than PAGE_SIZE, there are no more pages
-      return lastPage.length === PAGE_SIZE ? allPages.length : undefined;
+      return lastPage?.length === PAGE_SIZE ? allPages.length : undefined;
     },
     initialPageParam: 0,
   });
@@ -94,33 +106,34 @@ export const ManageBookTable: React.FC = () => {
     getCoreRowModel: getCoreRowModel(),
   });
 
-  // // Infinite scroll logic
-  // useEffect(() => {
-  //   const observer = new IntersectionObserver(
-  //     (entries) => {
-  //       if (entries[0].isIntersecting && hasNextPage && !isFetchingNextPage) {
-  //         fetchNextPage();
-  //       }
-  //     },
-  //     {threshold: 1.0}
-  //   );
-  //
-  //   if (loaderRef.current) {
-  //     observer.observe(loaderRef.current);
-  //   }
-  //
-  //   return () => {
-  //     if (loaderRef.current) {
-  //       observer.unobserve(loaderRef.current);
-  //     }
-  //   };
-  // }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
+  // event onClickSubmit on search bar
+  const [showAlert, setShowAlert] = useState(false);
+  const [alertMessage, setAlertMessage] = useState('');
+  const handleAlert = (msg = '') => {
+    setAlertMessage(msg)
+    setShowAlert(true);
+    setTimeout(() => setShowAlert(false), 3000);
+  };
+  const onClickSubmit = () => {
+    if (searchKeyword.length < 1) {
+      handleAlert('Please add a search keyword')
+    }
 
+    console.log(searchKeyword)
+    if (searchKeyword !== searchResultKeyword)
+      setSearchResultKeyword(searchKeyword)
+    if (searchType !== searchResultType)
+      setSearchResultType(searchType)
+  }
+
+  // Infinite scroll logic
   const tableContainerRef = useRef<HTMLDivElement | null>(null);
+
   const handleScroll = () => {
     if (!tableContainerRef.current || isFetchingNextPage || !hasNextPage) return;
 
     const { scrollTop, scrollHeight, clientHeight } = tableContainerRef.current;
+    if (isLoading) return;
 
     if (scrollTop + clientHeight >= scrollHeight - 50) {
       fetchNextPage();
@@ -153,10 +166,12 @@ export const ManageBookTable: React.FC = () => {
               value={searchType}
               onChange={onChangeSearchType}
             >
-              <option value="title">Title</option>
-              <option value="bookid">Book ID</option>
+              <option value="storybook_title">Title</option>
+              <option value="storybook_id">Book ID</option>
               <option value="genre">Genre</option>
-              <option value="contributed">Contributed by</option>
+              <option value="created_by">Created by</option>
+              <option value="ISBN">ISBN</option>
+              <option value="index">Index</option>
             </select>
             <input
               type="text"
@@ -164,13 +179,13 @@ export const ManageBookTable: React.FC = () => {
               value={searchKeyword}
               onChange={onChangeKeyword}
             />
-            <button type="submit" className="btn" id="search-button">Submit</button>
+            <button type="submit" className="btn" id="search-button" onClick={onClickSubmit}>Submit</button>
           </SearchContainer>
         </Container>
       </div>
       <SearchResultHeader
         resultCount={totalStorybooks}
-        keyword={searchKeyword}
+        keyword={searchResultKeyword}
       />
       <TableContainer
         id="table-container"
@@ -193,6 +208,11 @@ export const ManageBookTable: React.FC = () => {
           {!hasNextPage && !isLoading && <div>No more storybooks to load.</div>}
         </Container>
       </TableContainer>
+      <AlertMessage
+        message={alertMessage}
+        show={showAlert}
+        onClose={() => setShowAlert(false)}
+      />
     </div>
   );
 };
