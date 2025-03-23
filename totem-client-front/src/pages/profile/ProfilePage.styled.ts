@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { COLORS } from '../../constants/colors.ts';
 
 /* Main container */
 export const ProfileContainer = styled.div`
@@ -7,9 +8,9 @@ export const ProfileContainer = styled.div`
   align-items: flex-start;
   padding: 10vh 5% 5% 5%; /* Ensures content is not blocked by TopNavBar */
   font-family: Arial, sans-serif;
-  background: #F8F0E9;
+  background: ${COLORS.background};
   min-height: 100vh;
-  color: #8F857D;
+  color: ${COLORS.TextPrimary};
 `;
 
 /* Top Navigation Bar */
@@ -43,12 +44,14 @@ export const SectionTitle = styled.p`
   font-weight: bold;
   font-size: 16px;
   margin-bottom: 5px;
+  color: ${COLORS.TextPrimary};
 `;
 
 export const SectionContent = styled.p`
   font-size: 14px;
   color: #555;
   margin-bottom: 10px;
+  color: ${COLORS.TextPrimary};
 `;
 
 /* Divider */
