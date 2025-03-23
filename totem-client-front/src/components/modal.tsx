@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { COLORS } from '../constants/colors.ts';
 
 const ModalOverlay = styled.div`
   position: fixed;
@@ -15,7 +16,8 @@ const ModalOverlay = styled.div`
 `;
 
 const ModalContent = styled.div`
-  background: white;
+  background: ${COLORS.Lightest};
+  color: ${COLORS.Darkest};
   padding: 1.2em;
   border-radius: 0.5em;
   max-width: 25em;
@@ -24,15 +26,13 @@ const ModalContent = styled.div`
 `;
 
 const CloseButton = styled.button`
-  background: #007bff;
-  color: white;
-  border: none;
+  background: ${COLORS.Light};
+  color: ${COLORS.Darkest};
+  border: 0.5px solid ${COLORS.Darkest};
   padding: 0.5em 1em;
   border-radius: 0.25em;
   cursor: pointer;
   margin-top: 1em;
-  &:hover {
-    background: #0056b3;
   }
 `;
 

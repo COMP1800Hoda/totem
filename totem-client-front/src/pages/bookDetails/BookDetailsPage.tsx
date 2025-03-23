@@ -8,6 +8,7 @@ import {
 import Footer from '../../components/footer/Footer'; // Import the Footer component
 import Modal from '../../components/modal'; // Import the Modal component
 import { Header } from '../../components/header/Header'; // Import the Header component
+import { COLORS } from '../../constants/colors.ts';
 
 interface Author {
   name: string;
