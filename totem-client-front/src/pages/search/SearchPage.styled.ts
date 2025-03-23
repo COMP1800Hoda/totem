@@ -81,4 +81,5 @@ export const SearchResults = styled.ul`
 export const SearchResultItem = styled.li`
   padding: 10px;
   border-bottom: 1px solid #ddd;
+  min-width: 0;
 `;

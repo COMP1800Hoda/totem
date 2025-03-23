@@ -13,6 +13,7 @@ import {
   BookText,
   BookGrid
 } from './SearchPage.styled';
+import {CreatedBy} from "../../types/Storybook.ts";
 
 const SearchPage: React.FC = () => {
   const { searchQuery, setSearchQuery, searchResults, handleSearch } = useSearch();
@@ -54,8 +55,10 @@ const SearchPage: React.FC = () => {
                   <BookCover src={book.cover_image_url} alt={book.storybook_title} layoutType={layoutType} />
                   <BookText layoutType={layoutType}>
                     <strong>{book.storybook_title}</strong>
-                    <br />
-                    {book.author}
+                    <br/>
+                    <span className="created_by">
+                      {book.created_by?.map((person: CreatedBy) => person.name).join(', ')}
+                    </span>
                   </BookText>
                 </SearchResultItem>
               ))}

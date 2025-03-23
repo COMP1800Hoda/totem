@@ -56,8 +56,8 @@ const BookPage: React.FC = () => {
           <BookTitle>{book.storybook_title}</BookTitle>
           <BookMeta>Published: {book.published}</BookMeta>
           <BookTags>
-            {book.genre.length > 0 ? (
-              book.genre.map((tag, index) => <Tag key={index}>{tag}</Tag>)
+            {book.genre && book.genre.length > 0 ? (
+              book.genre?.map((tag, index) => <Tag key={index}>{tag}</Tag>)
             ) : (
               <Tag>No genre available</Tag>
             )}
