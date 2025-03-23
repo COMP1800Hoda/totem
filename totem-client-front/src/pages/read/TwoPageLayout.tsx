@@ -1,11 +1,11 @@
-// src/components/ReadPage/TwoPageLayout.tsx
-import React, { useRef } from "react";
+import React, { useRef, useEffect } from "react";
 import HTMLFlipBook from "react-pageflip";
 import { Page } from "./BookTypes";
 
 interface TwoPageLayoutProps {
   pages: Page[];
-  onFlip: (page: number) => void;
+  currentPage: number; // Receive currentPage as a prop
+  onFlip: (page: number) => void; // Callback to update currentPage
   onFlipEnd: () => void;
   onPageClick: (e: React.MouseEvent<HTMLDivElement>) => void;
 }
@@ -13,17 +13,27 @@ interface TwoPageLayoutProps {
 // Books in the database are stored in an incorrect order.
 const reorderPages = (pages: Page[]): Page[] => {
   const reorderedPages: Page[] = [];
+
+  // Reorder the pages for two-page spreads
   for (let i = 0; i < pages.length; i += 2) {
     // Add the first page of the spread (odd-numbered page)
     if (pages[i]) reorderedPages.push(pages[i]);
     // Add the second page of the spread (even-numbered page)
-    if (pages[i - 1]) reorderedPages.push(pages[i - 1]);
+    if (pages[i + 1]) reorderedPages.push(pages[i + 1]);
   }
+
+  // Add the back cover (last page)
+  reorderedPages.push({
+    pageNumber: pages.length + 1, // Assign a unique page number
+    imageUrl: "back-cover.jpg", // Replace with your back cover image URL
+  });
+
   return reorderedPages;
 };
 
 export const TwoPageLayout: React.FC<TwoPageLayoutProps> = ({
   pages,
+  currentPage,
   onFlip,
   onFlipEnd,
   onPageClick,
@@ -35,17 +45,31 @@ export const TwoPageLayout: React.FC<TwoPageLayoutProps> = ({
 
   // Handle flipping to the next page
   const handleFlipNext = () => {
-    if (flipBook.current) {
+    if (flipBook.current && flipBook.current.pageFlip) {
       flipBook.current.pageFlip().flipNext();
     }
   };
 
   // Handle flipping to the previous page
   const handleFlipPrev = () => {
-    if (flipBook.current) {
+    if (flipBook.current && flipBook.current.pageFlip) {
       flipBook.current.pageFlip().flipPrev();
     }
   };
+
+  // Sync the flipbook with the currentPage prop
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (flipBook.current && flipBook.current.pageFlip) {
+        const pageIndex = currentPage - 1; // Convert to zero-based index
+        console.log("Navigating to page:", pageIndex); // Debugging
+        flipBook.current.pageFlip().flip(pageIndex, "top"); // Navigate to the correct page
+      } else {
+        console.error("flipBook or pageFlip is not initialized"); // Debugging
+      }
+    }, 100); // Wait 100ms for the component to initialize
+    return () => clearTimeout(timer);
+  }, [currentPage]);
 
   return (
     <div
@@ -102,8 +126,9 @@ export const TwoPageLayout: React.FC<TwoPageLayoutProps> = ({
         onFlip={(e) => onFlip(e.data + 1)} // Pass the current page number
         onFlipEnd={onFlipEnd}
         usePortrait={false} // Ensure landscape mode for two-page spread
-        startPage={0} // Start from the first page
+        startPage={currentPage - 1} // Start from the current page (zero-based index)
         disableFlipByClick={true} // Disable flipping by clicking on the book
+        flippingTime={450} // Speed up the flip animation (default is 600ms)
         style={{ margin: "0 auto" }} // Center the flipbook
       >
         {/* Render each page individually */}

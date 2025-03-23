@@ -17,9 +17,8 @@ interface NavBarsProps {
   currentPage: number;
   totalPages: number;
   onBack: () => void;
-  onPageChange: (newPage: number) => void;
-  isFlipping: boolean;
-  isTwoPageLayout?: boolean; // Add a prop to indicate two-page layout
+  onPageChange: (newPage: number) => void; // onPageChange is now setCurrentPage
+  isTwoPageLayout?: boolean;
 }
 
 export const NavBars: React.FC<NavBarsProps> = ({
@@ -29,8 +28,7 @@ export const NavBars: React.FC<NavBarsProps> = ({
   totalPages,
   onBack,
   onPageChange,
-  isFlipping,
-  isTwoPageLayout = false, // Default to false
+  isTwoPageLayout = false,
 }) => {
   if (!showNav) return null;
 
@@ -61,8 +59,8 @@ export const NavBars: React.FC<NavBarsProps> = ({
           onClick={() => onPageChange(currentPage - (isTwoPageLayout ? 2 : 1))}
           disabled={
             isTwoPageLayout
-              ? currentPage <= 1 || isFlipping // Disable if on the first page or flipping
-              : currentPage === 1 || isFlipping // Disable if on the first page or flipping
+              ? currentPage <= 1 // Disable if on the first page
+              : currentPage === 1 // Disable if on the first page
           }
         >
           قبلی
@@ -75,7 +73,6 @@ export const NavBars: React.FC<NavBarsProps> = ({
             max={isTwoPageLayout ? totalSpreads : totalPages}
             value={isTwoPageLayout ? currentSpread : currentPage}
             onChange={(e) => handleSliderChange(Number(e.target.value))}
-            disabled={isFlipping}
           />
           <PageIndicator>
             {isTwoPageLayout
@@ -88,8 +85,8 @@ export const NavBars: React.FC<NavBarsProps> = ({
           onClick={() => onPageChange(currentPage + (isTwoPageLayout ? 2 : 1))}
           disabled={
             isTwoPageLayout
-              ? currentPage >= totalPages - 1 || isFlipping // Disable if on the last or second-to-last page or flipping
-              : currentPage === totalPages || isFlipping // Disable if on the last page or flipping
+              ? currentPage >= totalPages - 1 // Disable if on the last or second-to-last page
+              : currentPage === totalPages // Disable if on the last page
           }
         >
           بعدی
