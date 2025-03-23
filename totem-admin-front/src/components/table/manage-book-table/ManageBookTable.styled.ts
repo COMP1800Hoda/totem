@@ -2,11 +2,13 @@ import styled from 'styled-components';
 
 export const TableContainer = styled.div`
   width: 100vw;
+  height: calc(100vh - 222px);
   overflow: scroll;
 `
 
 export const StyledManageBookTable = styled.table`
   table-layout: fixed;
+  
   tbody{
     vertical-align: middle;
   }

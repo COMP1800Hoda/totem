@@ -1,9 +1,10 @@
 import styled from 'styled-components';
 
 const Component = styled.div`
-  font-size: 20px;
+  font-size: 18px;
   padding: 0 16px;
-  margin-bottom: 20px;
+  margin-top: -10px;
+  margin-bottom: 10px;
 `;
 
 type SearchResultHeaderProps = {
