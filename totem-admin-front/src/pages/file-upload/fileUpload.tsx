@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import ImageKit from 'imagekit';
 import Parse from '../../database';
 import './fileUpload.css';
-
+import 'bootstrap/dist/css/bootstrap.min.css';
 interface FileData {
   file: File;
   name: string;
@@ -300,7 +300,7 @@ const FileUpload: React.FC = () => {
   };
 
   return (
-    <div className="App">
+    <div className="App container mt-4 px-4 ">
       <h2 className="upload_header">Upload New Book</h2>
       <form onSubmit={handleSubmit}>
         <div className="form-group">
@@ -327,7 +327,7 @@ const FileUpload: React.FC = () => {
           <select
             value={age}
             onChange={(e) => setAge(e.target.value)}
-            style={{ width: '530px' }}
+            className="form-control w-auto px-4"
           >
             <option value="0~2">0~2</option>
             <option value="3~4">3~4</option>
@@ -370,7 +370,7 @@ const FileUpload: React.FC = () => {
             <button
               type="button"
               onClick={handleAddGenre}
-              className="Addbutton"
+              className="Addbutton w-auto px-3"
             >
               Add
             </button>
@@ -452,7 +452,7 @@ const FileUpload: React.FC = () => {
             <button
               type="button"
               onClick={handleAddCreator}
-              className="Addbutton"
+              className="Addbutton w-auto px-3"
             >
               Add
             </button>

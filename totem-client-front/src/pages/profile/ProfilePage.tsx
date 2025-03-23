@@ -1,19 +1,70 @@
 import React from 'react';
-import { Header } from '../../components/header/Header';  // Adjust the import paths as needed
-import Footer from '../../components/footer/Footer';
-import { ProfileContainer } from './ProfilePage.styled';
+import { useNavigate } from 'react-router-dom';
+import { ChevronLeft } from 'lucide-react';
+import { 
+  ProfileContainer,  
+  TopNavBar, 
+  NavButton, 
+  Section, 
+  SectionTitle, 
+  SectionContent, 
+  Divider, 
+  SettingsRow, 
+  Footer 
+} from './ProfilePage.styled';
 
 const ProfilePage: React.FC = () => {
-     return (
+  const navigate = useNavigate();
+
+  return (
     <ProfileContainer>
-      <Header />
-        <div style={{ padding: '20px', marginTop: '80px', textAlign: 'center' }}>
-        <h1>This is the Profile Page with a header and footer.</h1>
-        </div>
-        <Footer />
+      <TopNavBar>
+        <NavButton onClick={() => navigate(-1)}>
+          <ChevronLeft size={30} />
+        </NavButton>
+      </TopNavBar>
+
+      <Section>
+        <SectionTitle>Name:</SectionTitle>
+        <SectionContent>Sample Name</SectionContent>
+      </Section>
+      <Divider />
+
+      <Section>
+        <SectionTitle>Email and Username:</SectionTitle>
+        <SectionContent>sample@email.com</SectionContent>
+      </Section>
+      <Divider />
+
+      <br />
+      <br />
+
+      <SectionTitle>Edit Account</SectionTitle>
+      <Divider />
+      <SettingsRow onClick={() => navigate('/change-password')}> {/* Navigate to ChangePassword page */}
+        <SectionContent>Change Password</SectionContent>
+        <ChevronLeft size={28} style={{ transform: 'rotate(180deg)' }} />
+      </SettingsRow>
+      <Divider />
+
+      <br />
+      <br />
+
+      <SectionTitle>Account Settings</SectionTitle>
+      <Divider />
+
+      <SettingsRow>
+        <SectionContent>Log Out</SectionContent>
+        <ChevronLeft size={28} style={{ transform: 'rotate(180deg)' }} />
+      </SettingsRow>
+      <Divider />
+      
+      <br />
+      <br />
+
+      <Footer>© 2025 Totem</Footer>
     </ProfileContainer>
   );
-
 };
 
 export default ProfilePage;

@@ -25,9 +25,7 @@ const Login = () => {
     try {
       const query = new Parse.Query('Admin');
       query.equalTo('admin_email', email);
-      console.log(email);
       const admin = await query.first();
-      console.log(admin);
       if (!admin) {
         console.log('Email not found');
         setError('Email not found');
@@ -37,6 +35,7 @@ const Login = () => {
       //Get the hashed password from db
       const hashedPassword = admin.get('admin_hashed_password');
       const isMatch = await bcrypt.compare(password, hashedPassword);
+
       if (isMatch) {
         console.log('Login successful');
         setSuccess(true);
