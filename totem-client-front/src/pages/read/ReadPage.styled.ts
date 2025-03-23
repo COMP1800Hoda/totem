@@ -52,6 +52,7 @@ export const TopNavBar = styled.div`
   justify-content: space-between;
   padding: 0 3% 0 2%;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  z-index: 50;
 `;
 
 /* 🔹 Bottom Navigation Bar */
@@ -66,6 +67,7 @@ export const BottomNavBar = styled.div`
   justify-content: space-between;
   padding: 0 4%;
   box-shadow: 0px -4px 8px rgba(0, 0, 0, 0.1);
+  z-index: 50;
 `;
 
 /* 🔹 Navigation Button */
