@@ -46,7 +46,7 @@ export const BookThumbnail = styled.img`
   width: 5em; /* Width is 8% of the viewport width */
   height: 8em; /* Height is 13% of the viewport height */
   margin-right: 1em; /* Margin based on viewport width */
-  border-radius: 1em; /* Border radius based on viewport width */
+  border-radius: 8px; /* Border radius based on viewport width */
   object-fit: cover;
 `;
 
