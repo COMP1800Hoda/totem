@@ -8,6 +8,6 @@ export async function fetchStorybookCount(): Promise<number> {
     return totalCount;
   } catch (error) {
     console.error("Error fetching storybook count:", error);
-    throw error; // Rethrow the error to be handled by the caller
+    throw error;
   }
 }

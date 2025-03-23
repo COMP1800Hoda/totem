@@ -1,23 +1,34 @@
 import styled from "styled-components";
 
 export const BookContainer = styled.div`
+  background-color: #f8f8f8; 
   display: flex;
-  flex-direction: column;
-  min-height: 100vh; /* Ensure the container takes the full height of the viewport */
-  margin: 0;
-  padding: 1em;
-  background-color: #f8f8f8; /* Light background color for the page */
-
-  /* If you want the content to stretch and fill available space */
-  main {
-    flex: 1;
+  justify-content: center;
+  >div {
+    max-width: 600px;
   }
+
+  h3{
+    font-size: unset;
+    font-weight: bold;
+  }
+  p {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    vertical-align: baseline;
+  }
+  
+  * {
+    text-align: right;
+  }
+  
 `;
 
 export const BackButton = styled.button`
   display: flex;
   align-items: center;
-  gap: 0.5em; // Space between icon and text
+  gap: 0.5em;
   z-index: 99;
   color: #555;
   margin-bottom: 1em;
@@ -30,17 +41,17 @@ export const BackButton = styled.button`
   transition: background-color 0.3s ease, color 0.3s ease;
 
   &:hover {
-    background-color: #f0f0f0; // Light gray background on hover
-    color: #000; // Darker text on hover
+    background-color: #f0f0f0; 
+    color: #000;
   }
 
   &:active {
-    background-color: #e0e0e0; // Slightly darker background on click
+    background-color: #e0e0e0;
   }
 
   &:focus {
-    outline: none; // Remove default focus outline
-    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.5); // Add a custom focus outline
+    outline: none; 
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.5); 
   }
 `;
 
@@ -63,6 +74,12 @@ export const BookDetails = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  min-width: 200px;
+
+  button {
+    margin-top: 4px;
+    width: 72px;
+  }
 `;
 
 export const BookTitle = styled.h2`
@@ -78,6 +95,7 @@ export const BookMeta = styled.p`
 export const BookTags = styled.div`
   display: flex;
   gap: 0.5em;
+  justify-content: flex-end;
 `;
 
 export const Tag = styled.span`
