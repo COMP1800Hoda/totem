@@ -19,7 +19,7 @@ const SearchPage: React.FC = () => {
   const [layoutType, setLayoutType] = useState<'twoColumns' | 'threeColumns'>('threeColumns');
   const navigate = useNavigate();
 
-  const goToBook = (bookId: string) => navigate(`/books/${bookId}`);
+  const goToBook = (storybook_id: string) => navigate(`/books/${storybook_id}`);
   const toggleLayout = () => setLayoutType(prev => (prev === 'threeColumns' ? 'twoColumns' : 'threeColumns'));
 
   return (
@@ -50,7 +50,7 @@ const SearchPage: React.FC = () => {
           {searchResults.length > 0 ? (
             <BookGrid layoutType={layoutType}>
               {searchResults.map((book) => (
-                <SearchResultItem key={book.objectId} onClick={() => goToBook(book.objectId)}>
+                <SearchResultItem key={book.storybook_id} onClick={() => goToBook(book.storybook_id)}>
                   <BookCover src={book.cover_image_url} alt={book.storybook_title} layoutType={layoutType} />
                   <BookText layoutType={layoutType}>
                     <strong>{book.storybook_title}</strong>
