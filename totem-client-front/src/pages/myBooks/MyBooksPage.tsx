@@ -3,18 +3,11 @@ import { useNavigate } from 'react-router';
 import { MyBooksContainer, BookGrid, BookCover, BookText } from './MyBooksPage.styled';
 import { Header } from '../../components/header/Header';
 import Footer from '../../components/footer/Footer';
-
-// Define types for the book data
-interface Book {
-  objectId: string;
-  cover_image_url: string;
-  storybook_title: string;
-  author: string;
-}
+import {CreatedBy, Storybook} from "../../types/Storybook.ts";
 
 const MyBooksPage: React.FC = () => {
   const [layoutType, setLayoutType] = useState<'twoColumns' | 'threeColumns'>('threeColumns');
-  const [books, setBooks] = useState<Book[]>([]);
+  const [books, setBooks] = useState<Storybook[]>([]);
   const [limit] = useState(10);  // Limit set to 10 books initially
   const [skip, setSkip] = useState(0);   // Start from the first book
   const [hasMore, setHasMore] = useState(true); // Track if there are more books to load
@@ -92,18 +85,21 @@ const MyBooksPage: React.FC = () => {
       </div>
       <BookGrid layoutType={layoutType}>
         {books.map((book) => (
-          <div
-            key={book.objectId}
-            style={{ textAlign: 'center', cursor: 'pointer' }}
-            onClick={() => goToBook(book.objectId)} // Navigate to the specific book
-          >
-            <BookCover src={book.cover_image_url} alt={book.storybook_title} layoutType={layoutType} />
-            <BookText layoutType={layoutType}>
-              <strong>{book.storybook_title}</strong>
-              <br />
-              {book.author}
-            </BookText>
-          </div>
+            <div
+              key={book.objectId}
+              style={{textAlign: 'center', cursor: 'pointer', minWidth: 0}}
+              onClick={() => goToBook(book.storybook_id)} // Navigate to the specific book
+            >
+              <BookCover src={book.cover_image_url} alt={book.storybook_title} layoutType={layoutType}/>
+              <BookText layoutType={layoutType}>
+                <strong>{book.storybook_title}</strong>
+                <br/>
+                <span className="created_by">
+                  {book.created_by?.map((person: CreatedBy) => person.name).join(', ')}
+                </span>
+              </BookText>
+            </div>
+
         ))}
       </BookGrid>
 

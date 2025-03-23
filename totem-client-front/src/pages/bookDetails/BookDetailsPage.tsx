@@ -7,65 +7,34 @@ import {
 } from './BookDetailsPage.styled';
 import Footer from '../../components/footer/Footer'; // Import the Footer component
 import Modal from '../../components/modal'; // Import the Modal component
-import { Header } from '../../components/header/Header'; // Import the Header component
-
-interface Author {
-  name: string;
-  role: string;
-}
-
-interface BookProps {
-  objectId: string;
-  storybook_title: string;
-  cover_image_url: string;
-  genre: string[];
-  language: string;
-  published: string;
-  storybook_description: string;
-  contributed_by: string;
-  ISBN: string;
-  created_by: Author[];
-  publisher: string;
-}
+import { Header } from '../../components/header/Header';
+import {Storybook} from "../../types/Storybook.ts";
+import {fetchStorybookById} from "../../api/fetchStorybookById.ts"; // Import the Header component
 
 const BookPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate(); // Initialize useNavigate
-  const [book, setBook] = useState<BookProps | null>(null);
+  const [book, setBook] = useState<Storybook | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false); // State for modal
 
   useEffect(() => {
-    const fetchBook = async () => {
+    (async () => {
+      if (typeof id !== 'string')
+        return;
       try {
-        const response = await fetch(
-          `https://parseapi.back4app.com/classes/storybook/${id}`,
-          {
-            method: "GET",
-            headers: {
-              "X-Parse-Application-Id": "XWNVzANvs7w6pYMl4fZWLCcikgXdMvCZhEnI48sH",
-              "X-Parse-REST-API-Key": "mRZK1BOLh5EIaOR9Ircc2OhX5OU28aidSsZAtyJP",
-              "Content-Type": "application/json"
-            }
-          }
-        );
-
-        if (!response.ok) {
-          throw new Error("Failed to fetch book details");
-        }
-
-        const data = await response.json();
-        setBook(data);
-      } catch (error) {
+        const result = await fetchStorybookById(id);
+        setBook(result);
+      } catch (error: unknown) {
+        console.error(error)
         setError("Error fetching book details. Please try again.");
       } finally {
         setLoading(false);
       }
-    };
-
-    fetchBook();
+    })();
   }, [id]);
+
 
   const toggleModal = () => {
     setIsModalOpen(!isModalOpen);
@@ -87,8 +56,8 @@ const BookPage: React.FC = () => {
           <BookTitle>{book.storybook_title}</BookTitle>
           <BookMeta>Published: {book.published}</BookMeta>
           <BookTags>
-            {book.genre.length > 0 ? (
-              book.genre.map((tag, index) => <Tag key={index}>{tag}</Tag>)
+            {book.genre && book.genre.length > 0 ? (
+              book.genre?.map((tag, index) => <Tag key={index}>{tag}</Tag>)
             ) : (
               <Tag>No genre available</Tag>
             )}

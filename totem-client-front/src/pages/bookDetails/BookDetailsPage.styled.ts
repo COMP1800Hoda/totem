@@ -63,6 +63,7 @@ export const BookDetails = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  text-align: right;
 `;
 
 export const BookTitle = styled.h2`
@@ -100,21 +101,25 @@ export const ReadButton = styled.button`
 
 export const Synopsis = styled.div`
   margin-top: 0.9em;
+  text-align: right;
 `;
 
 export const BookInfo = styled.div`
   margin-top: 1em;
   font-size: 0.9em;
   color: #666;
+  text-align: right;
 `;
 export const AuthorInfo = styled.div`
   margin-top: 1em;
   font-size: 0.9em;
+  text-align: right;
 `;
 
 export const PublisherInfo = styled.div`
   font-size: 0.9em;
   margin-top: 1em;
+  text-align: right;
 `;
 
 export const ShowMoreButton = styled.button`

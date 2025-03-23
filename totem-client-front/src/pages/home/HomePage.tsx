@@ -9,13 +9,7 @@ import {
   SectionHeader, 
   BookThumbnail,
 } from "./HomePage.styled";
-
-// Define Book type
-interface Book {
-  objectId: string;
-  cover_image_url: string;
-  storybook_title: string;
-}
+import {Storybook} from "../../types/Storybook.ts";
 
 // Define Audio type
 interface Audio {
@@ -25,10 +19,10 @@ interface Audio {
 }
 
 // Book Component
-const BookComponent: React.FC<Book> = ({ objectId, cover_image_url, storybook_title }) => {
+const BookComponent: React.FC<Storybook> = ({ storybook_id, cover_image_url, storybook_title }) => {
   const navigate = useNavigate();
   return (
-    <div style={{ textAlign: 'center' }} onClick={() => navigate(`/books/${objectId}`)}>
+    <div style={{ textAlign: 'center' }} onClick={() => navigate(`/books/${storybook_id}`)}>
       <BookThumbnail src={cover_image_url} alt={storybook_title} />
       <div>{storybook_title}</div>
     </div>
@@ -47,7 +41,7 @@ const AudioComponent: React.FC<Audio> = ({ objectId, cover_image_url, title   })
 };
 
 const Home: React.FC = () => {
-  const [books, setBooks] = useState<Book[]>([]);
+  const [books, setBooks] = useState<Storybook[]>([]);
   const [audios, setAudios] = useState<Audio[]>([]);
   useEffect(() => {
     const fetchBooks = async () => {
@@ -112,7 +106,7 @@ const Home: React.FC = () => {
         </SectionHeader>
         <div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap', gap: '20px' }}>
           {books.map((book) => (
-            <BookComponent key={book.objectId} {...book} />
+            <BookComponent key={book.storybook_id} {...book} />
           ))}
         </div>
       </Section>

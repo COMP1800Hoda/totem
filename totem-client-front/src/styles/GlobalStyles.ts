@@ -106,6 +106,17 @@ html, body {
   line-height: 1.2;
   margin-bottom: 0.3em;
 }
+.created_by{
+  display: block;
+  max-width: 100%;
+  padding: 0 4px;
+  word-break: break-all;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
 
 `;
 

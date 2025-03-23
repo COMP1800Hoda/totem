@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 export const useSearch = () => {
   const [searchQuery, setSearchQuery] = useState<string>(() => {
@@ -61,7 +61,8 @@ export const useSearch = () => {
       // Save the search query and results to localStorage
       localStorage.setItem('lastSearchQuery', searchQuery);
       localStorage.setItem('lastSearchResults', JSON.stringify(data.results || []));
-    } catch (error) {
+    } catch (error: unknown) {
+      console.error(error)
       setError('Error fetching search results. Please try again.');
     } finally {
       setLoading(false);
