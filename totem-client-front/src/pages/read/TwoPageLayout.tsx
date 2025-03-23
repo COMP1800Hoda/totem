@@ -22,12 +22,6 @@ const reorderPages = (pages: Page[]): Page[] => {
     if (pages[i + 1]) reorderedPages.push(pages[i + 1]);
   }
 
-  // Add the back cover (last page)
-  reorderedPages.push({
-    pageNumber: pages.length + 1, // Assign a unique page number
-    imageUrl: "back-cover.jpg", // Replace with your back cover image URL
-  });
-
   return reorderedPages;
 };
 
