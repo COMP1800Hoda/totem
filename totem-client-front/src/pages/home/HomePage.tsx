@@ -40,7 +40,7 @@ const AudioComponent: React.FC<Audio> = ({ objectId, cover_image_url, title   })
   const navigate = useNavigate();
   return (
     <div style={{ textAlign: 'center' }} onClick={() => navigate(`/audios/${objectId}`)}>
-      <BookThumbnail src={cover_image_url} alt={title} />
+      <BookThumbnail src={`/src/assets/audio${objectId}.png`} alt={title} />
       <div>{title}</div>
     </div>
   );
