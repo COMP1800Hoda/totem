@@ -168,7 +168,10 @@ export const ManageBookTable: React.FC = () => {
           </SearchContainer>
         </Container>
       </div>
-      <SearchResultHeader resultCount={totalStorybooks}/>
+      <SearchResultHeader
+        resultCount={totalStorybooks}
+        keyword={searchKeyword}
+      />
       <TableContainer
         id="table-container"
         ref={tableContainerRef}

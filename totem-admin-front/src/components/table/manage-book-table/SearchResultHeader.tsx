@@ -8,15 +8,17 @@ const Component = styled.div`
 `;
 
 type SearchResultHeaderProps = {
-  // keyword: string;
+  keyword: string;
   resultCount: number;
 };
 
 const SearchResultHeader = ({
-  // keyword = '',
+  keyword = '',
   resultCount = 0,
 }: SearchResultHeaderProps) => {
-  // return <Component>{`${resultCount} results for '${keyword}'`}</Component>;
+  if (keyword?.length > 0)
+    return <Component>{`${resultCount} results for '${keyword}'`}</Component>;
+
   return <Component>{`${resultCount} results`}</Component>;
 };
 export default SearchResultHeader;
