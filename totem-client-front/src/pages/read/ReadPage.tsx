@@ -1,137 +1,67 @@
-// flipping animation from https://www.npmjs.com/package/page-flip
-
-import React, { useState, useRef, useEffect } from "react";
+// src/components/ReadPage/ReadPage.tsx
+import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import HTMLFlipBook from "react-pageflip";
-import { ChevronLeft } from "lucide-react";
-import {
-  Container,
-  TopNavBar,
-  BottomNavBar,
-  ReadingContainer,
-  SliderContainer,
-  Title,
-  NavButton,
-  PageIndicator,
-  BottomNavButton
-} from "./ReadPage.styled";
-import samplePage1 from "../../assets/sample-page-1.jpg";
-import samplePage2 from "../../assets/sample-page-2.jpg";
-import samplePage3 from "../../assets/sample-page-3.jpg";
-import samplePage4 from "../../assets/sample-page-4.jpg";
+import { useBookData } from "./FetchBookData";
+import { NavBars } from "./NavBars";
+import { OnePageLayout } from "./OnePageLayout";
+import { TwoPageLayout } from "./TwoPageLayout";
+import { Container } from "./ReadPage.styled";
 
 const ReadPage: React.FC = () => {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
-  const [currentPage, setCurrentPage] = useState(1);
+  const { book, pages, loading, error } = useBookData(id || "");
+  const [currentPage, setCurrentPage] = useState(1); // Lift currentPage state here
   const [showNav, setShowNav] = useState(false);
-  const [isPortrait, setIsPortrait] = useState(window.innerWidth < 1024);
-
-  const flipBookRef = useRef<HTMLDivElement>(null);
-
-  const pageImages = [samplePage1, samplePage2, samplePage3, samplePage4];
+  const [isWideScreen, setIsWideScreen] = useState(window.innerWidth >= 900);
 
   useEffect(() => {
     const handleResize = () => {
-      setIsPortrait(window.innerWidth < 1024);
+      setIsWideScreen(window.innerWidth >= 900);
     };
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const handleToggleNav = () => setShowNav((prev) => !prev);
-
-  const handlePageClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    const { clientX, currentTarget } = e;
-    const width = currentTarget.clientWidth;
-    const clickX = clientX / width;
-
-    if (clickX < 0.2) {
-      setCurrentPage((prev) => Math.min(prev + 1, 4));
-    } else if (clickX > 0.8) {
-      setCurrentPage((prev) => Math.max(prev - 1, 1));
-    } else {
-      handleToggleNav();
-    }
+  const toggleNav = () => {
+    setShowNav((prev) => !prev);
   };
+
+  const handleOnePageClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    // Toggle navigation bars on click
+    toggleNav();
+  };
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>{error}</div>;
 
   return (
     <Container>
-      {showNav && (
-        <TopNavBar>
-          <NavButton onClick={() => navigate(`/books/${id}`)} style={{ background: "none", border: "none", color: "#8F857D" }}>
-            <ChevronLeft size={30} />
-          </NavButton>
+      <NavBars
+        showNav={showNav}
+        bookTitle={book?.storybook_title}
+        currentPage={currentPage}
+        totalPages={pages.length}
+        onBack={() => navigate(`/books/${id}`)}
+        onPageChange={setCurrentPage} // Pass setCurrentPage to NavBars
+        isTwoPageLayout={isWideScreen}
+      />
 
-
-
-          <Title>آدم برفي و مترسك</Title>
-        </TopNavBar>
-      )}
-
-      <ReadingContainer onClick={handlePageClick}>
-        <HTMLFlipBook
-          ref={flipBookRef}
-          width={isPortrait ? 700 : 600}
-          height={isPortrait ? 700 : 800}
-          size="fixed"
-          minWidth={300}
-          minHeight={400}
-          maxWidth={isPortrait ? 700 : 800}
-          maxHeight={isPortrait ? 900 : 1000}
-          showCover={false}
-          mobileScrollSupport={true}
-          autoSize={false}
-          className="flipbook"
-          style={{}}
-          startPage={0}
-          drawShadow={true}
-          flippingTime={1000}
-          useMouseEvents={true}
-          swipeDistance={30}
-          clickEventForward={true}
-          usePortrait={isPortrait}
-          showPageCorners={true}
-          startZIndex={0}
-          maxShadowOpacity={0.5}
-          disableFlipByClick={false}
-        >
-          {pageImages.map((image, index) => (
-            <div key={index} className="page_stf__item">
-              <img src={image} alt={`Page ${index + 1}`} />
-            </div>
-          ))}
-        </HTMLFlipBook>
-      </ReadingContainer>
-
-      {showNav && (
-        <BottomNavBar>
-        <BottomNavButton onClick={() => setCurrentPage((prev) => Math.min(prev + 1, 4))}>
-          بعدی
-        </BottomNavButton>
-      
-        <SliderContainer>
-          <input
-            type="range"
-            min="1"
-            max="4"
-            value={currentPage}
-            onInput={(e) => {
-              const value = Number((e.target as HTMLInputElement).value);
-              setCurrentPage(value);
-              (e.target as HTMLInputElement).style.setProperty(
-                "--progress",
-                `${((value - 1) / (pageImages.length - 1)) * 100}%`
-              );
-            }}
-          />
-          <PageIndicator>{currentPage}/4</PageIndicator>
-        </SliderContainer>
-      
-        <BottomNavButton onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}>
-          قبلی
-        </BottomNavButton>
-      </BottomNavBar>      
+      {isWideScreen ? (
+        <TwoPageLayout
+        pages={pages}
+        currentPage={currentPage} // Pass currentPage as a prop
+        onFlip={setCurrentPage} // Pass setCurrentPage to update currentPage
+        onFlipEnd={() => {}} // Optional: Add logic for flip end
+        onPageClick={handleOnePageClick}
+        />
+      ) : (
+        <OnePageLayout
+          pages={pages}
+          currentPage={currentPage} // Pass currentPage as a prop
+          onPageChange={setCurrentPage} // Pass setCurrentPage to OnePageLayout
+          onPageClick={handleOnePageClick}
+        />
       )}
     </Container>
   );

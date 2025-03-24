@@ -1,7 +1,12 @@
 import Parse from '../../src/database';
 import { Storybook } from '../types/Storybook.ts';
 
-export async function fetchStorybooks(page: number, pageSize: number = 30): Promise<Storybook[]> {
+export async function fetchStorybooks(
+  page: number,
+  searchType: string = 'storybook_title',
+  searchKeyword: string = '',
+  pageSize: number = 30,
+): Promise<Storybook[]> {
   const skip = page * pageSize;
   const limit = pageSize;
 
@@ -10,6 +15,17 @@ export async function fetchStorybooks(page: number, pageSize: number = 30): Prom
     query.limit(limit);
     query.skip(skip);
     query.ascending('index');
+
+
+    if (searchKeyword?.length > 0 && searchType?.length > 0) {
+      if (searchType === 'index') {
+        // search exact matched number
+        query.equalTo(searchType, Number(searchKeyword))
+      } else {
+        // Add search by key and keyword (case-sensitive)
+        query.matches(searchType, searchKeyword, 'i');
+      }
+    }
 
     // Execute the query
     const results = await query.find();

@@ -77,7 +77,7 @@ const MyAudioPage: React.FC = () => {
           {audios.map((audio) => (
             <AudioItemComponent
               key={audio.objectId}
-              src={audio.cover_image_url}
+              src={`/src/assets/audio${audio.objectId}.png`}
               alt={audio.title}
               title={audio.title}
               objectId={audio.objectId} // Pass objectId to AudioItemComponent
@@ -89,7 +89,7 @@ const MyAudioPage: React.FC = () => {
           {audios.map((audio) => (
             <AudioItemComponent
               key={audio.objectId}
-              src={audio.cover_image_url}
+              src={`/src/assets/audio${audio.objectId}.png`}
               alt={audio.title}
               title={audio.title}
               objectId={audio.objectId} // Pass objectId to AudioItemComponent

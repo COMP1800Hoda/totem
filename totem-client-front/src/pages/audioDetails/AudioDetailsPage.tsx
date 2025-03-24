@@ -64,6 +64,7 @@ const AudioDetailsPage: React.FC = () => {
       <Header />
       <PageContainer>
         <h1>{audio.name}</h1>
+        <img src={`/src/assets/audio${audio.objectId}.png`} alt={audio.name} style={{ width: "25em" }} />
         <p>Created At: {new Date(audio.createdAt).toLocaleString()}</p>
         <p>Last Updated: {new Date(audio.updatedAt).toLocaleString()}</p>
         {audio.audio_url ? (

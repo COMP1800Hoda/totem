@@ -47,7 +47,6 @@ const MyAudioPage: React.FC = () => {
         },
       });
       const data = await response.json();
-      console.log(data);  
       if (data.results) {
         setAudios(data.results); // Take the first 3 audios for display
       } else {
@@ -78,7 +77,7 @@ const MyAudioPage: React.FC = () => {
           {audios.map((audio) => (
             <AudioItemComponent
               key={audio.objectId}
-              src={audio.cover_image_url}
+              src={`/src/assets/audio${audio.objectId}.png`}
               alt={audio.title}
               title={audio.title}
               objectId={audio.objectId} // Pass objectId to AudioItemComponent
@@ -90,7 +89,7 @@ const MyAudioPage: React.FC = () => {
           {audios.map((audio) => (
             <AudioItemComponent
               key={audio.objectId}
-              src={audio.cover_image_url}
+              src={`/src/assets/audio${audio.objectId}.png`}
               alt={audio.title}
               title={audio.title}
               objectId={audio.objectId} // Pass objectId to AudioItemComponent

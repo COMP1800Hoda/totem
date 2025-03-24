@@ -1,5 +1,32 @@
-import styled from "styled-components";
 import { COLORS } from '../../constants/colors.ts';
+import styled, { keyframes } from "styled-components";
+
+const slideOutLeft = keyframes`
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+`;
+
+const slideInForward = keyframes`
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+`;
+
+const slideInBackward = keyframes`
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+`;
 
 /* 🔹 Main Container */
 export const Container = styled.div`
@@ -26,6 +53,7 @@ export const TopNavBar = styled.div`
   justify-content: space-between;
   padding: 0 3% 0 2%;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  z-index: 50;
 `;
 
 /* 🔹 Bottom Navigation Bar */
@@ -40,6 +68,7 @@ export const BottomNavBar = styled.div`
   justify-content: space-between;
   padding: 0 4%;
   box-shadow: 0px -4px 8px rgba(0, 0, 0, 0.1);
+  z-index: 50;
 `;
 
 /* 🔹 Navigation Button */
@@ -51,7 +80,6 @@ export const NavButton = styled.button`
 `;
 
 /* 🔹 Bottom Navigation Button */
-// 3D style next and previous buttons with gradient and shadow
 export const BottomNavButton = styled.button`
   background: linear-gradient(to bottom, #DECBB7, #BFA88F); /*  Gradient for depth */
   color: ${COLORS.Darkest};
@@ -97,15 +125,12 @@ export const BottomNavButton = styled.button`
 // `;
 
 
-
-
 /* 🔹 Book Title */
 export const Title = styled.h2`
   font-size: 18px;
   font-weight: bold;
   color: ${COLORS.Dark}; /*  Updated text color */
 `;
-
 
 /* 🔹 Reading Page */
 export const ReadingContainer = styled.div`
@@ -119,13 +144,14 @@ export const ReadingContainer = styled.div`
   justify-content: center;
   cursor: pointer;
   overflow: hidden;
-
-  .flipbook {
+  
+  .page-container {
+    position: absolute;
     width: 100%;
     height: 100%;
-    object-fit: cover;
-    max-width: 100vw;
-    max-height: 100vh;
+    background-size: cover;
+    background-position: center;
+    transition: transform 0.5s ease-in-out; /* Smooth transition */
   }
 
    .page_stf__item {
@@ -141,29 +167,19 @@ export const ReadingContainer = styled.div`
       align-items: center;
       justify-content: center;
       overflow: hidden;
+
+  .page-container.slide-out-left {
+    animation: ${slideOutLeft} 0.5s ease-in-out; /* Slide out left animation */
   }
 
+  .page-container.slide-in-forward {
+    animation: ${slideInForward} 0.5s ease-in-out; /* Slide in forward animation */
+  }
 
-
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain !important;
+  .page-container.slide-in-backward {
+    animation: ${slideInBackward} 0.5s ease-in-out; /* Slide in backward animation */
   }
 `;
-
-/* 🔹 Flipbook Page Container */
-export const Page = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  height: 100%;
-  max-width: 100%;
-  max-height: 100%;
-  overflow: hidden;
-`;
-
 
 /* 🔹 Slider Container */
 export const SliderContainer = styled.div`
@@ -206,9 +222,6 @@ export const SliderContainer = styled.div`
     z-index: 2;
   }
 `;
-
-
-
 
 /* 🔹 Page Indicator */
 export const PageIndicator = styled.span`
