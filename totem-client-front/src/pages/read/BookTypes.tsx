@@ -5,7 +5,7 @@ export interface Page {
 }
 
 export interface Book {
-  objectId: string;
+  storybook_id: string;
   storybook_title: string;
   storybook_image_url: { [key: string]: string };
   storybook_description: string;
