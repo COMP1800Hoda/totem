@@ -30,7 +30,7 @@ const BookComponent: React.FC<Storybook> = ({ storybook_id, cover_image_url, sto
 };
 
 // Audio Component
-const AudioComponent: React.FC<Audio> = ({ objectId, cover_image_url, title   }) => {
+const AudioComponent: React.FC<Audio> = ({ objectId, title}) => {
   const navigate = useNavigate();
   return (
     <div style={{ textAlign: 'center' }} onClick={() => navigate(`/audios/${objectId}`)}>
@@ -49,8 +49,8 @@ const Home: React.FC = () => {
         const response = await fetch("https://parseapi.back4app.com/classes/storybook", {
           method: "GET",
           headers: {
-            "X-Parse-Application-Id": "XWNVzANvs7w6pYMl4fZWLCcikgXdMvCZhEnI48sH", // Replace with your actual Application ID
-            "X-Parse-REST-API-Key": "mRZK1BOLh5EIaOR9Ircc2OhX5OU28aidSsZAtyJP", // Replace with your actual API key
+            "X-Parse-Application-Id": import.meta.env.VITE_APP_ID,
+            "X-Parse-REST-API-Key": import.meta.env.VITE_RESTAPI_Key,
             "Content-Type": "application/json",
           },
         });
@@ -74,8 +74,8 @@ const Home: React.FC = () => {
         const response = await fetch("https://parseapi.back4app.com/classes/Audios", {
           method: "GET",
           headers: {
-            "X-Parse-Application-Id": "XWNVzANvs7w6pYMl4fZWLCcikgXdMvCZhEnI48sH", // Replace with your actual Application ID
-            "X-Parse-REST-API-Key": "mRZK1BOLh5EIaOR9Ircc2OhX5OU28aidSsZAtyJP", // Replace with your actual API key
+            "X-Parse-Application-Id": import.meta.env.VITE_APP_ID,
+            "X-Parse-REST-API-Key": import.meta.env.VITE_RESTAPI_Key,
             "Content-Type": "application/json",
           },
         });

@@ -4,26 +4,11 @@ import { Page } from "./BookTypes";
 
 interface TwoPageLayoutProps {
   pages: Page[];
-  currentPage: number; // Receive currentPage as a prop
-  onFlip: (page: number) => void; // Callback to update currentPage
+  currentPage: number;
+  onFlip: (page: number) => void;
   onFlipEnd: () => void;
   onPageClick: (e: React.MouseEvent<HTMLDivElement>) => void;
 }
-
-// Books in the database are stored in an incorrect order.
-const reorderPages = (pages: Page[]): Page[] => {
-  const reorderedPages: Page[] = [];
-
-  // Reorder the pages for two-page spreads
-  for (let i = 0; i < pages.length; i += 2) {
-    // Add the first page of the spread (odd-numbered page)
-    if (pages[i]) reorderedPages.push(pages[i]);
-    // Add the second page of the spread (even-numbered page)
-    if (pages[i + 1]) reorderedPages.push(pages[i + 1]);
-  }
-
-  return reorderedPages;
-};
 
 export const TwoPageLayout: React.FC<TwoPageLayoutProps> = ({
   pages,
@@ -34,20 +19,17 @@ export const TwoPageLayout: React.FC<TwoPageLayoutProps> = ({
 }) => {
   const flipBook = useRef<any>(null);
 
-  // Reorder the pages before rendering
-  const reorderedPages = reorderPages(pages);
-
-  // Handle flipping to the next page
+  // Handle flipping to the next page (left side click for RTL)
   const handleFlipNext = () => {
     if (flipBook.current && flipBook.current.pageFlip) {
-      flipBook.current.pageFlip().flipNext();
+      flipBook.current.pageFlip().flipPrev(); // Note: flipPrev for RTL navigation
     }
   };
 
-  // Handle flipping to the previous page
+  // Handle flipping to the previous page (right side click for RTL)
   const handleFlipPrev = () => {
     if (flipBook.current && flipBook.current.pageFlip) {
-      flipBook.current.pageFlip().flipPrev();
+      flipBook.current.pageFlip().flipNext(); // Note: flipNext for RTL navigation
     }
   };
 
@@ -55,87 +37,92 @@ export const TwoPageLayout: React.FC<TwoPageLayoutProps> = ({
   useEffect(() => {
     const timer = setTimeout(() => {
       if (flipBook.current && flipBook.current.pageFlip) {
-        const pageIndex = currentPage - 1; // Convert to zero-based index
-        console.log("Navigating to page:", pageIndex); // Debugging
-        flipBook.current.pageFlip().flip(pageIndex, "top"); // Navigate to the correct page
-      } else {
-        console.error("flipBook or pageFlip is not initialized"); // Debugging
+        const pageIndex = pages.length - currentPage; // Reverse index for RTL
+        console.log("Navigating to page:", pageIndex);
+        flipBook.current.pageFlip().flip(pageIndex, "top");
       }
-    }, 100); // Wait 100ms for the component to initialize
+    }, 100);
     return () => clearTimeout(timer);
-  }, [currentPage]);
+  }, [currentPage, pages.length]);
+
+  // Reverse the pages array for RTL display
+  const reversedPages = [...pages].reverse();
 
   return (
     <div
       style={{
         display: "flex",
-        justifyContent: "center", // Center the flipbook horizontally
-        alignItems: "center", // Center the flipbook vertically
-        height: "100vh", // Full viewport height
-        backgroundColor: "#f0f0f0", // Optional: Add background color
-        position: "relative", // Required for absolute positioning of overlays
+        justifyContent: "center",
+        alignItems: "center",
+        height: "100vh",
+        backgroundColor: "#f0f0f0",
+        position: "relative",
       }}
       onClick={onPageClick}
     >
-      {/* Left overlay for flipping to the previous page */}
+      {/* Left overlay for flipping to the next page (RTL) */}
       <div
         style={{
           position: "absolute",
           left: 0,
           top: 0,
-          width: "25%", // Cover 25% of the screen width
+          width: "25%",
           height: "100%",
-          cursor: "pointer", // Show pointer cursor
-          zIndex: 10, // Ensure it's above the flipbook
+          cursor: "pointer",
+          zIndex: 10,
         }}
-        onClick={handleFlipPrev}
+        onClick={handleFlipNext}
       />
 
-      {/* Right overlay for flipping to the next page */}
+      {/* Right overlay for flipping to the previous page (RTL) */}
       <div
         style={{
           position: "absolute",
           right: 0,
           top: 0,
-          width: "25%", // Cover 25% of the screen width
+          width: "25%",
           height: "100%",
-          cursor: "pointer", // Show pointer cursor
-          zIndex: 10, // Ensure it's above the flipbook
+          cursor: "pointer",
+          zIndex: 10,
         }}
-        onClick={handleFlipNext}
+        onClick={handleFlipPrev}
       />
 
       <HTMLFlipBook
         ref={flipBook}
-        width={500} // Adjusted width to bring pages closer
+        width={500}
         height={700}
         size="stretch"
-        minWidth={550} // Adjust min/max width for two-page layout
+        minWidth={550}
         maxWidth={1100}
         minHeight={700}
         maxHeight={1400}
         maxShadowOpacity={0.5}
-        showCover={true} // Show the cover page alone
+        showCover={true}
         mobileScrollSupport={true}
-        onFlip={(e) => onFlip(e.data + 1)} // Pass the current page number
+        onFlip={(e) => onFlip(pages.length - e.data)} // Adjust page number for RTL
         onFlipEnd={onFlipEnd}
-        usePortrait={false} // Ensure landscape mode for two-page spread
-        startPage={currentPage - 1} // Start from the current page (zero-based index)
-        disableFlipByClick={true} // Disable flipping by clicking on the book
-        flippingTime={450} // Speed up the flip animation (default is 600ms)
-        style={{ margin: "0 auto" }} // Center the flipbook
+        usePortrait={false}
+        startPage={pages.length - currentPage} // Adjusted for RTL
+        disableFlipByClick={true}
+        flippingTime={450}
+        style={{ margin: "0 auto" }}
+        // RTL specific settings
+        flippingDirection="backward" // This is crucial for RTL books
+        drawShadow={true}
+        showPageCorners={false}
       >
-        {/* Render each page individually */}
-        {reorderedPages.map((page, index) => (
+        {/* Render reversed pages */}
+        {reversedPages.map((page, index) => (
           <div key={index + 1}>
             <div
               style={{
                 display: "flex",
                 width: "100%",
                 height: "100%",
-                justifyContent: "center", // Center the page content horizontally
-                alignItems: "center", // Center the page content vertically
-                backgroundColor: "#f0f0f0", // Optional: Add background color
+                justifyContent: "center",
+                alignItems: "center",
+                backgroundColor: "#f0f0f0",
               }}
             >
               <img

@@ -26,8 +26,8 @@ const AudioDetailsPage: React.FC = () => {
           {
             method: "GET",
             headers: {
-              "X-Parse-Application-Id": "XWNVzANvs7w6pYMl4fZWLCcikgXdMvCZhEnI48sH",
-              "X-Parse-REST-API-Key": "mRZK1BOLh5EIaOR9Ircc2OhX5OU28aidSsZAtyJP",
+              "X-Parse-Application-Id": import.meta.env.VITE_APP_ID,
+              "X-Parse-REST-API-Key": import.meta.env.VITE_RESTAPI_Key,
               "Content-Type": "application/json",
             },
           }
