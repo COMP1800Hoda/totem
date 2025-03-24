@@ -35,6 +35,7 @@ const GlobalStyles = createGlobalStyle`
     --color-background: ${COLORS.background};
     --color-text-primary: ${COLORS.darkGray};
     --color-border-gray: #d1d1d1;
+    --color-danger: #E65E60;
   }
 
   *,

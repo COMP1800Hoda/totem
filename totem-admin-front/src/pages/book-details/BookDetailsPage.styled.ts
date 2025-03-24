@@ -160,8 +160,26 @@ export const ShowMoreButton = styled.button`
   }
 `;
 
-export const FooterWrapper = styled.footer`
-  & > * {
-    margin: 0 -1em; /* Apply negative margin to all direct children */
+export const DeleteButton = styled.button`
+  margin-top: 30px;
+  align-items: center;
+  width: 100px;
+  text-align: center;
+  font-size: 13px;
+  padding: 6px;
+  font-weight: 500;
+  margin-bottom: 20px;
+  background-color: var(--color-danger);
+  span{
+    position: relative;
+    top:1px;
+    margin-left: 4px;
   }
-`;
+  
+  svg {
+    width: 22px;
+    height: 22px;
+    stroke-width: 1px;
+  }
+`
+
