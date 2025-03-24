@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { COLORS } from '../../constants/colors.ts';
 
 export const HeaderContainer = styled.header<{
   hideBorder?: boolean;
@@ -10,11 +11,11 @@ export const HeaderContainer = styled.header<{
   right: 0;
   width: 100%;
   height: 3.5em;
-  background-color: white;
+  background-color: ${COLORS.Lightest};
   border-bottom: ${({ hideBorder }) =>
           hideBorder
                   ? 'none'
-                  : '1px solid lightgray'};
+                  : '1px solid ${COLORS.Light}'};
 `;
 
 export const Inner = styled.div`
@@ -23,6 +24,8 @@ export const Inner = styled.div`
   justify-content: flex-end;
   align-items: center;
   gap: 2em;
+  padding: 0 1.5em;
+  color: ${COLORS.Dark};
 `;
 
 export const SearchContainer = styled.div`

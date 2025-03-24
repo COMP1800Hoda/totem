@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { COLORS } from '../../constants/colors.ts';
 
 interface BookGridProps {
   layoutType: 'twoColumns' | 'threeColumns';
@@ -11,7 +12,8 @@ export const BooksContainer = styled.div`
   min-height: 100vh; /* Ensure the container takes the full height of the viewport */
   padding: 0;
   margin: 0;
-  background-color: #f8f8f8; /* Light background color for the page */
+  background-color: ${COLORS.Lightest}; 
+  color: ${COLORS.Dark};
 `;
 
 // Grid layout for books
@@ -43,7 +45,7 @@ export const BookCover = styled.img<BookGridProps>`
 export const BookText = styled.div<BookGridProps>`
   margin-top: 5px;
   font-size: ${(props) => (props.layoutType === 'threeColumns' ? '14px' : '16px')};
-  color: #333;
+  color: ${COLORS.Darkest};
   text-align: center;
   line-height: 1.3;
 `;

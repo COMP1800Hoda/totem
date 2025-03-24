@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { COLORS } from '../../constants/colors.ts';
 
 /* Main container */
 export const ProfileContainer = styled.div`
@@ -7,9 +8,9 @@ export const ProfileContainer = styled.div`
   align-items: flex-start;
   padding: 10vh 5% 5% 5%;
   font-family: Arial, sans-serif;
-  background: #f8f0e9;
+  background: ${COLORS.Lightest};
   min-height: 100vh;
-  color: #8f857d;
+  color: ${COLORS.Dark};
 `;
 
 /* Top Navigation Bar */
@@ -19,7 +20,7 @@ export const TopNavBar = styled.div`
   left: 0;
   width: 100%;
   height: 8vh;
-  background: #f8f0e9;
+  background: ${COLORS.Lightest};
   display: flex;
   align-items: center;
   padding-left: 2%;
@@ -30,7 +31,7 @@ export const TopNavBar = styled.div`
 export const NavButton = styled.button`
   background: none;
   border: none;
-  color: #8f857d;
+  color: ${COLORS.Dark};
   cursor: pointer;
 `;
 
@@ -50,15 +51,15 @@ export const TextBox = styled.input`
   width: 100%;
   padding: 10px;
   font-size: 14px;
-  border: 1px solid #8f857d; /* Thinner border */
+  border: 1px solid ${COLORS.Dark}; /* Thinner border */
   border-radius: 8px;
   background: none;
-  color: #8f857d;
+  color: ${COLORS.Dark};
   margin-bottom: 10px;
 
   &:focus {
     outline: none;
-    border-color: #5c5552;
+    border-color: ${COLORS.Darkest};
   }
 `;
 
@@ -68,15 +69,15 @@ export const Button = styled.button<{ cancel?: boolean }>`
   padding: 10px;
   font-size: 14px;
   border-radius: 8px;
-  border: 1px solid ${({ cancel }) => (cancel ? '#8f857d' : '#5c5552')}; /* Thinner border */
+  border: 0.01px solid ${({ cancel }) => (cancel ? '${COLORS.Dark}' : '${COLORS.Darkest}')}; /* Thinner border */
   background: ${({ cancel }) => (cancel ? 'none' : '#decbb7')};
-  color: ${({ cancel }) => (cancel ? '#8f857d' : '#5c5552')};
+  color: ${({ cancel }) => (cancel ? '${COLORS.Dark}' : '${COLORS.Darkest}')};
   font-weight: ${({ cancel }) => (cancel ? 'normal' : 'bold')};
   cursor: pointer;
   margin-bottom: 10px; /* Space between buttons */
 
   &:hover {
-    background: ${({ cancel }) => (cancel ? '#f8f0e9' : '#5c5552')};
-    color: ${({ cancel }) => (cancel ? '#8f857d' : '#f8f0e9')};
+    background: ${({ cancel }) => (cancel ? '${COLORS.Lightest}' : '${COLORS.Darkest}')};
+    color: ${({ cancel }) => (cancel ? '${COLORS.Dark}' : '${COLORS.Lightest}')};
   }
 `;

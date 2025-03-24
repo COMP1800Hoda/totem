@@ -8,9 +8,9 @@ export const ProfileContainer = styled.div`
   align-items: flex-start;
   padding: 10vh 5% 5% 5%; /* Ensures content is not blocked by TopNavBar */
   font-family: Arial, sans-serif;
-  background: ${COLORS.background};
+  background: ${COLORS.Lightest};
   min-height: 100vh;
-  color: ${COLORS.TextPrimary};
+  color: ${COLORS.Darkest};
 `;
 
 /* Top Navigation Bar */
@@ -20,7 +20,7 @@ export const TopNavBar = styled.div`
   left: 0;
   width: 100%;
   height: 8vh;
-  background: #F8F0E9;
+  background: ${COLORS.Lightest};
   display: flex;
   align-items: center;
   padding-left: 2%;
@@ -31,7 +31,7 @@ export const TopNavBar = styled.div`
 export const NavButton = styled.button`
   background: none;
   border: none;
-  color: #8F857D;
+  color: ${COLORS.Dark};
   cursor: pointer;
 `;
 
@@ -44,21 +44,21 @@ export const SectionTitle = styled.p`
   font-weight: bold;
   font-size: 16px;
   margin-bottom: 5px;
-  color: ${COLORS.TextPrimary};
+  color: ${COLORS.Dark};
 `;
 
 export const SectionContent = styled.p`
   font-size: 14px;
   color: #555;
   margin-bottom: 10px;
-  color: ${COLORS.TextPrimary};
+  color: ${COLORS.Darkest};
 `;
 
 /* Divider */
 export const Divider = styled.hr`
   width: 100%;
   border: none;
-  border-top: 2px solid #8F857D;
+  border-top: 2px solid ${COLORS.Dark};
   margin: 10px 0;
 `;
 
@@ -79,6 +79,6 @@ export const Footer = styled.div`
   transform: translateX(-50%);
   text-align: center;
   font-size: 14px;
-  color: #8F857D;
+  color: ${COLORS.Dark};
   width: 100%;
 `;

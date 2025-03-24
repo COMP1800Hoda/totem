@@ -7,6 +7,7 @@ import {
 } from './BookDetailsPage.styled';
 import Footer from '../../components/footer/Footer'; // Import the Footer component
 import Modal from '../../components/modal'; // Import the Modal component
+import { COLORS } from '../../constants/colors.ts';
 import { Header } from '../../components/header/Header';
 import {Storybook} from "../../types/Storybook.ts";
 import {fetchStorybookById} from "../../api/fetchStorybookById.ts"; // Import the Header component
