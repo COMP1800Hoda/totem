@@ -54,9 +54,8 @@ export const BookCard = styled.div`
 
 export const BookCover = styled.img`
   margin-top: 0.8em;
-  width: 7.5em;
-  height: 13.5em;
   border-radius: 0.5em;
+  object-fit: contain;
 `;
 
 export const BookDetails = styled.div`

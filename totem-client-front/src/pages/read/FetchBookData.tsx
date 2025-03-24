@@ -26,6 +26,7 @@ export const useBookData = (id: string) => {
 
         const data: Book = await response.json();
         setBook(data);
+        console.log(data);
 
         const imageUrls = Object.values(data.storybook_image_url);
         const mappedPages = imageUrls.map((url, index) => ({

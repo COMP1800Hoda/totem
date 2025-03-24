@@ -56,7 +56,6 @@ export const TwoPageLayout: React.FC<TwoPageLayoutProps> = ({
     const timer = setTimeout(() => {
       if (flipBook.current && flipBook.current.pageFlip) {
         const pageIndex = currentPage - 1; // Convert to zero-based index
-        console.log("Navigating to page:", pageIndex); // Debugging
         flipBook.current.pageFlip().flip(pageIndex, "top"); // Navigate to the correct page
       } else {
         console.error("flipBook or pageFlip is not initialized"); // Debugging
