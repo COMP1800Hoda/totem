@@ -21,12 +21,12 @@ export const OnePageLayout: React.FC<OnePageLayoutProps> = ({
     const { clientX, currentTarget } = e;
     const clickX = clientX / currentTarget.clientWidth;
 
-    if (clickX < 0.3 && currentPage > 1) {
+    if (clickX < 0.3 && currentPage < pages.length) {
       // Clicked on the left side (30% of the screen)
-      onPageChange(currentPage - 1); // Go to the previous page
-    } else if (clickX > 0.7 && currentPage < pages.length) {
+      onPageChange(currentPage + 1); // Go to the previous page
+    } else if (clickX > 0.7 && currentPage > 1) {
       // Clicked on the right side (70% of the screen)
-      onPageChange(currentPage + 1); // Go to the next page
+      onPageChange(currentPage - 1); // Go to the next page
     }
 
     // Call the parent onPageClick handler if needed

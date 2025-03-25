@@ -20,9 +20,9 @@ const BooksPage: React.FC = () => {
       const response = await fetch(`https://parseapi.back4app.com/classes/storybook?limit=${limit}&skip=${skip}`, {
         method: "GET",
         headers: {
-          "X-Parse-Application-Id": "XWNVzANvs7w6pYMl4fZWLCcikgXdMvCZhEnI48sH",
-          "X-Parse-REST-API-Key": "mRZK1BOLh5EIaOR9Ircc2OhX5OU28aidSsZAtyJP",
-          "Content-Type": "application/json"
+          "X-Parse-Application-Id": import.meta.env.VITE_APP_ID,
+          "X-Parse-REST-API-Key": import.meta.env.VITE_RESTAPI_Key,
+          "Content-Type": "application/json",
         }
       });
       const data = await response.json();

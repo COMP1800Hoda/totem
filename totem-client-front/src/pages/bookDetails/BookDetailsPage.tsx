@@ -82,7 +82,7 @@ const BookPage: React.FC = () => {
           )}
         </BookDetails>
       </BookCard>
-      <ReadButton onClick={() => navigate(`/read/${book.objectId}`)}>
+      <ReadButton onClick={() => navigate(`/read/${book.storybook_id}`)}>
         Read this book
       </ReadButton>
       <Synopsis>

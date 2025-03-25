@@ -1,5 +1,4 @@
-// src/components/ReadPage/ReadPage.tsx
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useBookData } from "./FetchBookData";
 import { NavBars } from "./NavBars";
@@ -11,7 +10,7 @@ const ReadPage: React.FC = () => {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const { book, pages, loading, error } = useBookData(id || "");
-  const [currentPage, setCurrentPage] = useState(1); // Lift currentPage state here
+  const [currentPage, setCurrentPage] = useState(1);
   const [showNav, setShowNav] = useState(false);
   const [isWideScreen, setIsWideScreen] = useState(window.innerWidth >= 900);
 
@@ -23,14 +22,20 @@ const ReadPage: React.FC = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const toggleNav = () => {
+  const toggleNav = useCallback(() => {
     setShowNav((prev) => !prev);
-  };
+  }, []);
 
-  const handleOnePageClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    // Toggle navigation bars on click
-    toggleNav();
-  };
+  const handlePageClick = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    const clickX = e.clientX;
+    const windowWidth = window.innerWidth;
+    const middleStart = windowWidth * 0.3; // 30% from left
+    const middleEnd = windowWidth * 0.7; // 70% from left (middle 40%)
+
+    if (clickX > middleStart && clickX < middleEnd) {
+      toggleNav();
+    }
+  }, [toggleNav]);
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>{error}</div>;
@@ -43,24 +48,24 @@ const ReadPage: React.FC = () => {
         currentPage={currentPage}
         totalPages={pages.length}
         onBack={() => navigate(`/books/${id}`)}
-        onPageChange={setCurrentPage} // Pass setCurrentPage to NavBars
+        onPageChange={setCurrentPage}
         isTwoPageLayout={isWideScreen}
       />
 
       {isWideScreen ? (
         <TwoPageLayout
-        pages={pages}
-        currentPage={currentPage} // Pass currentPage as a prop
-        onFlip={setCurrentPage} // Pass setCurrentPage to update currentPage
-        onFlipEnd={() => {}} // Optional: Add logic for flip end
-        onPageClick={handleOnePageClick}
+          pages={pages}
+          currentPage={currentPage}
+          onFlip={setCurrentPage}
+          onFlipEnd={() => {}}
+          onPageClick={handlePageClick}
         />
       ) : (
         <OnePageLayout
           pages={pages}
-          currentPage={currentPage} // Pass currentPage as a prop
-          onPageChange={setCurrentPage} // Pass setCurrentPage to OnePageLayout
-          onPageClick={handleOnePageClick}
+          currentPage={currentPage}
+          onPageChange={setCurrentPage}
+          onPageClick={handlePageClick}
         />
       )}
     </Container>

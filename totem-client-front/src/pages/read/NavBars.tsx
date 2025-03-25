@@ -55,15 +55,15 @@ export const NavBars: React.FC<NavBarsProps> = ({
       </TopNavBar>
 
       <BottomNavBar>
-        <BottomNavButton
-          onClick={() => onPageChange(currentPage - (isTwoPageLayout ? 2 : 1))}
+      <BottomNavButton
+          onClick={() => onPageChange(currentPage + (isTwoPageLayout ? 2 : 1))}
           disabled={
             isTwoPageLayout
-              ? currentPage <= 1 // Disable if on the first page
-              : currentPage === 1 // Disable if on the first page
+              ? currentPage >= totalPages - 1 // Disable if on the last or second-to-last page
+              : currentPage === totalPages // Disable if on the last page
           }
         >
-          قبلی
+          بعدی
         </BottomNavButton>
 
         <SliderContainer>
@@ -82,14 +82,14 @@ export const NavBars: React.FC<NavBarsProps> = ({
         </SliderContainer>
 
         <BottomNavButton
-          onClick={() => onPageChange(currentPage + (isTwoPageLayout ? 2 : 1))}
+          onClick={() => onPageChange(currentPage - (isTwoPageLayout ? 2 : 1))}
           disabled={
             isTwoPageLayout
-              ? currentPage >= totalPages - 1 // Disable if on the last or second-to-last page
-              : currentPage === totalPages // Disable if on the last page
+              ? currentPage <= 1 // Disable if on the first page
+              : currentPage === 1 // Disable if on the first page
           }
         >
-          بعدی
+          قبلی
         </BottomNavButton>
       </BottomNavBar>
     </>
