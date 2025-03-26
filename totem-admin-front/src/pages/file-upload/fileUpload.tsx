@@ -9,6 +9,7 @@ import {
     TextArea, SubPreButton, FileInputContainer, FullWidthLabel,Icon, AddButton, 
     DeleteButton, PreviewContainer, PreviewRemoveButton,GenerateButton,
 } from './fileUpload_style';
+import {generateBookID} from "../../utils/generateBookId.ts";
 
 interface FileData {
     file: File;
@@ -218,18 +219,24 @@ const FileUpload: React.FC = () => {
         setFiles(newFiles);
     };
 
-
-    useEffect(() => {
-        if (isUploading && coverimageurl && contentimageurl.length > 0) {
-
-            handleAddToDB();
-            setIsUploading(false);
-        }
-    }, [coverimageurl, contentimageurl, isUploading]);
-
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
         setIsUploading(true);
+        if (
+          !bookTitle ||
+          !bookId ||
+          !age ||
+          // !genres ||
+          !creators
+          // !publisher ||
+          // !published ||
+          // !isbn ||
+          // !abstract
+        ) {
+          alert("Please fill in all required fields");
+          setIsUploading(false);
+          return;
+        }
 
         const coverImageFolder = `/book-cover-images/${bookId}/`;
 
@@ -321,14 +328,27 @@ const FileUpload: React.FC = () => {
             // Wait for all uploads to complete
             await Promise.all(uploadPromises);
             console.log("All files uploaded successfully");
+            if (
+              !coverimageurl ||
+              !contentimageurl
+            ) {
+              console.log("Something wrong to handle images");
+              setIsUploading(false);
+              return;
+            }
 
+            const dbResult = await handleAddToDB();
+            if (!dbResult) {
+              console.log('failed db upload')
+              setIsUploading(false);
+              return; // do not navigate
+            }
 
             const metaData = {
                 bookTitle: bookTitle,
                 bookId: bookId
             };
             localStorage.setItem('Metadata', JSON.stringify(metaData));
-
 
             window.location.href = '/success';
         } catch (error) {
@@ -340,26 +360,12 @@ const FileUpload: React.FC = () => {
 
     
     const handleAddToDB = async () => {
-        if (
-            !bookTitle ||
-            !bookId ||
-            !age ||
-            !genres ||
-            !creators ||
-            !publisher ||
-            !published ||
-            !isbn ||
-            !abstract ||
-            !coverimageurl ||
-            !contentimageurl
-        ) {
-            console.log("Please fill in all required fields");
-            return;
-        }
         const updatedCreators = replaceOtherWithCustomRole(creators);
         console.log(updatedCreators)
         const Storybook = Parse.Object.extend("storybook");
         const storybook = new Storybook();
+        const nextIndex = await Parse.Cloud.run('getNextIndex', { name: 'storybook' });
+        console.log("Generated index:", nextIndex);
         storybook.set("storybook_title", bookTitle);
         storybook.set("storybook_id", bookId);
         storybook.set("Age", age);
@@ -378,8 +384,10 @@ const FileUpload: React.FC = () => {
         try {
             await storybook.save();
             console.log("Book metadata saved successfully!");
+            return true;
         } catch (error) {
             console.log("Error saving metadata:", error);
+            return false;
         }
     };
     
@@ -466,13 +474,23 @@ const FileUpload: React.FC = () => {
         });
     };
 
+    const handleGenerate = async (e: { preventDefault: () => void; }) => {
+      e.preventDefault();
+
+      const id = await generateBookID()
+      if (typeof id === "string") {
+        console.log('success to generate new id:', id)
+        setBookId(id);
+      }
+    }
+
     return (
         <div>
             <div style={{ gap: "50px" }}><Header /></div>
             <AppContainer>
                 <UploadHeader>Add New Book</UploadHeader>
                 <form onSubmit={handleSubmit}>
-                    <FormGroup>
+                    <FormGroup className={"required"}>
                         <label>Book Title</label>
                         <Input
                             type="text"
@@ -481,7 +499,7 @@ const FileUpload: React.FC = () => {
                         />
                     </FormGroup>
 
-                    <FormGroup>
+                    <FormGroup className={"required"}>
                         <label>Book ID</label>
                         <FormRow>
                             <Input
@@ -490,7 +508,7 @@ const FileUpload: React.FC = () => {
                                 onChange={(e) => setBookId(e.target.value)}
                                 style={{ marginRight: "10px", width: "90%" }}
                             />
-                            <GenerateButton>Generate</GenerateButton>
+                            <GenerateButton onClick={handleGenerate}>Generate</GenerateButton>
                         </FormRow>
                         <div style={{ fontSize: "12px" }}>
                             <span style={{ fontWeight: "bold" }}>Book ID</span> consists of English letters, numbers, and underscores (e.g., cropson_00390039).
@@ -498,7 +516,7 @@ const FileUpload: React.FC = () => {
                         </div>
                     </FormGroup>
 
-                    <FormGroup>
+                    <FormGroup className={"required"}>
                         <label>Age</label>
                         <Select
                             value={age}
@@ -551,7 +569,7 @@ const FileUpload: React.FC = () => {
                         </div>
                     </FormGroup>
 
-                    <FormGroup>
+                    <FormGroup className={"required"}>
                         <label>Created by</label>
                         {creators.map((creator, index) => (
                             <div
@@ -672,7 +690,7 @@ const FileUpload: React.FC = () => {
                     </FormGroup>
                 </form>
 
-                <FormGroup>
+                <FormGroup className={"required"}>
                     <label>Book Cover</label>
                     <Input
                         type="file"
@@ -682,7 +700,7 @@ const FileUpload: React.FC = () => {
                         required
                     />
                 </FormGroup>
-                <FormGroup>
+                <FormGroup className={"required"}>
                     <label>Book Content images</label>
                     <FullWidthLabel htmlFor="file-upload">
                         <FileInputContainer

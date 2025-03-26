@@ -32,9 +32,24 @@ export const ButtonRow = styled.div`
 `;
 
 export const FormGroup = styled.div`
+  position: relative;
   flex: 1;
   width: auto;
   margin-bottom: 10px;
+  
+  &.required{
+    > label:first-child {
+      display: block;
+      &:after {
+        position: relative;
+        top: 2px;
+        margin-left: 6px;
+        color: red;
+        font-weight: bold;
+        content: '*';
+      }
+    }
+  }
 `;
 
 export const Input = styled.input`
