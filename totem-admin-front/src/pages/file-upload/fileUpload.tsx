@@ -177,6 +177,13 @@ const FileUpload: React.FC = () => {
         if (files.length > 0) {
             const filesArray = Array.from(files);
 
+            const validImages = filesArray.filter(file => file.type.startsWith("image/"));
+
+            if (validImages.length !== filesArray.length) {
+              alert("Only image files are allowed.");
+              return;
+            }
+
             const firstFile = filesArray[0];
             const isFolderUpload = firstFile.webkitRelativePath !== "";
 
@@ -226,14 +233,17 @@ const FileUpload: React.FC = () => {
           !bookTitle ||
           !bookId ||
           !age ||
-          // !genres ||
           !creators
-          // !publisher ||
-          // !published ||
-          // !isbn ||
-          // !abstract
         ) {
           alert("Please fill in all required fields");
+          setIsUploading(false);
+          return;
+        }
+        if (
+          files.length === 0 ||
+          !coverImage
+        ) {
+          alert("Please add cover and content images");
           setIsUploading(false);
           return;
         }
