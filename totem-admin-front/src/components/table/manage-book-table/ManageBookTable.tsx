@@ -119,7 +119,6 @@ export const ManageBookTable: React.FC = () => {
       handleAlert('Please add a search keyword')
     }
 
-    console.log(searchKeyword)
     if (searchKeyword !== searchResultKeyword)
       setSearchResultKeyword(searchKeyword)
     if (searchType !== searchResultType)

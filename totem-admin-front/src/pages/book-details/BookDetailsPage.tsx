@@ -1,6 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import {useParams} from 'react-router';
 import {Spinner} from "react-bootstrap";
+import {IconTrash} from "@tabler/icons-react";
+import {useNavigate} from "react-router-dom";
 
 import {
   AuthorInfo,
@@ -24,7 +26,7 @@ import {fetchStorybookById} from "../../api/fetchStorybookById.ts";
 import {Storybook} from "../../types/Storybook.ts";
 import {Container} from "../../components/Container.tsx";
 import {MainTitle} from "../../components/text/MainTitle.tsx";
-import {IconTrash} from "@tabler/icons-react";
+import {deleteStorybook} from "../../api/deleteStorybook.ts";
 
 const BookPage: React.FC = () => {
   const {id} = useParams<{ id: string }>();
@@ -32,6 +34,7 @@ const BookPage: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+
 
   useEffect(() => {
     (async () => {
@@ -54,9 +57,15 @@ const BookPage: React.FC = () => {
   };
 
   const authors = book?.created_by || [];
+  const navigate = useNavigate();
 
-  const onClickDelete = () => {
-
+  const onClickDelete = (storybook_id:string) => {
+    try {
+      deleteStorybook(storybook_id);
+      navigate('/main');
+    } catch (e) {
+      console.error(e)
+    }
   }
 
   if (loading || error || !book) {
@@ -66,7 +75,7 @@ const BookPage: React.FC = () => {
         <BookContainer>
           {loading && (<Spinner/>)}
           {error && (<p>{error}</p>)}
-          {!book && (<p>Cannot find book</p>)}
+          {!loading && !book && (<p>Cannot find book</p>)}
         </BookContainer>
       </div>
     )
@@ -120,7 +129,7 @@ const BookPage: React.FC = () => {
           <DeleteButton
             type="button"
             className="btn btn-danger"
-            onClick={onClickDelete}
+            onClick={() => onClickDelete(book.storybook_id)}
           >
             <IconTrash/>
             <span>
