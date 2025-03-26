@@ -177,10 +177,19 @@ const FileUpload: React.FC = () => {
         if (files.length > 0) {
             const filesArray = Array.from(files);
 
+            // check file format
             const validImages = filesArray.filter(file => file.type.startsWith("image/"));
-
             if (validImages.length !== filesArray.length) {
               alert("Only image files are allowed.");
+              return;
+            }
+
+            // check duplicate
+            const existingNames = filesArray.map(f => f.name);
+            const hasDuplicate = validImages.some(file => existingNames.includes(file.name));
+
+            if (hasDuplicate) {
+              alert("Duplicate file names are not allowed. Please rename your files before uploading.");
               return;
             }
 
