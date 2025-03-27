@@ -1,6 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import {useParams} from 'react-router';
 import {Spinner} from "react-bootstrap";
+import {IconTrash} from "@tabler/icons-react";
+import {useNavigate} from "react-router-dom";
 
 import {
   AuthorInfo,
@@ -12,6 +14,7 @@ import {
   BookMeta,
   BookTags,
   BookTitle,
+  DeleteButton,
   PublisherInfo,
   ShowMoreButton,
   Synopsis,
@@ -22,6 +25,8 @@ import {Header} from '../../components/header/Header';
 import {fetchStorybookById} from "../../api/fetchStorybookById.ts";
 import {Storybook} from "../../types/Storybook.ts";
 import {Container} from "../../components/Container.tsx";
+import {MainTitle} from "../../components/text/MainTitle.tsx";
+import {deleteStorybook} from "../../api/deleteStorybook.ts";
 
 const BookPage: React.FC = () => {
   const {id} = useParams<{ id: string }>();
@@ -29,6 +34,7 @@ const BookPage: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+
 
   useEffect(() => {
     (async () => {
@@ -51,25 +57,25 @@ const BookPage: React.FC = () => {
   };
 
   const authors = book?.created_by || [];
+  const navigate = useNavigate();
 
-  if (loading || error) {
+  const onClickDelete = (storybook_id:string) => {
+    try {
+      deleteStorybook(storybook_id);
+      navigate('/main');
+    } catch (e) {
+      console.error(e)
+    }
+  }
+
+  if (loading || error || !book) {
     return (
       <div className="page">
         <Header/>
         <BookContainer>
           {loading && (<Spinner/>)}
           {error && (<p>{error}</p>)}
-        </BookContainer>
-      </div>
-    )
-  }
-
-  if (!book) {
-    return (
-      <div className="page">
-        <Header/>
-        <BookContainer>
-          Cannot find book
+          {!loading && !book && (<p>Cannot find book</p>)}
         </BookContainer>
       </div>
     )
@@ -80,7 +86,7 @@ const BookPage: React.FC = () => {
       <Header/>
       <BookContainer>
         <Container>
-          {/*<BackButton onClick={() => window.history.back()}>&lt; Back</BackButton>*/}
+          <MainTitle text="Book Details"/>
           <BookCard style={{flexDirection: "row-reverse"}}>
             <BookCover src={book.cover_image_url} alt="Book Cover"/>
             <BookDetails>
@@ -120,6 +126,16 @@ const BookPage: React.FC = () => {
             <p>Book index in DB: {book.index || "N/A"}</p>
             <p>Book ID: {book.storybook_id || "N/A"}</p>
           </BookInfo>
+          <DeleteButton
+            type="button"
+            className="btn btn-danger"
+            onClick={() => onClickDelete(book.storybook_id)}
+          >
+            <IconTrash/>
+            <span>
+              Remove
+            </span>
+          </DeleteButton>
 
           {/* Modal for showing all authors */}
           <Modal isOpen={isModalOpen} onClose={toggleModal} className="modal-author">

@@ -8,7 +8,7 @@ export const HomePage = () => {
   return (
     <div id={'page-home'} className={'page'}>
       <Header />
-      <Container>
+      <Container style={{margin: '0 auto'}}>
         <MainTitle text={`Welcome, ${username}`} />
         <Menu />
       </Container>
