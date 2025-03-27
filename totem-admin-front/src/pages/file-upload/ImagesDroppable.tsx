@@ -10,6 +10,7 @@ import {
   PreviewRemoveButton
 } from "./fileUpload_style.ts";
 import DraggingIcon from "../../assets/draggingdot.svg";
+import {hasDuplicatedFile} from "../../utils/hasDuplicatedFile";
 
 export const ImagesDroppable = ({files, setFiles}) => {
   const contentInputRef = useRef<HTMLInputElement | null>(null);
@@ -45,11 +46,11 @@ export const ImagesDroppable = ({files, setFiles}) => {
   };
 
 
-  const handleFileChange = (files: FileList) => {
+  const handleFileChange = (newFiles: FileList) => {
     console.log("Selecting files");
 
-    if (files.length > 0) {
-      const filesArray = Array.from(files);
+    if (newFiles.length > 0) {
+      const filesArray = Array.from(newFiles);
 
       // check file format
       const validImages = filesArray.filter(file => file.type.startsWith("image/"));
@@ -58,7 +59,10 @@ export const ImagesDroppable = ({files, setFiles}) => {
         return;
       }
 
-      const firstFile = filesArray[0];
+      // check file name duplication
+      if (hasDuplicatedFile([...filesArray, ...files])) {
+        return;
+      }
 
       const updatedFilesData = filesArray.map((file) => ({
         file: file,
