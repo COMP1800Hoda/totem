@@ -3,13 +3,17 @@ import dotenv from 'dotenv';
 import nodeMailer from 'nodemailer';
 import bodyParser from 'body-parser';
 import cors from 'cors';
-
+import bcrypt from 'bcryptjs';
+import ParseConfig from './parseConfig.js'
+import jwt from 'jsonwebtoken';
 const app = express();
 const PORT = 8080;
 
 app.use(cors());
 app.use(express.json());
 dotenv.config();
+
+const JWT_SECRET = process.env.JWT_SECRET;
 
 //Nodemailer
 
@@ -46,6 +50,32 @@ app.post('/reset-password', async(req, res) => {
         return res.status(500).json({message: "Error sending email"});
     }
 })
+
+app.post('/', async(req,res) => {
+    const {email, password} = req.body;
+    try{
+        const query = new ParseConfig.Query('Admin');
+        query.equalTo('admin_email', email);
+        const admin = await query.first();
+        if(!admin){
+            return res.status(401).json({message: "Email not found"});
+        }
+        const hashedPassword = admin.get('admin_hashed_password');
+        const isMatch = await bcrypt.compare(password, hashedPassword);
+        if(!isMatch){
+            return res.status(401).strictContentLength({message: 'Incorrect password'});
+        }
+
+        const token = jwt.sign({email: admin.get('admin_email')}, JWT_SECRET, {expiresIn: '1h'});
+        res.json({token, message: 'Login successful'});
+    } catch(error){
+        console.log("error: ", error);
+        res.status(500).json({message: "Internal server error"});
+    }
+})
+
+
 app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
 });
+

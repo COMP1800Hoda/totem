@@ -3,19 +3,19 @@ import ImageKit from 'imagekit';
 import Parse from '../../database';
 import './fileUpload.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
+
 interface FileData {
   file: File;
   name: string;
   size: string;
   url: string; // For image previews
 }
-// initializeParse();
 
 // Initialize ImageKit
 const imagekit = new ImageKit({
-  publicKey: 'public_P17LRkYTu9e3UdN3WnyzbodiT1U=',
-  urlEndpoint: 'https://ik.imagekit.io/Comp3800Group12',
-  privateKey: 'private_PeSFDBIdeSuhtUZaec1saMxjqoU=',
+  publicKey: import.meta.env.VITE_IMAGEKIT_PUBLIC_KEY,
+  urlEndpoint: import.meta.env.VITE_IMAGEKIT_URL_ENDPOINT,
+  privateKey: import.meta.env.VITE_IMAGEKIT_PRIVATE_KEY,
 });
 
 const FileUpload: React.FC = () => {

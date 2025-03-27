@@ -1,4 +1,4 @@
-import ParseConfig from "parse/dist/parse.min.js";
+import ParseConfig from "parse/node.js";
 import dotenv from 'dotenv';
 
 dotenv.config(); // Load env variables
