@@ -2,7 +2,6 @@ import React, {useRef} from "react";
 import {DragDropContext, Draggable, Droppable} from "react-beautiful-dnd";
 import {
   FileInputContainer,
-  FormGroup,
   FullWidthLabel,
   Icon,
   Input,
@@ -102,32 +101,27 @@ export const ImagesDroppable = ({files, setFiles}) => {
 
   return (
     <>
-
-      <FormGroup className={"required"}>
-        <label>Book Content images</label>
-        <FullWidthLabel htmlFor="file-upload">
-          <FileInputContainer
-            onDrop={handleDrop}
-            onDragOver={handleDragOver}
-            onDragEnter={handleDragEnter}
-            onDragLeave={handleDragLeave}
-          >
-            <Input
-              ref={contentInputRef}
-              id="file-upload"
-              type="file"
-              onChange={onInputChange}
-              style={{display: "none"}}
-              accept="image/*"
-              multiple
-              required
-            />
-            <Icon className="fas fa-cloud-upload-alt"/>
-            <span style={{fontSize: "16px"}}>Drag and drop images to upload, or click to browse</span>
-          </FileInputContainer>
-        </FullWidthLabel>
-      </FormGroup>
-
+      <FullWidthLabel htmlFor="file-upload">
+        <FileInputContainer
+          onDrop={handleDrop}
+          onDragOver={handleDragOver}
+          onDragEnter={handleDragEnter}
+          onDragLeave={handleDragLeave}
+        >
+          <Input
+            ref={contentInputRef}
+            id="file-upload"
+            type="file"
+            onChange={onInputChange}
+            style={{display: "none"}}
+            accept="image/*"
+            multiple
+            required
+          />
+          <Icon className="fas fa-cloud-upload-alt"/>
+          <span style={{fontSize: "16px"}}>Drag and drop images to upload, or click to browse</span>
+        </FileInputContainer>
+      </FullWidthLabel>
       <DragDropContext onDragEnd={onDragEnd}>
         {files.length > 0 ? (
           <Droppable
@@ -153,7 +147,8 @@ export const ImagesDroppable = ({files, setFiles}) => {
                         <PreviewContainer>
                           <div style={{display: "flex", alignItems: "center"}}>
                             <img
-                              src={DraggingIcon} alt="Dragging Icon" style={{width: "24px", height: "24px",marginRight:10}}/>
+                              src={DraggingIcon} alt="Dragging Icon"
+                              style={{width: "24px", height: "24px", marginRight: 10}}/>
                             <span>{file.name}</span>
                           </div>
                           <div style={{display: "flex", alignItems: "center"}}>

@@ -444,7 +444,8 @@ const FileUpload: React.FC = () => {
               <GenerateButton onClick={handleGenerate}>Generate</GenerateButton>
             </FormRow>
             <div style={{fontSize: "12px"}}>
-              <span style={{fontWeight: "bold"}}>Book ID</span> consists of English letters, numbers, and underscores
+              <span style={{fontWeight: "bold"}}>Book ID</span> consists of English letters, numbers, and
+              underscores
               (e.g., cropson_00390039).
               It is used as the folder path in the image CDN.<span style={{fontWeight: "bold"}}> Once generated, it cannot be changed.</span> Click
               “Generate” to create a random ID.
@@ -635,10 +636,14 @@ const FileUpload: React.FC = () => {
             required
           />
         </FormGroup>
-        <ImagesDroppable
-          files={files}
-          setFiles={setFiles}
-        />
+
+        <FormGroup className={"required"}>
+          <label>Book Content images</label>
+          <ImagesDroppable
+            files={files}
+            setFiles={setFiles}
+          />
+        </FormGroup>
         <ButtonRow>
           <SubPreButton type="submit" onClick={handlePreview}>Preview</SubPreButton>
           <SubPreButton type="submit" onClick={handleSubmit}>
