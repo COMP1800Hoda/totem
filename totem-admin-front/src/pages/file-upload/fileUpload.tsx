@@ -183,6 +183,9 @@ const FileUpload: React.FC = () => {
     const uploadPromises: Promise<void>[] = [];
 
     const contentImageNames: string[] = [];
+
+    let coverImageUploaded;
+    let contentUploaded = [];
     // Upload cover image
     if (coverImage) {
       const coverUploadPromise = new Promise<void>(async (resolve, reject) => {
@@ -198,6 +201,7 @@ const FileUpload: React.FC = () => {
                 tags: [bookId],
               });
               const coverimageUrl = response.url;
+              coverImageUploaded = response.url;
               setUrl(coverimageUrl);
               const covername = coverImage.name;
               setCoverImagename(covername);
@@ -241,6 +245,7 @@ const FileUpload: React.FC = () => {
               setImageNames(contentImageNames);
               const imageUrl = response.url;
               setimageUrl((prevUrls) => [...prevUrls, imageUrl]);
+              contentUploaded.push(imageUrl);
               console.log("Content image uploaded successfully. URL:", imageUrl);
               resolve();
             } catch (error) {
@@ -267,14 +272,16 @@ const FileUpload: React.FC = () => {
       await Promise.all(uploadPromises);
       console.log("All files uploaded successfully");
       if (
-        !coverimageurl ||
-        !contentimageurl
+        !coverImageUploaded ||
+        contentUploaded.length == 0
       ) {
         console.log("Something wrong to handle images");
         setIsUploading(false);
         return;
       }
 
+
+      // Update db
       const dbResult = await handleAddToDB();
       if (!dbResult) {
         console.log('failed db upload')
@@ -304,6 +311,7 @@ const FileUpload: React.FC = () => {
     const storybook = new Storybook();
     const nextIndex = await Parse.Cloud.run('getNextIndex', {name: 'storybook'});
     console.log("Generated index:", nextIndex);
+    storybook.set("index", nextIndex);
     storybook.set("storybook_title", bookTitle);
     storybook.set("storybook_id", bookId);
     storybook.set("Age", age);
