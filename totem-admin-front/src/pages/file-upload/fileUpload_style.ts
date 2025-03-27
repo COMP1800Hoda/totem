@@ -29,6 +29,7 @@ export const ButtonRow = styled.div`
   gap: 20px;
   margin-bottom: 15px;
   margin-left: 8px;
+  margin-top: 30px;
 `;
 
 export const FormGroup = styled.div`
@@ -203,16 +204,16 @@ export const FileDetails = styled.div`
 `;
 
 export const PreviewContainer = styled.div`
-  width: 100%;
-  padding-left: 5px;
-  height: 50px;
   display: flex;
   justify-content: space-between;
-  align-items: stretch;
-  margin-bottom: 10px;
-  transition: none;
-  gap: 10px;
+  align-items: center;
+  padding: 10px;
+  width: 100%;
   border-radius: 4px;
+  min-height: 50px;
+  gap: 10px;
+  box-sizing: border-box;
+
 `;
 
 export const PreviewRemoveButton = styled.button`

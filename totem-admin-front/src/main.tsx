@@ -6,12 +6,12 @@ import GlobalStyles from './styles/GlobalStyles.ts';
 import App from './App.tsx';
 
 createRoot(document.getElementById('root')!).render(
-  <StrictMode>
+  // <StrictMode>
     <StyleSheetManager shouldForwardProp={shouldForwardProp}>
       <App />
       <GlobalStyles />
     </StyleSheetManager>
-  </StrictMode>
+  // </StrictMode>
 );
 
 function shouldForwardProp(propName: string, target: unknown) {
