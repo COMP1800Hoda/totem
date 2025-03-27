@@ -88,8 +88,6 @@ const FileUpload: React.FC = () => {
     setGenres(newGenres);
   };
 
-  console.log('files', files)
-
   const handleAddGenre = (): void => {
     setGenres([...genres, ""]);
   };
