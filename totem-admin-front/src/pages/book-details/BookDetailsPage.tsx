@@ -3,6 +3,7 @@ import {useParams} from 'react-router';
 import {Spinner} from "react-bootstrap";
 import {IconTrash} from "@tabler/icons-react";
 import {useNavigate} from "react-router-dom";
+import {Modal as BootstrapModal, Button, Alert} from 'react-bootstrap';
 
 import {
   AuthorInfo,
@@ -32,8 +33,18 @@ const BookPage: React.FC = () => {
   const {id} = useParams<{ id: string }>();
   const [book, setBook] = useState<Storybook | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const [deleting, setDeleting] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [alert, setAlert] = useState<{ show: boolean; type: 'success' | 'danger'; message: string }>({
+    show: false,
+    type: 'success',
+    message: '',
+  });
+  const [successModalOpen, setSuccessModalOpen] = useState(false);
+  const [selectedBookId, setSelectedBookId] = useState<string | null>(null);
 
 
   useEffect(() => {
@@ -59,12 +70,21 @@ const BookPage: React.FC = () => {
   const authors = book?.created_by || [];
   const navigate = useNavigate();
 
-  const onClickDelete = (storybook_id:string) => {
+  const onClickDelete = async () => {
+    if (!selectedBookId) return;
     try {
-      deleteStorybook(storybook_id);
-      navigate('/main');
-    } catch (e) {
-      console.error(e)
+      setDeleting(true)
+      await deleteStorybook(selectedBookId);
+      setShowConfirmModal(false);
+      setSuccessModalOpen(true);
+
+      setTimeout(() => navigate('/manage-books'), 3000);
+    } catch (err) {
+      console.error(err);
+      setAlert({show: true, type: 'danger', message: 'Failed to delete the book.'});
+      setShowConfirmModal(false);
+    } finally {
+      setDeleting(false);
     }
   }
 
@@ -129,7 +149,10 @@ const BookPage: React.FC = () => {
           <DeleteButton
             type="button"
             className="btn btn-danger"
-            onClick={() => onClickDelete(book.storybook_id)}
+            onClick={() => {
+              setSelectedBookId(book.storybook_id);
+              setShowConfirmModal(true);
+            }}
           >
             <IconTrash/>
             <span>
@@ -146,6 +169,66 @@ const BookPage: React.FC = () => {
           </Modal>
         </Container>
       </BookContainer>
+
+      {/*Confirmation modal*/}
+      <BootstrapModal
+        className="bs-modal"
+        show={showConfirmModal} onHide={() => setShowConfirmModal(false)} centered
+      >
+        <BootstrapModal.Header closeButton>
+          <BootstrapModal.Title>Confirm Deletion</BootstrapModal.Title>
+        </BootstrapModal.Header>
+        <BootstrapModal.Body>
+          Are you sure you want to remove this? <br/>This action cannot be undone.
+        </BootstrapModal.Body>
+        <BootstrapModal.Footer>
+          {deleting ? (
+            <Spinner/>
+          ) : (
+            <>
+              <Button variant="secondary" onClick={() => setShowConfirmModal(false)}>
+                Cancel
+              </Button>
+              <Button
+                variant="danger"
+                onClick={onClickDelete}
+              >
+                Yes, delete it
+              </Button>
+            </>
+          )}
+        </BootstrapModal.Footer>
+      </BootstrapModal>
+
+      {/*Any alert message*/}
+      {alert.show && (
+        <Container>
+          <Alert
+            variant={alert.type}
+            onClose={() => setAlert({...alert, show: false})}
+            dismissible
+          >
+            {alert.message}
+          </Alert>
+        </Container>
+      )}
+
+      {/*Success modal*/}
+      <BootstrapModal
+        className="bs-modal"
+        show={successModalOpen}
+        backdrop="static"
+        keyboard={false}
+        centered
+      >
+        <BootstrapModal.Header>
+          <BootstrapModal.Title>Success</BootstrapModal.Title>
+        </BootstrapModal.Header>
+        <BootstrapModal.Body>
+          Book deleted successfully. <br/>
+          You will be redirected to manage books page
+        </BootstrapModal.Body>
+      </BootstrapModal>
     </div>
   );
 };
