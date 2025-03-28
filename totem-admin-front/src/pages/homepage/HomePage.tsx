@@ -4,6 +4,8 @@ import { MainTitle } from '../../components/text/MainTitle.tsx';
 import { Menu } from '../../components/menu/Menu.tsx';
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
+import { jwtDecode } from 'jwt-decode';
+
 import {
   checkTokenAndRedirect,
   getToken,
@@ -11,9 +13,9 @@ import {
 
 export const HomePage = () => {
   checkTokenAndRedirect();
-  const username = 'admin';
   const navigate = useNavigate();
-  const [error, setError] = useState(null);
+  const [username, setUsername] = useState<string>('admin'); // Initialize username state
+  const [error, setError] = useState<string | null>(null);
   const [isCheckingToken, setIsCheckingToken] = useState(true); // prevent rendering before token check
 
   useEffect(() => {
@@ -21,28 +23,44 @@ export const HomePage = () => {
       await checkTokenAndRedirect();
       setIsCheckingToken(false); // Set to false after token check
     };
+    checkToken();
   }, []);
 
   useEffect(() => {
     if (isCheckingToken) return; // Prevent rendering until token check is complete
     const token = getToken(); // Get the token from local storage
 
-    fetch('http://localhost:8080/main', {
-      method: 'GET',
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error('Failed to fetch admins');
-        }
-        return response.json();
+    if (token) {
+      try {
+        const decodedToken: any = jwtDecode(token);
+        const username = decodedToken?.email;
+        setUsername(username || 'admin'); // Set the username state
+      } catch (error) {
+        console.log('Error decoding token:', error);
+        navigate('/'); // Redirect to login if token decoding fails
+      }
+
+      fetch('http://localhost:8080/main', {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       })
-      .catch((error) => {
-        setError(error.message);
-        console.log('Error:', error);
-      });
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error('Failed to fetch admins');
+          }
+          return response.json();
+        })
+        .catch((error) => {
+          setError(error.message);
+          console.log('Error:', error);
+        });
+    } else {
+      console.log('No token found in local storage');
+      setError('No token found'); // Handle case where token is not found
+      navigate('/'); // Redirect to login if no token is found
+    }
   }, [isCheckingToken]);
 
   //Check if the token is being checked or if there is an error
