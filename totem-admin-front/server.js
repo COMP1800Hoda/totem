@@ -76,6 +76,7 @@ app.post('/', async(req,res) => {
 })
 
  //only accessible if user is logged in
+ //done
 app.use ('/main', checkAuth, (req,res) => {
     res.json({message:'You are logged in and allow to access main page', user: req.user});
 })
@@ -85,7 +86,7 @@ app.use('/manage-books', checkAuth, (req,res) => {
     res.json({message:'You are logged in and allow to access manage-books page', user: req.user});
 })
 
-
+//done
 app.use ('/manage-admins', checkAuth, (req,res) => {
     res.json({message:'You are logged in and allow to access manage-admins page', user: req.user});
 })

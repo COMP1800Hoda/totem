@@ -47,7 +47,7 @@ export const HomePage = () => {
 
   //Check if the token is being checked or if there is an error
   // if (isCheckingToken) return null; // Prevent rendering UI until token check is complete
-  if (error) return;
+  if (error) navigate('/'); // Redirect to login if there's an error
 
   return (
     <div id={'page-home'} className={'page'}>

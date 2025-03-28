@@ -3,18 +3,21 @@ import { IconMenu2 } from '@tabler/icons-react';
 
 import { HeaderContainer, Inner } from './Header.styled.ts';
 import { COLORS } from '../../constants/colors.ts';
+import { useNavigate } from 'react-router-dom';
 
-interface HeaderSearchProps {
-}
+interface HeaderSearchProps {}
 
-export const Header: React.FC<HeaderSearchProps> = ({
-}) => {
+export const Header: React.FC<HeaderSearchProps> = ({}) => {
+  const navigate = useNavigate();
+  const handleClick = () => {
+    navigate('/main'); // This will navigate to the homepage ('/')
+  };
   return (
     <HeaderContainer hideBorder={false}>
       <Inner>
-        <a href="/main">
-          <h1 style={{ fontSize: 20 }}>Totem</h1>
-        </a>
+        <h1 style={{ fontSize: 20, cursor: 'pointer' }} onClick={handleClick}>
+          Totem
+        </h1>
         <IconMenu2 color={COLORS.darkGray} size={24} stroke={1.5} />
       </Inner>
     </HeaderContainer>
