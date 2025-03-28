@@ -41,8 +41,6 @@ const AdminProfile = () => {
   useEffect(() => {
     if (isCheckingToken) return; // Prevent rendering until token check is complete
 
-    console.log('manage admin before');
-
     const token = getToken(); // Get the token from local storage
 
     fetch('http://localhost:8080/manage-admins', {
@@ -61,8 +59,6 @@ const AdminProfile = () => {
         setError(error.message);
         console.log('Error:', error);
       });
-
-    console.log('manage admin after');
 
     fetchAdmins();
   }, [isCheckingToken]); // Ensure useEffect runs only on mount
@@ -86,8 +82,8 @@ const AdminProfile = () => {
     }
   };
 
-  // Prevent UI rendering if token is still being checked
-  if (isCheckingToken) return null;
+  //Check if the token is being checked or if there is an error
+  if (isCheckingToken) return null; // Prevent rendering UI until token check is complete
   if (error) return;
 
   const handleDelete = async () => {
@@ -112,8 +108,16 @@ const AdminProfile = () => {
       <Header />
       <Container>
         {/* Table */}
-        <div className="d-flex justify-content-between align-items-center mt-5 mb-3">
-          <h2 className="m-0">Admin Dashboard</h2>
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            marginTop: '4rem',
+            marginBottom: '1rem',
+          }}
+        >
+          <h2 className="mt-2">Admin Dashboard</h2>
           <Button
             variant="primary"
             size="sm"

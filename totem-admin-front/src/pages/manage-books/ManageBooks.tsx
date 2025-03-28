@@ -13,22 +13,22 @@ const ManageBooks = () => {
   const queryClient = new QueryClient();
   const navigate = useNavigate();
   const [error, setError] = useState(null);
+  const [isCheckingToken, setIsCheckingToken] = useState(true); // prevent rendering before token check
 
   useEffect(() => {
-    //check token expiration using the utility function
-    console.log('manage book1');
-    checkTokenAndRedirect();
+    const checkToken = async () => {
+      await checkTokenAndRedirect();
+      setIsCheckingToken(false); // Set to false after token check
+    };
+    checkToken();
+  }, []);
 
-    console.log('manage book2');
+  useEffect(() => {
+    if (isCheckingToken) return; // Prevent rendering until token check is complete
 
     const token = getToken(); // Get the token from local storage
 
     // Log the token only once when the component is mounted
-
-    if (!token) {
-      navigate('/'); // Redirect if there's no token
-      return;
-    }
 
     fetch('http://localhost:8080/manage-books', {
       method: 'GET',
@@ -46,11 +46,11 @@ const ManageBooks = () => {
         setError(error.message);
         console.error('Error:', error);
       });
-  }, [navigate]); // Ensure useEffect runs only on mount
+  }, [isCheckingToken]); // Ensure useEffect runs only on mount
 
-  if (error) {
-    return;
-  }
+  //Check if the token is being checked or if there is an error
+  if (isCheckingToken) return null; // Prevent rendering UI until token check is complete
+  if (error) return;
 
   return (
     <div id={'page-manage-books'} className={'page'}>
