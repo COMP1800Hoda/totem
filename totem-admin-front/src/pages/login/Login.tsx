@@ -1,8 +1,6 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import React, { useState, useEffect } from 'react';
-import Parse from '../../database';
 import { Link, useNavigate } from 'react-router-dom';
-import bcrypt from 'bcryptjs';
 
 const Login = () => {
   const [email, setEmail] = useState('');
