@@ -54,7 +54,7 @@ export const bookColumns: ColumnDef<Storybook>[] = [
   {
     accessorKey: 'publisher',
     header: 'Publisher',
-    size: 200,
+    size: 120,
     cell: (info) => <span className={"rtl"}>{info.getValue() as string}</span>,
   },
   {
@@ -76,5 +76,21 @@ export const bookColumns: ColumnDef<Storybook>[] = [
     cell: (info) => (
       <span>{info.getValue() ? 'Yes' : 'No'}</span>
     ),
+  },
+  {
+    accessorKey: 'createdAt',
+    header: 'Created At',
+    size: 120,
+    cell: (info) => {
+      const rawDate = info.getValue() as string;
+      const date = new Date(rawDate);
+      const formattedDate = `${(date.getMonth() + 1)
+        .toString()
+        .padStart(2, '0')}/${date.getDate().toString().padStart(2, '0')}/${date
+        .getFullYear()
+        .toString()
+        .slice(-2)}`;
+      return <span>{formattedDate}</span>;
+    },
   },
 ];

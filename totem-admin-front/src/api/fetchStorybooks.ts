@@ -21,6 +21,18 @@ export async function fetchStorybooks(
       if (searchType === 'index') {
         // search exact matched number
         query.equalTo(searchType, Number(searchKeyword))
+      } else if (searchType === 'createdAt') {
+        // Parse MM/DD/YY format
+        const [month, day, year] = searchKeyword.split('/');
+        if (month && day && year) {
+          const start = new Date(`20${year}-${month}-${day}T00:00:00.000Z`);
+          const end = new Date(`20${year}-${month}-${day}T23:59:59.999Z`);
+          query.greaterThanOrEqualTo('createdAt', start);
+          query.lessThan('createdAt', end);
+        } else {
+          console.warn('Invalid createdAt format. Expected MM/DD/YY');
+          return [];
+        }
       } else {
         // Add search by key and keyword (case-sensitive)
         query.matches(searchType, searchKeyword, 'i');
