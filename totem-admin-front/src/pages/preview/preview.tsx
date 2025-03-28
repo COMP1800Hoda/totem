@@ -1,4 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import {
+  checkTokenAndRedirect,
+  getToken,
+} from '../../components/utils/tokenUtils.js';
 
 import {
   BookContainer,
@@ -27,6 +32,8 @@ interface Creator {
 }
 
 const PreviewPage: React.FC = () => {
+  checkTokenAndRedirect();
+  const navigate = useNavigate();
   const previewData = JSON.parse(localStorage.getItem('previewBook') || '{}');
   console.log(previewData);
   const creators = previewData.creators || [];
@@ -34,6 +41,16 @@ const PreviewPage: React.FC = () => {
   const [coverimageurl, setUrl] = useState<string | null>(null);
   const [contentimageurl, setimageUrl] = useState<string[]>([]);
   const [isDataSaved, setIsDataSaved] = useState(false);
+  const [isCheckingToken, setIsCheckingToken] = useState(true); // prevent rendering before token check
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const checkToken = async () => {
+      await checkTokenAndRedirect();
+      setIsCheckingToken(false); // Set to false after token check
+    };
+    checkToken();
+  }, []);
 
   useEffect(() => {
     if (coverimageurl && contentimageurl.length > 0 && !isDataSaved) {
@@ -41,6 +58,35 @@ const PreviewPage: React.FC = () => {
       setIsDataSaved(true);
     }
   }, [coverimageurl, contentimageurl, isDataSaved]);
+
+  useEffect(() => {
+    if (isCheckingToken) return; // Prevent rendering until token check is complete
+
+    const token = getToken(); // Get the token from local storage
+
+    // Log the token only once when the component is mounted
+
+    fetch('http://localhost:8080/preview', {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Failed to fetch newly added book');
+        }
+        return response.json();
+      })
+      .catch((error) => {
+        setError(error.message);
+        console.error('Error:', error);
+      });
+  }, [isCheckingToken]); // Ensure useEffect runs only on mount
+
+  //Check if the token is being checked or if there is an error
+  if (isCheckingToken) return null; // Prevent rendering UI until token check is complete
+  if (error) navigate('/'); // Redirect to login if there's an error
 
   const replaceOtherWithCustomRole = (
     creators: { role: string; name: string; customRole: string }[]
@@ -110,7 +156,6 @@ const PreviewPage: React.FC = () => {
             alert(`Error uploading content image: ${(error as Error).message}`);
             reject(error);
           }
-
         }
       );
       uploadPromises.push(contentUploadPromise);
