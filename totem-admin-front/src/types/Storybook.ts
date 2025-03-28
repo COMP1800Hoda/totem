@@ -1,7 +1,7 @@
 export interface Storybook {
   objectId: string | null;
   index: number;
-  storybook_id: number;
+  storybook_id: string;
   admin_id: number;
   created_by: createdBy[] | null;
   storybook_title: string;

@@ -181,5 +181,4 @@ export const DeleteButton = styled.button`
     height: 22px;
     stroke-width: 1px;
   }
-`
-
+`;

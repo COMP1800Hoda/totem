@@ -112,6 +112,10 @@ const GlobalStyles = createGlobalStyle`
   }
     
 
+  .bs-modal {
+      text-align: center;
+  }
 `;
+
 
 export default GlobalStyles;
