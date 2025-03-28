@@ -77,7 +77,6 @@ app.post('/', async(req,res) => {
 
  //only accessible if user is logged in
 app.use ('/main', checkAuth, (req,res) => {
-   
     res.json({message:'You are logged in and allow to access main page', user: req.user});
 })
 

@@ -6,6 +6,11 @@ import AddAdminModal from './AddAdminModal';
 import EditAdminModal from './EditAdminModal';
 import { Header } from '../../components/header/Header';
 import { Container } from '../../components/Container.tsx';
+import { useNavigate } from 'react-router-dom';
+import {
+  checkTokenAndRedirect,
+  getToken,
+} from '../../components/utils/tokenUtils.js';
 
 interface Admin {
   id: string;
@@ -15,12 +20,52 @@ interface Admin {
 }
 
 const AdminProfile = () => {
+  const navigate = useNavigate();
   const [admins, setAdmins] = useState<Admin[]>([]);
   const [showAddModal, setShowAddModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [selectedAdmin, setSelectedAdmin] = useState<Admin | null>(null);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [adminToDelete, setAdminToDelete] = useState<string | null>(null);
+  const [error, setError] = useState(null);
+  const [isCheckingToken, setIsCheckingToken] = useState(true); // prevent rendering before token check
+
+  useEffect(() => {
+    const checkToken = async () => {
+      await checkTokenAndRedirect();
+      setIsCheckingToken(false); // Set to false after token check
+    };
+    checkToken();
+  }, []);
+
+  useEffect(() => {
+    if (isCheckingToken) return; // Prevent rendering until token check is complete
+
+    console.log('manage admin before');
+
+    const token = getToken(); // Get the token from local storage
+
+    fetch('http://localhost:8080/manage-admins', {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Failed to fetch admins');
+        }
+        return response.json();
+      })
+      .catch((error) => {
+        setError(error.message);
+        console.log('Error:', error);
+      });
+
+    console.log('manage admin after');
+
+    fetchAdmins();
+  }, [isCheckingToken]); // Ensure useEffect runs only on mount
 
   const fetchAdmins = async () => {
     try {
@@ -41,9 +86,9 @@ const AdminProfile = () => {
     }
   };
 
-  useEffect(() => {
-    fetchAdmins();
-  }, []);
+  // Prevent UI rendering if token is still being checked
+  if (isCheckingToken) return null;
+  if (error) return;
 
   const handleDelete = async () => {
     if (!adminToDelete) return;
@@ -63,7 +108,7 @@ const AdminProfile = () => {
   };
 
   return (
-    <div className="container mt-4 px-4">
+    <div className="container">
       <Header />
       <Container>
         {/* Table */}
@@ -72,7 +117,7 @@ const AdminProfile = () => {
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
-            marginTop: '3rem',
+            marginTop: '4rem',
             marginBottom: '1rem',
           }}
         >

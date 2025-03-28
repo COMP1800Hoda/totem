@@ -9,9 +9,9 @@ import {
 } from '../../components/utils/tokenUtils.js';
 
 const ManageBooks = () => {
+  checkTokenAndRedirect();
   const queryClient = new QueryClient();
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
@@ -30,8 +30,6 @@ const ManageBooks = () => {
       return;
     }
 
-    console.log('token:', token);
-
     fetch('http://localhost:8080/manage-books', {
       method: 'GET',
       headers: {
@@ -44,21 +42,11 @@ const ManageBooks = () => {
         }
         return response.json();
       })
-      .then((data) => {
-        console.log('Data:', data);
-      })
       .catch((error) => {
         setError(error.message);
         console.error('Error:', error);
-      })
-      .finally(() => {
-        setLoading(false);
       });
   }, [navigate]); // Ensure useEffect runs only on mount
-
-  if (loading) {
-    return;
-  }
 
   if (error) {
     return;

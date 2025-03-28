@@ -5,6 +5,12 @@ import './fileUpload.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Header } from '../../components/header/Header';
 import { Container } from '../../components/Container.tsx';
+import { useNavigate } from 'react-router-dom';
+import {
+  checkTokenAndRedirect,
+  getToken,
+} from '../../components/utils/tokenUtils.js';
+
 interface FileData {
   file: File;
   name: string;
@@ -20,6 +26,10 @@ const imagekit = new ImageKit({
 });
 
 const FileUpload: React.FC = () => {
+  checkTokenAndRedirect();
+  const navigate = useNavigate();
+  const [error, setError] = useState(null);
+
   const [bookTitle, setBookTitle] = useState<string>('');
   const [bookId, setBookId] = useState<string>('');
   const [age, setAge] = useState<string>('0~2');
@@ -136,12 +146,33 @@ const FileUpload: React.FC = () => {
     }
   };
   useEffect(() => {
+    console.log('file upload before');
+    const token = getToken(); // Get the token from local storage
+    fetch('http://localhost:8080/add-book', {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Failed to fetch admins');
+        }
+        return response.json();
+      })
+      .catch((error) => {
+        setError(error.message);
+        console.log('Error:', error);
+      });
+
+    console.log('file upload after');
+
     if (isUploading && coverimageurl && contentimageurl.length > 0) {
       // Both coverimageurl and contentimageurl are updated
       handleAddToDB();
       setIsUploading(false); // Reset the uploading state
     }
-  }, [coverimageurl, contentimageurl, isUploading]);
+  }, [coverimageurl, contentimageurl, isUploading, navigate]);
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
