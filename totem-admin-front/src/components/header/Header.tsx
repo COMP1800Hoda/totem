@@ -1,13 +1,27 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {IconMenu2} from '@tabler/icons-react';
 import {DrawerContainer, HeaderContainer, Inner} from './Header.styled.ts';
 import {COLORS} from '../../constants/colors.ts';
 import {Menu} from "../menu/Menu.tsx";
+import {useLocation} from "react-router-dom";
+import {Offcanvas} from "react-bootstrap";
 
 interface HeaderSearchProps {
 }
 
 export const Header: React.FC<HeaderSearchProps> = () => {
+  const location = useLocation();
+  useEffect(() => {
+    const openedOffcanvas = document.querySelector('.offcanvas.show');
+    if (openedOffcanvas) {
+      const bsOffcanvas = Offcanvas?.getInstance?.(openedOffcanvas);
+      bsOffcanvas?.hide();
+    }
+
+    document.body.style.overflow = 'auto';
+    document.body.style.paddingRight = 'unset';
+  }, [location.pathname]);
+
   return (
     <>
       <HeaderContainer hideBorder={false}>

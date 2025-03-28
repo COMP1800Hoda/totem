@@ -171,12 +171,14 @@ export const ManageBookTable: React.FC = () => {
               <option value="created_by">Created by</option>
               <option value="ISBN">ISBN</option>
               <option value="index">Index</option>
+              <option value="createdAt">Created At</option>
             </select>
             <input
               type="text"
               id="search-keyword"
               value={searchKeyword}
               onChange={onChangeKeyword}
+              placeholder={searchType === 'createdAt' ? 'MM/DD/YY' : ''}
             />
             <button type="submit" className="btn" id="search-button" onClick={onClickSubmit}>Submit</button>
           </SearchContainer>

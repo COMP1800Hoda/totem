@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from "react";
-
+import React, {useState} from "react";
 import {
   BookContainer, BackButton, BookCard, BookCover, BookDetails,
   BookTitle, BookMeta, BookTags, Tag, Synopsis, BookInfo, BookContentImg,
@@ -7,51 +6,75 @@ import {
 } from "./preview_style";
 import Parse from "../../database.js";
 import imagekit from "../../imagekit.js";
+import {Spinner} from "react-bootstrap";
+import {useNavigate} from "react-router-dom";
+
 interface Creator {
   role: string;
   name: string;
   customRole?: string;
 }
 
-
 const PreviewPage: React.FC = () => {
   const previewData = JSON.parse(localStorage.getItem('previewBook') || '{}');
-  console.log(previewData);
   const creators = previewData.creators || [];
+  const navigate = useNavigate();
+
   const [isUploading, setIsUploading] = useState(false);
-  const [coverimageurl, setUrl] = useState<string | null>(null);
-  const [contentimageurl, setimageUrl] = useState<string[]>([]);
-  const [isDataSaved, setIsDataSaved] = useState(false);
 
-  useEffect(() => {
-    if (coverimageurl && contentimageurl.length > 0 && !isDataSaved) {
-      handleAddToDB();
-      setIsDataSaved(true); 
-    }
-  }, [coverimageurl, contentimageurl, isDataSaved]);
-
-  const replaceOtherWithCustomRole = (creators: { role: string; name: string; customRole: string }[]) => {
+  const replaceOtherWithCustomRole = (
+    creators: { role: string; name: string; customRole: string }[]
+  ) => {
     return creators.map((creator) => {
-        if (creator.role === "Other" && creator.customRole) {
-            return {
-                ...creator,
-                role: creator.customRole, 
-                customRole: "",
-            };
-        }
-        return creator;
+      if (creator.role === "Other" && creator.customRole) {
+        return {
+          ...creator,
+          role: creator.customRole,
+          customRole: "",
+        };
+      }
+      return creator;
     });
-};
+  };
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     setIsUploading(true);
-    setIsDataSaved(false);
-    const coverImageFolder = `/book-cover-images/${previewData.bookId}/`;
 
+    let isCreatedByVaild = true;
+    for (const creator of creators) {
+      if (creator.name === '') {
+        isCreatedByVaild = false;
+      }
+    }
+    if (
+      !previewData.bookTitle ||
+      !previewData.bookId ||
+      !previewData.age ||
+      !isCreatedByVaild
+    ) {
+      alert("Please fill in all required fields");
+      setIsUploading(false);
+      return;
+    }
+
+    if (
+      previewData.contentImages === 0 ||
+      !previewData.coverImage
+    ) {
+      alert("Please add cover and content images");
+      setIsUploading(false);
+      return;
+    }
+
+
+    const coverImageFolder = `/book-cover-images/${previewData.bookId}/`;
     const contentImagesFolder = `/book-images/${previewData.bookId}/`;
 
     const uploadPromises: Promise<void>[] = [];
+
+    let coverImageUrl: string | null = null;
+    const contentImageUrls: string[] = [];
 
     // Upload cover image
     if (previewData.coverImage) {
@@ -59,17 +82,16 @@ const PreviewPage: React.FC = () => {
         try {
           const response = await imagekit.upload({
             file: previewData.coverImage,
-            fileName: `${previewData.coverImageName}`,
+            fileName: previewData.coverImageName,
             folder: coverImageFolder,
             tags: [previewData.bookId],
           });
-          const coverimageUrl = response.url;
-          setUrl(coverimageUrl);
-          console.log("Cover image uploaded successfully. URL:", coverimageUrl);
+          coverImageUrl = response.url;
+          console.log("Cover image uploaded successfully:", coverImageUrl);
           resolve();
         } catch (error) {
           console.error("Error uploading cover image:", error);
-          alert(`Error uploading cover image: ${(error as Error).message}`);
+          alert("Error uploading cover image.");
           reject(error);
         }
       });
@@ -77,95 +99,74 @@ const PreviewPage: React.FC = () => {
     }
 
     // Upload content images
-    for (const fileData of previewData.contentImages) {
+    for (let i = 0; i < previewData.contentImages.length; i++) {
       const contentUploadPromise = new Promise<void>(async (resolve, reject) => {
         try {
-          
           const response = await imagekit.upload({
-            file: fileData, 
-            fileName: `${previewData.bookId}-${previewData.contentImages.indexOf(fileData) + 1}.jpg`,
+            file: previewData.contentImages[i],
+            fileName: previewData.contentImageName[i],
             folder: contentImagesFolder,
             tags: [previewData.bookId],
           });
-          const imageUrl = response.url;
-          setimageUrl((prevUrls) => [...prevUrls, imageUrl]);
-          console.log("Content image uploaded successfully. URL:", imageUrl);
+          contentImageUrls.push(response.url);
+          console.log("Content image uploaded successfully:", response.url);
           resolve();
         } catch (error) {
-          console.error(`Error uploading content image:`, error);
+          console.error("Error uploading content image:", error);
           alert(`Error uploading content image: ${(error as Error).message}`);
           reject(error);
         }
       });
       uploadPromises.push(contentUploadPromise);
-
     }
 
     try {
-      // Wait for all uploads to complete
       await Promise.all(uploadPromises);
 
-      console.log("All files uploaded and metadata saved successfully");
-      alert("Book uploaded and metadata saved successfully!");
+      if (!coverImageUrl || contentImageUrls.length === 0) {
+        throw new Error("Image upload failed. Skipping DB update.");
+      }
+
+      // Save to DB
+      const dbResult = await handleAddToDB({
+        coverimageurl: coverImageUrl,
+        contentimageurl: contentImageUrls,
+      });
+
+      if (!dbResult) {
+        alert("Metadata saving failed.");
+        setIsUploading(false);
+        return;
+      }
+
       const metaData = {
         bookTitle: previewData.bookTitle,
-        bookId: previewData.bookId
+        bookId: previewData.bookId,
       };
-      localStorage.setItem('Metadata', JSON.stringify(metaData));
-
-      
-      window.location.href = '/success';
+      localStorage.setItem("Metadata", JSON.stringify(metaData));
+      navigate("/success");
     } catch (error) {
-      console.error("Error during upload:", error);
-      alert("An error occurred during the upload process. Please try again.");
+      console.error("Error during full upload/save flow:", error);
+      alert("Upload failed. Please try again.");
     } finally {
-      setIsUploading(false); 
+      setIsUploading(false);
     }
   };
 
-  
-  const handleAddToDB = async () => {
-    
-    if (
-      !previewData.bookTitle ||
-      !previewData.bookId ||
-      !previewData.age ||
-      !previewData.genres ||
-      !previewData.creators ||
-      !previewData.publisher ||
-      !previewData.published ||
-      !previewData.isbn ||
-      !previewData.abstract||
-      !coverimageurl ||
-      !contentimageurl
-
-
-    ) {
-      console.error("Please fill in all required fields");
-      return;
-    }
+  const handleAddToDB = async ({
+                                 coverimageurl,
+                                 contentimageurl,
+                               }: {
+    coverimageurl: string;
+    contentimageurl: string[];
+  }) => {
     const updatedCreators = replaceOtherWithCustomRole(previewData.creators);
-    console.log(updatedCreators)
-
-    
-    console.log("Saving metadata to database:", {
-      bookTitle: previewData.bookTitle,
-      bookId: previewData.bookId,
-      age: previewData.age,
-      genres: previewData.genres,
-      creators: updatedCreators,
-      publisher: previewData.publisher,
-      published: previewData.published,
-      isbn: previewData.isbn,
-      abstract: previewData.abstract,
-      coverImageUrl: coverimageurl,
-      contentImageUrl: contentimageurl,
-    });
 
     const Storybook = Parse.Object.extend("storybook");
     const storybook = new Storybook();
+    const nextIndex = await Parse.Cloud.run('getNextIndex', {name: 'storybook'});
 
-    // Set metadata fields
+    storybook.set("index", nextIndex);
     storybook.set("storybook_title", previewData.bookTitle);
     storybook.set("storybook_id", previewData.bookId);
     storybook.set("Age", previewData.age);
@@ -179,38 +180,36 @@ const PreviewPage: React.FC = () => {
     storybook.set("storybook_image_url", contentimageurl);
     storybook.set("cover_image_name", previewData.coverImageName);
     storybook.set("storybook_image_name", previewData.contentImageName);
-    console.log(storybook);
+
     try {
-      
       await storybook.save();
       console.log("Book metadata saved successfully!");
+      return true;
     } catch (error) {
       console.error("Error saving metadata:", error);
+      return false;
     }
   };
 
   return (
-    <div style={{ justifyContent: 'center', display: 'flex' }}>
+    <div style={{justifyContent: "center", display: "flex"}}>
       <BookContainer>
-
         <BackButton onClick={() => window.history.back()}>&lt; Return to Edit</BackButton>
 
         <BookCard>
-
-          <BookCover src={previewData.coverImage} alt="Book Cover" />
+          <BookCover src={previewData.coverImage} alt="Book Cover"/>
           <BookDetails>
             <BookTitle>{previewData.bookTitle}</BookTitle>
-            <BookMeta>BookId: {previewData.bookId} </BookMeta>
+            <BookMeta>BookId: {previewData.bookId}</BookMeta>
             {creators.map((creator: Creator, index: number) => (
               <BookMeta key={index}>
                 {creator.customRole || creator.role}: {creator.name}
               </BookMeta>
             ))}
-
             <BookTags>
               <Tag>Age: {previewData.age}</Tag>
               {previewData.genres
-                .filter((genre: string) => genre) 
+                .filter((genre: string) => genre)
                 .map((genre: string, index: number) => (
                   <Tag key={index}>{genre}</Tag>
                 ))}
@@ -222,25 +221,33 @@ const PreviewPage: React.FC = () => {
           <p>Abstract:</p>
           <div>{previewData.abstract}</div>
         </Synopsis>
+
         <BookInfo>
-          <p>Publisher: {previewData.publisher} </p>
+          <p>Publisher: {previewData.publisher}</p>
           <p>Published: {previewData.published}</p>
-          <p>ISBN: {previewData.isbn} </p>
+          <p>ISBN: {previewData.isbn}</p>
         </BookInfo>
+
         <ThumbnailContainer>
           {previewData.contentImages.map((image: string, index: number) => {
             const fileName = previewData.contentImageName[index];
             return (
               <ThumbnailWrapper key={index}>
-                <BookContentImg src={image} alt={`Content ${fileName}`} />
+                <BookContentImg src={image} alt={`Content ${fileName}`}/>
                 <FileNameContainer>{fileName}</FileNameContainer>
               </ThumbnailWrapper>
             );
           })}
         </ThumbnailContainer>
-        <UploadButton onClick={handleSubmit}>Upload</UploadButton>
 
-      </BookContainer >
+        {isUploading ? (
+          <Spinner/>
+        ) : (
+          <UploadButton onClick={handleSubmit} disabled={isUploading}>
+            Upload
+          </UploadButton>
+        )}
+      </BookContainer>
     </div>
   );
 };

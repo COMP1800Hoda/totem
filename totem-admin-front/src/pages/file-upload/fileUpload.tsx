@@ -19,6 +19,7 @@ import {
 import {generateBookID} from "../../utils/generateBookId.ts";
 import {ImagesDroppable} from "./ImagesDroppable.tsx";
 import {Spinner} from "react-bootstrap";
+import {useNavigate} from "react-router-dom";
 
 interface FileData {
   file: File;
@@ -52,6 +53,7 @@ const FileUpload: React.FC = () => {
     "Action Adventure",
     "Historical Fiction",
   ]);
+  const navigate = useNavigate();
 
   // default creators
   const initialCreators = [
@@ -69,14 +71,8 @@ const FileUpload: React.FC = () => {
   const [abstract, setAbstract] = useState<string>("");
   const [coverImage, setCoverImage] = useState<File | null>(null);
   const [files, setFiles] = useState<FileData[]>([]);
-  const [folderName, setFolderName] = useState<string | null>(null);
-  const [coverimageurl, setUrl] = useState<string | null>(null);
-  const [contentimageurl, setimageUrl] = useState<string[]>([]);
   const [isUploading, setIsUploading] = useState(false);
   const coverInputRef = useRef<HTMLInputElement | null>(null);
-  const [previewData, setPreviewData] = useState<PreviewData | null>(null);
-  const [imageNames, setImageNames] = useState<string[]>([]);
-  const [coverimagename, setCoverImagename] = useState<string | null>(null);
   //handle Genre
   const handleGenreInputChange = (index: number, value: string): void => {
     const newGenres = genres.map((genre, i) => {
@@ -202,9 +198,6 @@ const FileUpload: React.FC = () => {
               });
               const coverimageUrl = response.url;
               coverImageUploaded = response.url;
-              setUrl(coverimageUrl);
-              const covername = coverImage.name;
-              setCoverImagename(covername);
               console.log("Cover image uploaded successfully. URL:", coverimageUrl);
               resolve();
             } catch (error) {
@@ -242,9 +235,7 @@ const FileUpload: React.FC = () => {
               const imageName = fileData.file.name;
               console.log(imageName);
               contentImageNames.push(imageName);
-              setImageNames(contentImageNames);
               const imageUrl = response.url;
-              setimageUrl((prevUrls) => [...prevUrls, imageUrl]);
               contentUploaded.push(imageUrl);
               console.log("Content image uploaded successfully. URL:", imageUrl);
               resolve();
@@ -282,7 +273,12 @@ const FileUpload: React.FC = () => {
 
 
       // Update db
-      const dbResult = await handleAddToDB();
+      const dbResult = await handleAddToDB({
+        coverimageurl: coverImageUploaded,
+        contentimageurl: contentUploaded,
+        coverimagename: coverImage?.name ?? '',
+        imageNames: contentImageNames,
+      });
       if (!dbResult) {
         console.log('failed db upload')
         setIsUploading(false);
@@ -295,7 +291,7 @@ const FileUpload: React.FC = () => {
       };
       localStorage.setItem('Metadata', JSON.stringify(metaData));
 
-      window.location.href = '/success';
+      navigate('/success')
     } catch (error) {
       console.error("Error during upload:", error);
       alert("An error occurred during the upload process. Please try again.");
@@ -303,14 +299,22 @@ const FileUpload: React.FC = () => {
     }
   };
 
-
-  const handleAddToDB = async () => {
+  const handleAddToDB = async ({
+     coverimageurl,
+     contentimageurl,
+     coverimagename,
+     imageNames,
+   }: {
+    coverimageurl: string;
+    contentimageurl: string[];
+    coverimagename: string;
+    imageNames: string[];
+  }) => {
     const updatedCreators = replaceOtherWithCustomRole(creators);
-    console.log(updatedCreators)
     const Storybook = Parse.Object.extend("storybook");
     const storybook = new Storybook();
     const nextIndex = await Parse.Cloud.run('getNextIndex', {name: 'storybook'});
-    console.log("Generated index:", nextIndex);
+
     storybook.set("index", nextIndex);
     storybook.set("storybook_title", bookTitle);
     storybook.set("storybook_id", bookId);
@@ -325,7 +329,6 @@ const FileUpload: React.FC = () => {
     storybook.set("storybook_image_url", contentimageurl);
     storybook.set("cover_image_name", coverimagename);
     storybook.set("storybook_image_name", imageNames);
-    console.log(storybook);
 
     try {
       await storybook.save();
@@ -380,7 +383,6 @@ const FileUpload: React.FC = () => {
       }
     }
 
-    setImageNames(newImageNames);
     console.log('Stored image names:', newImageNames);
 
     const previewData: PreviewData = {
@@ -401,9 +403,8 @@ const FileUpload: React.FC = () => {
 
     console.log('Preview data:', previewData); // Debugging
 
-    setPreviewData(previewData);
     localStorage.setItem('previewBook', JSON.stringify(previewData));
-    window.location.href = '/preview';
+    navigate('/preview');
   };
 
   const convertFileToBase64 = (file: File): Promise<string> => {
@@ -653,14 +654,13 @@ const FileUpload: React.FC = () => {
           />
         </FormGroup>
         <ButtonRow>
-          <SubPreButton type="submit" onClick={handlePreview}>Preview</SubPreButton>
-          <SubPreButton type="submit" onClick={handleSubmit}>
-            {isUploading ? (
-              <Spinner/>
-            ) : (
-              'Upload'
-            )}
-          </SubPreButton>
+          {!isUploading ? (
+            <>
+              <SubPreButton type="submit" onClick={handlePreview}>Preview</SubPreButton>
+              <SubPreButton type="submit" onClick={handleSubmit}>
+                Upload
+              </SubPreButton></>
+          ) : (<Spinner/>)}
         </ButtonRow>
       </AppContainer>
     </div>
