@@ -112,16 +112,8 @@ const AdminProfile = () => {
       <Header />
       <Container>
         {/* Table */}
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            marginTop: '4rem',
-            marginBottom: '1rem',
-          }}
-        >
-          <h2 style={{ margin: 0 }}>Admin Dashboard</h2>
+        <div className="d-flex justify-content-between align-items-center mt-5 mb-3">
+          <h2 className="m-0">Admin Dashboard</h2>
           <Button
             variant="primary"
             size="sm"
