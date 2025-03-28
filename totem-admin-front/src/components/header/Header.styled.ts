@@ -26,3 +26,7 @@ export const Inner = styled.div`
   align-items: center;
   gap: 30px;
 `;
+
+export const DrawerContainer = styled.div`
+  background-color: var(--color-background);
+`
