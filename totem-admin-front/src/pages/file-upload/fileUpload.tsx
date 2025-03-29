@@ -26,10 +26,11 @@ const imagekit = new ImageKit({
 });
 
 const FileUpload: React.FC = () => {
+  //Start of code for JWT authorization
   checkTokenAndRedirect();
   const navigate = useNavigate();
   const [error, setError] = useState(null);
-
+  const [isCheckingToken, setIsCheckingToken] = useState(true); // prevent rendering before token check
   const [bookTitle, setBookTitle] = useState<string>('');
   const [bookId, setBookId] = useState<string>('');
   const [age, setAge] = useState<string>('0~2');
@@ -60,6 +61,49 @@ const FileUpload: React.FC = () => {
   const [isUploading, setIsUploading] = useState(false);
   const coverInputRef = useRef<HTMLInputElement | null>(null);
   const contentInputRef = useRef<HTMLInputElement | null>(null);
+
+  useEffect(() => {
+    const checkToken = async () => {
+      await checkTokenAndRedirect();
+      setIsCheckingToken(false); // Set to false after token check
+    };
+    checkToken();
+  }, []);
+
+  useEffect(() => {
+    console.log('file upload before');
+    const token = getToken(); // Get the token from local storage
+    fetch('http://localhost:8080/add-book', {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Failed to fetch admins');
+        }
+        return response.json();
+      })
+      .catch((error) => {
+        setError(error.message);
+        console.log('Error:', error);
+      });
+
+    console.log('file upload after');
+  });
+
+  useEffect(() => {
+    if (isUploading && coverimageurl && contentimageurl.length > 0) {
+      // Both coverimageurl and contentimageurl are updated
+      handleAddToDB();
+      setIsUploading(false); // Reset the uploading state
+    }
+  }, [coverimageurl, contentimageurl]);
+
+  if (isCheckingToken) return null; // Prevent rendering UI until token check is complete
+  if (error) navigate('/'); // Redirect to login if there's an error
+  //end of JWT_authorization code
 
   //handle Genre
   const handleGenreInputChange = (index: number, value: string): void => {
@@ -145,34 +189,6 @@ const FileUpload: React.FC = () => {
       setFiles(filesData);
     }
   };
-  useEffect(() => {
-    console.log('file upload before');
-    const token = getToken(); // Get the token from local storage
-    fetch('http://localhost:8080/add-book', {
-      method: 'GET',
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error('Failed to fetch admins');
-        }
-        return response.json();
-      })
-      .catch((error) => {
-        setError(error.message);
-        console.log('Error:', error);
-      });
-
-    console.log('file upload after');
-
-    if (isUploading && coverimageurl && contentimageurl.length > 0) {
-      // Both coverimageurl and contentimageurl are updated
-      handleAddToDB();
-      setIsUploading(false); // Reset the uploading state
-    }
-  }, [coverimageurl, contentimageurl, isUploading, navigate]);
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();

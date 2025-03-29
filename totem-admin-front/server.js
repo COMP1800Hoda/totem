@@ -67,7 +67,7 @@ app.post('/', async(req,res) => {
             return res.status(401).json({message: 'Incorrect password'});
         }
 
-        const token = jwt.sign({email: admin.get('admin_email')}, JWT_SECRET, {expiresIn: '60s'});
+        const token = jwt.sign({email: email}, JWT_SECRET, {expiresIn: '60s'});
         res.json({token, message: 'Login successful'});
     } catch(error){
         console.log("error: ", error);
