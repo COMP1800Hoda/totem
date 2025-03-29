@@ -109,6 +109,7 @@ const GlobalStyles = createGlobalStyle`
     display: block;
     text-align: right;
   }
+    
 
 `;
 
