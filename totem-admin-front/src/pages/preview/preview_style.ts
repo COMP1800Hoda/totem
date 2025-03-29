@@ -134,4 +134,3 @@ export const BookContentImg = styled.img`
   margin: 0; /* Remove default margin */
   font-size: 10px;
 `;
-
