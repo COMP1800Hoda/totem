@@ -1,6 +1,5 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate for redirection
-import Cookies from 'js-cookie';
 import { Container } from '../Container.tsx';
 import { MenuItem, MenuItemTitle } from './Menu.styled.ts';
 import { MenuSubItem } from './MenuSubItem.tsx';
@@ -11,7 +10,7 @@ export const Menu: React.FC<MenuProps> = () => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    Cookies.remove('authToken'); // Remove the token from cookies
+    localStorage.clear(); // Remove the all local storage items
     navigate('/'); // Redirect to login page
     console.log('navigating to login page');
   };

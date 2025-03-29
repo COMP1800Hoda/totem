@@ -1,3 +1,9 @@
+/**
+ * Separte the add admin modal from the manage admin dashboard page
+ * This component is used to add a new admin to the system.
+ * It uses the Parse SDK to save the new admin's information to the database.
+ * It also uses bcrypt to hash the password before saving it.
+ */
 import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Modal, Button, Form } from 'react-bootstrap';

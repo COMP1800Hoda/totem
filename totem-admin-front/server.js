@@ -3,13 +3,18 @@ import dotenv from 'dotenv';
 import nodeMailer from 'nodemailer';
 import bodyParser from 'body-parser';
 import cors from 'cors';
-
+import bcrypt from 'bcryptjs';
+import ParseConfig from './parseConfig.js'
+import jwt from 'jsonwebtoken';
+import checkAuth from './src/middlewares/checkAuth.js';
 const app = express();
 const PORT = 8080;
 
 app.use(cors());
 app.use(express.json());
 dotenv.config();
+
+const JWT_SECRET = process.env.JWT_SECRET;
 
 //Nodemailer
 
@@ -46,6 +51,62 @@ app.post('/reset-password', async(req, res) => {
         return res.status(500).json({message: "Error sending email"});
     }
 })
+
+app.post('/', async(req,res) => {
+    const {email, password} = req.body;
+    try{
+        const query = new ParseConfig.Query('Admin');
+        query.equalTo('admin_email', email);
+        const admin = await query.first();
+        if(!admin){
+            return res.status(401).json({message: "Email not found"});
+        }
+        const hashedPassword = admin.get('admin_hashed_password');
+        const isMatch = await bcrypt.compare(password, hashedPassword);
+        if(!isMatch){
+            return res.status(401).json({message: 'Incorrect password'});
+        }  
+        // change expiration time to any time you want for testing        
+        const token = jwt.sign({email: email}, JWT_SECRET, {expiresIn: '1200000s'});
+        res.json({token, message: 'Login successful'});
+    } catch(error){
+        console.log("error: ", error);
+        res.status(500).json({message: "Internal server error"});
+    }
+})
+
+ //only accessible if user is logged in
+ //done
+app.use ('/main', checkAuth, (req,res) => {
+    res.json({message:'You are logged in and allow to access main page', user: req.user});
+})
+
+//done
+app.use('/manage-books', checkAuth, (req,res) => {
+    res.json({message:'You are logged in and allow to access manage-books page', user: req.user});
+})
+
+//done
+app.use ('/manage-admins', checkAuth, (req,res) => {
+    res.json({message:'You are logged in and allow to access manage-admins page', user: req.user});
+})
+
+//done
+app.use ('/add-book', checkAuth, (req,res) => {
+    res.json({message:'You are logged in and allow to access add-book page', user: req.user});
+})
+
+//done
+app.use ('/preview', checkAuth, (req,res) => {
+    res.json({message:'You are logged in and allow to access preview page', user: req.user});
+})
+
+//done
+app.use ('/success', checkAuth, (req,res) => {
+    res.json({message:'You are logged in and allow to access success page', user: req.user});
+})
+
+
 app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
 });

@@ -1,8 +1,6 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import React, { useState, useEffect } from 'react';
-import Parse from '../../database';
 import { Link, useNavigate } from 'react-router-dom';
-import bcrypt from 'bcryptjs';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -23,31 +21,28 @@ const Login = () => {
     setSuccess(false);
 
     try {
-      const query = new Parse.Query('Admin');
-      query.equalTo('admin_email', email);
-      const admin = await query.first();
-      if (!admin) {
-        console.log('Email not found');
-        setError('Email not found');
-        return;
+      const response = await fetch('http://localhost:8080/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: email, password: password }),
+      });
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.message || 'Failed to login. Please try again');
       }
-
-      //Get the hashed password from db
-      const hashedPassword = admin.get('admin_hashed_password');
-      const isMatch = await bcrypt.compare(password, hashedPassword);
-
-      if (isMatch) {
-        console.log('Login successful');
-        setSuccess(true);
-      } else {
-        console.log('Incorrect password');
-        setError('Incorrect password');
-      }
-    } catch (error) {
-      console.log('An error occured: ', error);
-      setError('An error occured. Please try again');
+      localStorage.setItem('token', data.token); //// Store JWT in local storage
+      //to send JWT in Authorization header for subsequent requests
+      console.log('token: ', data.token);
+      console.log('successful login');
+      setSuccess(true);
+    } catch (err: any) {
+      setError(
+        err.response?.data?.message ||
+          'An error occurred in catch. Please try again.'
+      );
     }
   };
+
   return (
     <div className="d-flex justify-content-center align-items-center vh-100 w-100">
       <div

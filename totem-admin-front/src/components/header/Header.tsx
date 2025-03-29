@@ -1,15 +1,15 @@
-import React, {useEffect} from 'react';
-import {IconMenu2} from '@tabler/icons-react';
-import {DrawerContainer, HeaderContainer, Inner} from './Header.styled.ts';
-import {COLORS} from '../../constants/colors.ts';
-import {Menu} from "../menu/Menu.tsx";
-import {useLocation} from "react-router-dom";
-import {Offcanvas} from "react-bootstrap";
-
-interface HeaderSearchProps {
-}
+import React, { useEffect } from 'react';
+import { IconMenu2 } from '@tabler/icons-react';
+import { DrawerContainer, HeaderContainer, Inner } from './Header.styled.ts';
+import { COLORS } from '../../constants/colors.ts';
+import { Menu } from '../menu/Menu.tsx';
+import { useLocation } from 'react-router-dom';
+import { Offcanvas } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
+interface HeaderSearchProps {}
 
 export const Header: React.FC<HeaderSearchProps> = () => {
+  const navigate = useNavigate();
   const location = useLocation();
   useEffect(() => {
     const openedOffcanvas = document.querySelector('.offcanvas.show');
@@ -26,9 +26,9 @@ export const Header: React.FC<HeaderSearchProps> = () => {
     <>
       <HeaderContainer hideBorder={false}>
         <Inner>
-          <a href="/main">
-            <h1 style={{fontSize: 20}}>Totem</h1>
-          </a>
+          <h1 onClick={() => navigate('/main')} style={{ fontSize: 20 }}>
+            Totem
+          </h1>
           <IconMenu2
             color={COLORS.darkGray}
             size={24}
@@ -47,7 +47,9 @@ export const Header: React.FC<HeaderSearchProps> = () => {
         aria-labelledby="offcanvasMenuLabel"
       >
         <div className="offcanvas-header">
-          <h5 className="offcanvas-title" id="offcanvasMenuLabel">Menu</h5>
+          <h5 className="offcanvas-title" id="offcanvasMenuLabel">
+            Menu
+          </h5>
           <button
             type="button"
             className="btn-close"

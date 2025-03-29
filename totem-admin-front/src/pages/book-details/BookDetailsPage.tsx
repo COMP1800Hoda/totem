@@ -1,9 +1,9 @@
-import React, {useEffect, useState} from 'react';
-import {useParams} from 'react-router';
-import {Spinner} from "react-bootstrap";
-import {IconTrash} from "@tabler/icons-react";
-import {useNavigate} from "react-router-dom";
-import {Modal as BootstrapModal, Button, Alert} from 'react-bootstrap';
+import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router';
+import { Spinner } from 'react-bootstrap';
+import { IconTrash } from '@tabler/icons-react';
+import { useNavigate } from 'react-router-dom';
+import { Modal as BootstrapModal, Button, Alert } from 'react-bootstrap';
 
 import {
   AuthorInfo,
@@ -19,18 +19,18 @@ import {
   PublisherInfo,
   ShowMoreButton,
   Synopsis,
-  Tag
+  Tag,
 } from './BookDetailsPage.styled';
 import Modal from '../../components/modal';
-import {Header} from '../../components/header/Header';
-import {fetchStorybookById} from "../../api/fetchStorybookById.ts";
-import {Storybook} from "../../types/Storybook.ts";
-import {Container} from "../../components/Container.tsx";
-import {MainTitle} from "../../components/text/MainTitle.tsx";
-import {deleteStorybook} from "../../api/deleteStorybook.ts";
+import { Header } from '../../components/header/Header';
+import { fetchStorybookById } from '../../api/fetchStorybookById.ts';
+import { Storybook } from '../../types/Storybook.ts';
+import { Container } from '../../components/Container.tsx';
+import { MainTitle } from '../../components/text/MainTitle.tsx';
+import { deleteStorybook } from '../../api/deleteStorybook.ts';
 
 const BookPage: React.FC = () => {
-  const {id} = useParams<{ id: string }>();
+  const { id } = useParams<{ id: string }>();
   const [book, setBook] = useState<Storybook | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [deleting, setDeleting] = useState<boolean>(false);
@@ -38,7 +38,11 @@ const BookPage: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
   const [showConfirmModal, setShowConfirmModal] = useState(false);
-  const [alert, setAlert] = useState<{ show: boolean; type: 'success' | 'danger'; message: string }>({
+  const [alert, setAlert] = useState<{
+    show: boolean;
+    type: 'success' | 'danger';
+    message: string;
+  }>({
     show: false,
     type: 'success',
     message: '',
@@ -46,17 +50,15 @@ const BookPage: React.FC = () => {
   const [successModalOpen, setSuccessModalOpen] = useState(false);
   const [selectedBookId, setSelectedBookId] = useState<string | null>(null);
 
-
   useEffect(() => {
     (async () => {
-      if (typeof id !== 'string')
-        return;
+      if (typeof id !== 'string') return;
       try {
         const result = await fetchStorybookById(id);
         setBook(result);
       } catch (error: unknown) {
-        console.error(error)
-        setError("Error fetching book details. Please try again.");
+        console.error(error);
+        setError('Error fetching book details. Please try again.');
       } finally {
         setLoading(false);
       }
@@ -73,7 +75,7 @@ const BookPage: React.FC = () => {
   const onClickDelete = async () => {
     if (!selectedBookId) return;
     try {
-      setDeleting(true)
+      setDeleting(true);
       await deleteStorybook(selectedBookId);
       setShowConfirmModal(false);
       setSuccessModalOpen(true);
@@ -81,34 +83,38 @@ const BookPage: React.FC = () => {
       setTimeout(() => navigate('/manage-books'), 3000);
     } catch (err) {
       console.error(err);
-      setAlert({show: true, type: 'danger', message: 'Failed to delete the book.'});
+      setAlert({
+        show: true,
+        type: 'danger',
+        message: 'Failed to delete the book.',
+      });
       setShowConfirmModal(false);
     } finally {
       setDeleting(false);
     }
-  }
+  };
 
   if (loading || error || !book) {
     return (
       <div className="page">
-        <Header/>
+        <Header />
         <BookContainer>
-          {loading && (<Spinner/>)}
-          {error && (<p>{error}</p>)}
-          {!loading && !book && (<p>Cannot find book</p>)}
+          {loading && <Spinner />}
+          {error && <p>{error}</p>}
+          {!loading && !book && <p>Cannot find book</p>}
         </BookContainer>
       </div>
-    )
+    );
   }
 
   return (
     <div className="page">
-      <Header/>
+      <Header />
       <BookContainer>
         <Container>
-          <MainTitle text="Book Details"/>
-          <BookCard style={{flexDirection: "row-reverse"}}>
-            <BookCover src={book.cover_image_url} alt="Book Cover"/>
+          <MainTitle text="Book Details" />
+          <BookCard style={{ flexDirection: 'row-reverse' }}>
+            <BookCover src={book.cover_image_url} alt="Book Cover" />
             <BookDetails>
               <BookTitle>{book.storybook_title}</BookTitle>
               <BookMeta>Published: {book.published}</BookMeta>
@@ -127,7 +133,9 @@ const BookPage: React.FC = () => {
               {authors.length > 0 && (
                 <AuthorInfo>
                   {authors.slice(0, 2).map((author, index) => (
-                    <p key={index}>{author.role}: {author.name}</p>
+                    <p key={index}>
+                      {author.role}: {author.name}
+                    </p>
                   ))}
                   {authors.length > 2 && (
                     <ShowMoreButton onClick={toggleModal}>
@@ -142,9 +150,9 @@ const BookPage: React.FC = () => {
             <p>{book.storybook_description}</p>
           </Synopsis>
           <BookInfo>
-            <p>ISBN: {book.ISBN || "N/A"}</p>
-            <p>Book index in DB: {book.index || "N/A"}</p>
-            <p>Book ID: {book.storybook_id || "N/A"}</p>
+            <p>ISBN: {book.ISBN || 'N/A'}</p>
+            <p>Book index in DB: {book.index || 'N/A'}</p>
+            <p>Book ID: {book.storybook_id || 'N/A'}</p>
           </BookInfo>
           <DeleteButton
             type="button"
@@ -154,17 +162,21 @@ const BookPage: React.FC = () => {
               setShowConfirmModal(true);
             }}
           >
-            <IconTrash/>
-            <span>
-              Remove
-            </span>
+            <IconTrash />
+            <span>Remove</span>
           </DeleteButton>
 
           {/* Modal for showing all authors */}
-          <Modal isOpen={isModalOpen} onClose={toggleModal} className="modal-author">
+          <Modal
+            isOpen={isModalOpen}
+            onClose={toggleModal}
+            className="modal-author"
+          >
             <h3>Authors and Illustrators</h3>
             {authors.map((author, index) => (
-              <p key={index}>{author.role}: {author.name}</p>
+              <p key={index}>
+                {author.role}: {author.name}
+              </p>
             ))}
           </Modal>
         </Container>
@@ -173,26 +185,31 @@ const BookPage: React.FC = () => {
       {/*Confirmation modal*/}
       <BootstrapModal
         className="bs-modal"
-        show={showConfirmModal} onHide={() => setShowConfirmModal(false)} centered
+        show={showConfirmModal}
+        onHide={() => setShowConfirmModal(false)}
+        centered
       >
         <BootstrapModal.Header closeButton>
           <BootstrapModal.Title>Confirm Deletion</BootstrapModal.Title>
         </BootstrapModal.Header>
+
         <BootstrapModal.Body>
-          Are you sure you want to remove this? <br/>This action cannot be undone.
+          Are you sure you want to remove this? <br />
+          This action cannot be undone.
         </BootstrapModal.Body>
+
         <BootstrapModal.Footer>
           {deleting ? (
-            <Spinner/>
+            <Spinner />
           ) : (
             <>
-              <Button variant="secondary" onClick={() => setShowConfirmModal(false)}>
+              <Button
+                variant="secondary"
+                onClick={() => setShowConfirmModal(false)}
+              >
                 Cancel
               </Button>
-              <Button
-                variant="danger"
-                onClick={onClickDelete}
-              >
+              <Button variant="danger" onClick={onClickDelete}>
                 Yes, delete it
               </Button>
             </>
@@ -205,7 +222,7 @@ const BookPage: React.FC = () => {
         <Container>
           <Alert
             variant={alert.type}
-            onClose={() => setAlert({...alert, show: false})}
+            onClose={() => setAlert({ ...alert, show: false })}
             dismissible
           >
             {alert.message}
@@ -225,7 +242,7 @@ const BookPage: React.FC = () => {
           <BootstrapModal.Title>Success</BootstrapModal.Title>
         </BootstrapModal.Header>
         <BootstrapModal.Body>
-          Book deleted successfully. <br/>
+          Book deleted successfully. <br />
           You will be redirected to manage books page
         </BootstrapModal.Body>
       </BootstrapModal>

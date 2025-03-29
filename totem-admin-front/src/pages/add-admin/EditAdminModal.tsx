@@ -1,3 +1,8 @@
+/**
+ * This component is a modal for editing admin profiles.
+ * It allows the admin to update the name, email, and role of an existing admin.
+ *
+ */
 import React, { useState } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
 import Parse from '../../database';
@@ -39,6 +44,7 @@ const EditAdminModal: React.FC<EditAdminModalProps> = ({
         <Modal.Title>Edit Admin Profile</Modal.Title>
       </Modal.Header>
 
+      {/* The body of the modal contains a form for editing admin details */}
       <Modal.Body>
         <Form>
           <Form.Group controlId="formEditAdminName">
@@ -77,6 +83,8 @@ const EditAdminModal: React.FC<EditAdminModalProps> = ({
           </Form.Group>
         </Form>
       </Modal.Body>
+
+      {/* The footer of the modal contains the buttons for canceling or saving changes */}
       <Modal.Footer>
         <div className="d-flex gap-5 justify-content-center w-100">
           <Button variant="secondary" onClick={onClose}>

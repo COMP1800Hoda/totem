@@ -14,21 +14,25 @@ import ManageBooks from './pages/manage-books/ManageBooks.tsx';
 import AdminProfile from './pages/add-admin/ManageAdminDashboard.tsx';
 import Preview from './pages/preview/preview.tsx';
 import Success from './pages/success/success.tsx';
-import BookDetailsPage from "./pages/book-details/BookDetailsPage.tsx";
+import BookDetailsPage from './pages/book-details/BookDetailsPage.tsx';
 const App: React.FC = () => {
   return (
     <Router>
       <Routes>
+        {/* done */}
         <Route path="/" element={<Login />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/confirm-page" element={<ConfirmPage />} />
         <Route path="/edit-password" element={<EditPassword />} />
+        {/* done */}
         <Route path="/main" element={<HomePage />} />
+        {/* done */}
         <Route path="/manage-books" element={<ManageBooks />} />
         <Route path="/books/:id" element={<BookDetailsPage />} />
+        {/* done */}
         <Route path="/manage-admins" element={<AdminProfile />} />
+        {/* done */}
         <Route path="/add-book" element={<FileUpload />} />
-        <Route path="/manage-admins" element={<AdminProfile />} />
         <Route path="/preview" element={<Preview />} />
         <Route path="/success" element={<Success />} />
         <Route path="*" element={<NotFoundPage />} />
