@@ -21,10 +21,7 @@ import Parse from '../../database.js';
 import imagekit from '../../imagekit.js';
 import { Spinner } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-import {
-  checkTokenAndRedirect,
-  getToken,
-} from '../../components/utils/tokenUtils.js';
+import { checkTokenAndRedirect, getToken } from '../../utils/tokenUtils.js';
 
 interface Creator {
   role: string;

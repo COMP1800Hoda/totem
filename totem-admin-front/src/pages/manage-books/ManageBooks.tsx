@@ -3,10 +3,7 @@ import { Header } from '../../components/header/Header.tsx';
 import { ManageBookTable } from '../../components/table/manage-book-table/ManageBookTable.tsx';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import {
-  checkTokenAndRedirect,
-  getToken,
-} from '../../components/utils/tokenUtils.js';
+import { checkTokenAndRedirect, getToken } from '../../utils/tokenUtils.js';
 
 const ManageBooks = () => {
   checkTokenAndRedirect();

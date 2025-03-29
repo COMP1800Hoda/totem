@@ -11,10 +11,7 @@ import {
 } from './success_style';
 import { Header } from '../../components/header/Header.tsx';
 import { useNavigate } from 'react-router';
-import {
-  checkTokenAndRedirect,
-  getToken,
-} from '../../components/utils/tokenUtils.js';
+import { checkTokenAndRedirect, getToken } from '../../utils/tokenUtils.js';
 
 const SuccessPage: React.FC = () => {
   checkTokenAndRedirect(); // Check if the token is valid and redirect if not

@@ -6,10 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { jwtDecode } from 'jwt-decode';
 
-import {
-  checkTokenAndRedirect,
-  getToken,
-} from '../../components/utils/tokenUtils.js';
+import { checkTokenAndRedirect, getToken } from '../../utils/tokenUtils.js';
 
 export const HomePage = () => {
   checkTokenAndRedirect();

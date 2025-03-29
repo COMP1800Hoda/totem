@@ -7,10 +7,7 @@ import EditAdminModal from './EditAdminModal';
 import { Header } from '../../components/header/Header';
 import { Container } from '../../components/Container.tsx';
 import { useNavigate } from 'react-router-dom';
-import {
-  checkTokenAndRedirect,
-  getToken,
-} from '../../components/utils/tokenUtils.js';
+import { checkTokenAndRedirect, getToken } from '../../utils/tokenUtils.js';
 
 interface Admin {
   id: string;

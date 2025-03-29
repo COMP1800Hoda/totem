@@ -2,10 +2,7 @@ import React, { useRef, useState, useEffect } from 'react';
 import { Header } from '../../components/header/Header.tsx';
 import imagekit from '../../imagekit.js';
 import Parse from '../../database.js';
-import {
-  checkTokenAndRedirect,
-  getToken,
-} from '../../components/utils/tokenUtils.js';
+import { checkTokenAndRedirect, getToken } from '../../utils/tokenUtils.js';
 
 import {
   AddButton,
