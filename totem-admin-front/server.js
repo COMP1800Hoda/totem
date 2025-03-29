@@ -91,18 +91,19 @@ app.use ('/manage-admins', checkAuth, (req,res) => {
     res.json({message:'You are logged in and allow to access manage-admins page', user: req.user});
 })
 
+//done
 app.use ('/add-book', checkAuth, (req,res) => {
     res.json({message:'You are logged in and allow to access add-book page', user: req.user});
 })
 
-app.use ('/preview', checkAuth, (req,res) => {
-    res.json({message:'You are logged in and allow to access preview page', user: req.user});
-})
+// app.use ('/preview', checkAuth, (req,res) => {
+//     res.json({message:'You are logged in and allow to access preview page', user: req.user});
+// })
 
 
-app.use ('/success', checkAuth, (req,res) => {
-    res.json({message:'You are logged in and allow to access success page', user: req.user});
-})
+// app.use ('/success', checkAuth, (req,res) => {
+//     res.json({message:'You are logged in and allow to access success page', user: req.user});
+// })
 
 
 app.listen(PORT, () => {
