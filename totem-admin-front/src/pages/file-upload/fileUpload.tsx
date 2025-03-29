@@ -1,36 +1,53 @@
 import React, { useState, useRef, useEffect } from 'react';
-import ImageKit from 'imagekit';
-import Parse from '../../database';
-import './fileUpload.css';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { Header } from '../../components/header/Header';
-import { Container } from '../../components/Container.tsx';
-import { useNavigate } from 'react-router-dom';
+import imagekit from '../../imagekit.js';
+import Parse from '../../database.js';
+import DraggingIcon from '../../assets/draggingdot.svg';
 import {
-  checkTokenAndRedirect,
-  getToken,
-} from '../../components/utils/tokenUtils.js';
+  AppContainer,
+  UploadHeader,
+  FormRow,
+  ButtonRow,
+  FormGroup,
+  Input,
+  Select,
+  TextArea,
+  SubPreButton,
+  FileInputContainer,
+  FullWidthLabel,
+  Icon,
+  AddButton,
+  DeleteButton,
+  PreviewContainer,
+  PreviewRemoveButton,
+  GenerateButton,
+} from './fileUpload_style';
 
 interface FileData {
   file: File;
   name: string;
   size: string;
-  url: string; // For image previews
+  url: string;
 }
 
-// Initialize ImageKit
-const imagekit = new ImageKit({
-  publicKey: import.meta.env.VITE_IMAGEKIT_PUBLIC_KEY,
-  urlEndpoint: import.meta.env.VITE_IMAGEKIT_URL_ENDPOINT,
-  privateKey: import.meta.env.VITE_IMAGEKIT_PRIVATE_KEY,
-});
+interface PreviewData {
+  bookTitle: string;
+  bookId: string;
+  age: string;
+  genres: string[];
+  creators: { role: string; name: string; customRole: string }[];
+  publisher: string;
+  published: string;
+  isbn: string;
+  abstract: string;
+  coverImage: string | null;
+  contentImages: string[];
+  coverImageName: string;
+  contentImageName: string[];
+}
 
 const FileUpload: React.FC = () => {
-  //Start of code for JWT authorization
-  checkTokenAndRedirect();
-  const navigate = useNavigate();
-  const [error, setError] = useState(null);
-  const [isCheckingToken, setIsCheckingToken] = useState(true); // prevent rendering before token check
   const [bookTitle, setBookTitle] = useState<string>('');
   const [bookId, setBookId] = useState<string>('');
   const [age, setAge] = useState<string>('0~2');
@@ -40,9 +57,7 @@ const FileUpload: React.FC = () => {
   ]);
 
   // default creators
-  const initialCreators = [
-    { role: 'Author', name: 'John Doe', customRole: '' },
-  ];
+  const initialCreators = [{ role: 'Author', name: '', customRole: '' }];
   const initialRoles = [
     { value: 'Author', label: 'Author' },
     { value: 'Illustrator', label: 'Illustrator' },
@@ -61,50 +76,9 @@ const FileUpload: React.FC = () => {
   const [isUploading, setIsUploading] = useState(false);
   const coverInputRef = useRef<HTMLInputElement | null>(null);
   const contentInputRef = useRef<HTMLInputElement | null>(null);
-
-  useEffect(() => {
-    const checkToken = async () => {
-      await checkTokenAndRedirect();
-      setIsCheckingToken(false); // Set to false after token check
-    };
-    checkToken();
-  }, []);
-
-  useEffect(() => {
-    console.log('file upload before');
-    const token = getToken(); // Get the token from local storage
-    fetch('http://localhost:8080/add-book', {
-      method: 'GET',
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error('Failed to fetch admins');
-        }
-        return response.json();
-      })
-      .catch((error) => {
-        setError(error.message);
-        console.log('Error:', error);
-      });
-
-    console.log('file upload after');
-  });
-
-  useEffect(() => {
-    if (isUploading && coverimageurl && contentimageurl.length > 0) {
-      // Both coverimageurl and contentimageurl are updated
-      handleAddToDB();
-      setIsUploading(false); // Reset the uploading state
-    }
-  }, [coverimageurl, contentimageurl]);
-
-  if (isCheckingToken) return null; // Prevent rendering UI until token check is complete
-  if (error) navigate('/'); // Redirect to login if there's an error
-  //end of JWT_authorization code
-
+  const [previewData, setPreviewData] = useState<PreviewData | null>(null);
+  const [imageNames, setImageNames] = useState<string[]>([]);
+  const [coverimagename, setCoverImagename] = useState<string | null>(null);
   //handle Genre
   const handleGenreInputChange = (index: number, value: string): void => {
     const newGenres = genres.map((genre, i) => {
@@ -117,7 +91,7 @@ const FileUpload: React.FC = () => {
   };
 
   const handleAddGenre = (): void => {
-    setGenres([...genres, '']); // Add an empty genre
+    setGenres([...genres, '']);
   };
 
   const handleRemoveGenre = (index: number): void => {
@@ -127,11 +101,10 @@ const FileUpload: React.FC = () => {
   const handleCreatorChange = (index: number, field: string, value: string) => {
     const newCreators = creators.map((creator, i) => {
       if (i === index) {
-        // If the field is 'customRole', update the customRole field
         if (field === 'customRole') {
-          return { ...creator, customRole: value }; // Update customRole without changing the role
+          return { ...creator, customRole: value };
         }
-        // If the role is changed to 'Other', initialize customRole if it doesn't exist
+
         if (field === 'role' && value === 'Other') {
           return {
             ...creator,
@@ -139,12 +112,27 @@ const FileUpload: React.FC = () => {
             customRole: creator.customRole || '',
           };
         }
-        // Handle updates to all other fields
+
         return { ...creator, [field]: value };
       }
       return creator;
     });
     setCreators(newCreators);
+  };
+
+  const replaceOtherWithCustomRole = (
+    creators: { role: string; name: string; customRole: string }[]
+  ) => {
+    return creators.map((creator) => {
+      if (creator.role === 'Other' && creator.customRole) {
+        return {
+          ...creator,
+          role: creator.customRole,
+          customRole: '',
+        };
+      }
+      return creator;
+    });
   };
 
   const handleAddCreator = () => {
@@ -155,20 +143,49 @@ const FileUpload: React.FC = () => {
   const handleRemoveCreator = (index: number) => {
     setCreators(creators.filter((_, i) => i !== index));
   };
-
+  //Handle cover image
   const handleCoverChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
       setCoverImage(event.target.files[0]);
     }
   };
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    console.log('Selecting files');
-    const fileList = event.target.files;
-    console.log(fileList);
+  //Handle drag and drop effect
+  const handleDragOver = (event: React.DragEvent<HTMLDivElement>) => {
+    event.preventDefault(); // Prevent default behavior (prevent file from being opened)
+    event.currentTarget.classList.add('drag-over');
+  };
 
-    if (fileList && fileList.length > 0) {
-      const filesArray = Array.from(fileList);
+  const handleDragEnter = (event: React.DragEvent<HTMLDivElement>) => {
+    event.preventDefault();
+    // Optional: Add visual cues or classes
+  };
+
+  const handleDragLeave = (event: React.DragEvent<HTMLDivElement>) => {
+    event.currentTarget.classList.remove('drag-over'); // Remove the visual cue on leaving drag area
+  };
+
+  const handleDrop = (event: React.DragEvent<HTMLDivElement>) => {
+    event.preventDefault();
+    event.currentTarget.classList.remove('drag-over');
+
+    const files = event.dataTransfer.files;
+    handleFileChange(files); // Pass the FileList directly
+  };
+
+  const onInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files) {
+      handleFileChange(event.target.files);
+    }
+    // Reset the value of the input to allow for re-upload of the same file if necessary
+    event.target.value = '';
+  };
+
+  const handleFileChange = (files: FileList) => {
+    console.log('Selecting files');
+
+    if (files.length > 0) {
+      const filesArray = Array.from(files);
 
       const firstFile = filesArray[0];
       const isFolderUpload = firstFile.webkitRelativePath !== '';
@@ -179,30 +196,55 @@ const FileUpload: React.FC = () => {
         setFolderName(null);
       }
 
-      const filesData = filesArray.map((file) => ({
-        file: file, // Store the actual File object
+      const updatedFilesData = filesArray.map((file) => ({
+        file: file,
         name: file.name,
-        size: `${(file.size / 1024).toFixed(2)}kb`, // Convert size to KB
-        url: URL.createObjectURL(file), // Generate preview URL
+        size: `${(file.size / 1024).toFixed(2)}kb`,
+        url: URL.createObjectURL(file),
       }));
 
-      setFiles(filesData);
+      setFiles((prevFiles) => [...prevFiles, ...updatedFilesData]);
     }
   };
 
+  const onDragEnd = (result: { destination: any; source: any }) => {
+    const { destination, source } = result;
+    if (!destination) {
+      return;
+    }
+
+    if (
+      destination.droppableId === source.droppableId &&
+      destination.index === source.index
+    ) {
+      return;
+    }
+
+    const newFiles = Array.from(files);
+    const [moved] = newFiles.splice(source.index, 1);
+    newFiles.splice(destination.index, 0, moved);
+
+    setFiles(newFiles);
+  };
+
+  useEffect(() => {
+    if (isUploading && coverimageurl && contentimageurl.length > 0) {
+      handleAddToDB();
+      setIsUploading(false);
+    }
+  }, [coverimageurl, contentimageurl, isUploading]);
+
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    setIsUploading(true); // Set uploading state to true
+    setIsUploading(true);
 
-    // Folder for cover images
     const coverImageFolder = `/book-cover-images/${bookId}/`;
 
-    // Folder for content images
     const contentImagesFolder = `/book-images/${bookId}/`;
 
-    // Array to track upload promises
     const uploadPromises: Promise<void>[] = [];
 
+    const contentImageNames: string[] = [];
     // Upload cover image
     if (coverImage) {
       const coverUploadPromise = new Promise<void>(async (resolve, reject) => {
@@ -218,7 +260,9 @@ const FileUpload: React.FC = () => {
                 tags: [bookId],
               });
               const coverimageUrl = response.url;
-              setUrl(coverimageUrl); // Update coverimageurl state
+              setUrl(coverimageUrl);
+              const covername = coverImage.name;
+              setCoverImagename(covername);
               console.log(
                 'Cover image uploaded successfully. URL:',
                 coverimageUrl
@@ -256,8 +300,13 @@ const FileUpload: React.FC = () => {
                   folder: contentImagesFolder,
                   tags: [bookId],
                 });
+
+                const imageName = fileData.file.name;
+                console.log(imageName);
+                contentImageNames.push(imageName);
+                setImageNames(contentImageNames);
                 const imageUrl = response.url;
-                setimageUrl((prevUrls) => [...prevUrls, imageUrl]); // Update contentimageurl state
+                setimageUrl((prevUrls) => [...prevUrls, imageUrl]);
                 console.log(
                   'Content image uploaded successfully. URL:',
                   imageUrl
@@ -293,6 +342,14 @@ const FileUpload: React.FC = () => {
       // Wait for all uploads to complete
       await Promise.all(uploadPromises);
       console.log('All files uploaded successfully');
+
+      const metaData = {
+        bookTitle: bookTitle,
+        bookId: bookId,
+      };
+      localStorage.setItem('Metadata', JSON.stringify(metaData));
+
+      window.location.href = '/success';
     } catch (error) {
       console.error('Error during upload:', error);
       alert('An error occurred during the upload process. Please try again.');
@@ -300,10 +357,7 @@ const FileUpload: React.FC = () => {
     }
   };
 
-  // add one function to add storybook metadata to database
   const handleAddToDB = async () => {
-    // just checking, you should change it and add more variables to check
-    // should have an alert pop up to notify the admin
     if (
       !bookTitle ||
       !bookId ||
@@ -320,20 +374,24 @@ const FileUpload: React.FC = () => {
       console.log('Please fill in all required fields');
       return;
     }
-
-    const Storybook = Parse.Object.extend('StoryBook_Admin');
+    const updatedCreators = replaceOtherWithCustomRole(creators);
+    console.log(updatedCreators);
+    const Storybook = Parse.Object.extend('storybook');
     const storybook = new Storybook();
-    storybook.set('BookTitle', bookTitle);
-    storybook.set('BookID', bookId);
+    storybook.set('storybook_title', bookTitle);
+    storybook.set('storybook_id', bookId);
     storybook.set('Age', age);
-    storybook.set('Genre', genres);
-    storybook.set('CreatedBy', creators);
-    storybook.set('Publisher', publisher);
-    storybook.set('Published', published);
+    storybook.set('genre', genres);
+    storybook.set('created_by', updatedCreators);
+    storybook.set('publisher', publisher);
+    storybook.set('published', published);
     storybook.set('ISBN', isbn);
-    storybook.set('Abstract', abstract);
-    storybook.set('CoverImgUrl', coverimageurl);
-    storybook.set('ContentImgUrl', contentimageurl);
+    storybook.set('storybook_description', abstract);
+    storybook.set('cover_image_url', coverimageurl);
+    storybook.set('storybook_image_url', contentimageurl);
+    storybook.set('cover_image_name', coverimagename);
+    storybook.set('storybook_image_name', imageNames);
+    console.log(storybook);
 
     try {
       await storybook.save();
@@ -342,50 +400,145 @@ const FileUpload: React.FC = () => {
       console.log('Error saving metadata:', error);
     }
   };
-  // Function to handle file removal
+
   const handleRemove = (index: number) => {
-    setFiles((prev) => prev.filter((_, i) => i !== index)); // Remove file by index
+    setFiles((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  const handlePreview = async () => {
+    console.log('Cover image state:', coverImage);
+
+    if (!coverImage) {
+      alert('Please upload a cover image.');
+      return;
+    }
+
+    let coverImageBase64: string | null = null;
+
+    if (coverImage.type.startsWith('image/')) {
+      try {
+        coverImageBase64 = await convertFileToBase64(coverImage);
+        console.log('Base64 cover image:', coverImageBase64);
+      } catch (error) {
+        console.error('Error converting cover image to Base64:', error);
+        alert('Failed to process the cover image. Please try again.');
+        return;
+      }
+    }
+
+    // Convert content images to Base64
+    const contentImagesBase64: string[] = [];
+    const newImageNames: string[] = [];
+
+    for (const fileData of files) {
+      const imageName = fileData.file.name;
+      console.log(imageName);
+      newImageNames.push(imageName);
+
+      if (fileData.file.type.startsWith('image/')) {
+        try {
+          const base64 = await convertFileToBase64(fileData.file);
+          contentImagesBase64.push(base64);
+          console.log('Base64 content image:', base64);
+        } catch (error) {
+          console.error('Error converting content image to Base64:', error);
+          alert('Failed to process a content image. Please try again.');
+          return;
+        }
+      }
+    }
+
+    setImageNames(newImageNames);
+    console.log('Stored image names:', newImageNames);
+
+    const previewData: PreviewData = {
+      bookTitle,
+      bookId,
+      age,
+      genres,
+      creators,
+      publisher,
+      published,
+      isbn,
+      abstract,
+      coverImage: coverImageBase64,
+      contentImages: contentImagesBase64,
+      coverImageName: coverImage.name,
+      contentImageName: newImageNames,
+    };
+
+    console.log('Preview data:', previewData); // Debugging
+
+    setPreviewData(previewData);
+    localStorage.setItem('previewBook', JSON.stringify(previewData));
+    window.location.href = '/preview';
+  };
+
+  const convertFileToBase64 = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = (error) => reject(error);
+      reader.readAsDataURL(file);
+    });
   };
 
   return (
-    <div className="App container mt-4 px-4 ">
-      <Header />
-      <Container>
-        <h2 className="upload_header mt-5">Upload New Book</h2>
+    <div>
+      <div style={{ gap: '50px' }}>
+        <Header />
+      </div>
+      <AppContainer>
+        <UploadHeader>Add New Book</UploadHeader>
         <form onSubmit={handleSubmit}>
-          <div className="form-group">
+          <FormGroup>
             <label>Book Title</label>
-            <input
+            <Input
               type="text"
               value={bookTitle}
               onChange={(e) => setBookTitle(e.target.value)}
-              //required
             />
-          </div>
+          </FormGroup>
 
-          <div className="form-group">
+          <FormGroup>
             <label>Book ID</label>
-            <input
-              type="text"
-              value={bookId}
-              onChange={(e) => setBookId(e.target.value)}
-              //required
-            />
-          </div>
-          <div className="form-group">
-            <label>Age</label>
-            <select
-              value={age}
-              onChange={(e) => setAge(e.target.value)}
-              className="form-control w-auto px-4"
-            >
-              <option value="0~2">0~2</option>
-              <option value="3~4">3~4</option>
-              <option value="5~6">5~6</option>
-            </select>
-          </div>
+            <FormRow>
+              <Input
+                type="text"
+                value={bookId}
+                onChange={(e) => setBookId(e.target.value)}
+                style={{ marginRight: '10px', width: '90%' }}
+              />
+              <GenerateButton className="w-auto px-3">Generate</GenerateButton>
+            </FormRow>
+            <div style={{ fontSize: '12px' }}>
+              <span style={{ fontWeight: 'bold' }}>Book ID</span> consists of
+              English letters, numbers, and underscores (e.g.,
+              cropson_00390039). It is used as the folder path in the image CDN.
+              <span style={{ fontWeight: 'bold' }}>
+                {' '}
+                Once generated, it cannot be changed.
+              </span>{' '}
+              Click “Generate” to create a random ID.
+            </div>
+          </FormGroup>
 
-          <div className="form-group">
+          <FormGroup>
+            <label>Age</label>
+            <div>
+              <Select
+                value={age}
+                onChange={(e) => setAge(e.target.value)}
+                className="w-auto px-4"
+              >
+                <option value="0~2">0~2</option>
+                <option value="3~4">3~4</option>
+                <option value="5~6">5~6</option>
+              </Select>
+            </div>
+          </FormGroup>
+
+          <FormGroup>
             <label>Genre</label>
             {genres.map((genre, index) => (
               <div
@@ -396,7 +549,7 @@ const FileUpload: React.FC = () => {
                   marginBottom: '5px',
                 }}
               >
-                <input
+                <Input
                   type="text"
                   value={genre}
                   onChange={(e) =>
@@ -406,29 +559,29 @@ const FileUpload: React.FC = () => {
                   style={{ marginRight: '10px' }}
                 />
                 <div className="input-with-icon">
-                  <button
+                  <DeleteButton
                     type="button"
-                    className="delete-button"
                     onClick={() => handleRemoveGenre(index)}
                     aria-label="Remove genre"
                   >
                     <i className="fa-solid fa-trash"></i>
-                  </button>
+                  </DeleteButton>
                 </div>
               </div>
             ))}
 
             <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-              <button
+              <AddButton
+                className="w-auto px-3"
                 type="button"
                 onClick={handleAddGenre}
-                className="Addbutton w-auto px-3"
               >
                 Add
-              </button>
+              </AddButton>
             </div>
-          </div>
-          <div className="form-group">
+          </FormGroup>
+
+          <FormGroup>
             <label>Created by</label>
             {creators.map((creator, index) => (
               <div
@@ -437,12 +590,12 @@ const FileUpload: React.FC = () => {
                 style={{
                   display: 'flex',
                   alignItems: 'center',
-                  marginBottom: '5px',
+                  marginBottom: '7px',
                 }}
               >
                 {creator.role === 'Other' ? (
                   <>
-                    <input
+                    <Input
                       type="text"
                       placeholder="Custom role name"
                       value={creator.customRole || ''}
@@ -451,7 +604,7 @@ const FileUpload: React.FC = () => {
                       }
                       style={{ marginRight: '5px' }}
                     />
-                    <input
+                    <Input
                       type="text"
                       placeholder="Name"
                       value={creator.name}
@@ -462,7 +615,7 @@ const FileUpload: React.FC = () => {
                   </>
                 ) : (
                   <>
-                    <select
+                    <Select
                       value={creator.role}
                       onChange={(e) =>
                         handleCreatorChange(index, 'role', e.target.value)
@@ -477,8 +630,8 @@ const FileUpload: React.FC = () => {
                         Book Cover Designer
                       </option>
                       <option value="Other">Other</option>
-                    </select>
-                    <input
+                    </Select>
+                    <Input
                       type="text"
                       placeholder="Name"
                       value={creator.name}
@@ -490,123 +643,189 @@ const FileUpload: React.FC = () => {
                   </>
                 )}
                 <div className="input-with-icon">
-                  <button
-                    className="delete-button"
+                  <DeleteButton
                     type="button"
                     onClick={() => handleRemoveCreator(index)}
                   >
                     <i className="fa-solid fa-trash"></i>
-                  </button>
+                  </DeleteButton>
                 </div>
               </div>
             ))}
             <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-              <button
+              <AddButton
+                className="w-auto px-3"
                 type="button"
                 onClick={handleAddCreator}
-                className="Addbutton w-auto px-3"
               >
                 Add
-              </button>
+              </AddButton>
             </div>
-          </div>
-          <div className="form-group">
+          </FormGroup>
+
+          <FormGroup>
             <label>Publisher</label>
-            <input
+            <Input
               type="text"
               placeholder="Publisher"
               value={publisher}
               onChange={(e) => setPublisher(e.target.value)}
             />
-          </div>
-          <div className="form-group">
+          </FormGroup>
+
+          <FormGroup>
             <label>Published</label>
-            <input
+            <Input
               type="text"
               value={published}
               onChange={(e) => setPublished(e.target.value)}
               placeholder="Published"
             />
-          </div>
+          </FormGroup>
 
-          <div className="form-group">
+          <FormGroup>
             <label>ISBN</label>
-            <input
+            <Input
               type="text"
               value={isbn}
               placeholder="ISBN"
               onChange={(e) => setISBN(e.target.value)}
             />
-          </div>
+          </FormGroup>
 
-          <div className="form-group">
+          <FormGroup>
             <label>Abstract</label>
-            <textarea
+            <TextArea
               value={abstract}
               placeholder="Abstract"
               onChange={(e) => setAbstract(e.target.value)}
             />
-          </div>
+          </FormGroup>
         </form>
 
-        <div className="form-group">
+        <FormGroup>
           <label>Book Cover</label>
-          <input
+          <Input
             type="file"
             ref={coverInputRef}
             onChange={handleCoverChange}
             accept="image/*"
             required
           />
-        </div>
-        <div className="form-group">
+        </FormGroup>
+        <FormGroup>
           <label>Book Content images</label>
-          <div className="file-input-container">
-            <i className="fas fa-cloud-upload-alt icon"></i>
-            <label htmlFor="file-upload" className="custom-file-choose">
-              Select Folder
-            </label>
+          <FullWidthLabel htmlFor="file-upload">
+            <FileInputContainer
+              onDrop={handleDrop}
+              onDragOver={handleDragOver}
+              onDragEnter={handleDragEnter}
+              onDragLeave={handleDragLeave}
+            >
+              <Input
+                ref={contentInputRef}
+                id="file-upload"
+                type="file"
+                onChange={onInputChange}
+                style={{ display: 'none' }}
+                accept="image/*"
+                multiple
+                required
+              />
+              <Icon className="fas fa-cloud-upload-alt" />
+              <span style={{ fontSize: '16px' }}>
+                Drag and drop images to upload, or click to browse
+              </span>
+            </FileInputContainer>
+          </FullWidthLabel>
+        </FormGroup>
 
-            <input
-              ref={contentInputRef}
-              id="file-upload"
-              type="file"
-              onChange={handleFileChange}
-              style={{ display: 'none' }}
-              accept="image/*"
-              multiple
-              required
-            />
-          </div>
-        </div>
-        <div className="upload-container">
-          {folderName && <p>Selected Folder: {folderName}</p>}
-          <div>
-            {files.map((file, index) => (
-              <div key={index} className="preview-container">
-                <span>{file.name}</span>
-                <div style={{ display: 'flex', alignItems: 'center' }}>
-                  <span style={{ fontSize: '16px', marginRight: '10px' }}>
-                    {file.size}{' '}
-                  </span>
-                  <button
-                    onClick={() => handleRemove(index)}
-                    className="preview-remove-Button"
-                  >
-                    <i className="fa-solid fa-xmark"></i>
-                  </button>
+        <DragDropContext onDragEnd={onDragEnd}>
+          {files.length > 0 ? (
+            <Droppable
+              droppableId="filesList"
+              isDropDisabled={false}
+              isCombineEnabled={false}
+              ignoreContainerClipping={false}
+            >
+              {(provided) => (
+                <div
+                  {...provided.droppableProps}
+                  ref={provided.innerRef}
+                  style={{ display: 'flex', flexDirection: 'column' }}
+                >
+                  {files.map((file, index) => (
+                    <Draggable
+                      key={file.name}
+                      draggableId={file.name}
+                      index={index}
+                    >
+                      {(provided) => (
+                        <div
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
+                        >
+                          <PreviewContainer>
+                            <div
+                              style={{ display: 'flex', alignItems: 'center' }}
+                            >
+                              <img
+                                src={DraggingIcon}
+                                alt="Dragging Icon"
+                                style={{ width: '24px', height: '24px' }}
+                              />
+                              <span>{file.name}</span>
+                            </div>
+                            <div
+                              style={{ display: 'flex', alignItems: 'center' }}
+                            >
+                              <span
+                                style={{
+                                  fontSize: '16px',
+                                  marginRight: '10px',
+                                }}
+                              >
+                                {file.size}{' '}
+                              </span>
+                              <PreviewRemoveButton
+                                onClick={() => handleRemove(index)}
+                              >
+                                <i className="fa-solid fa-xmark"></i>
+                              </PreviewRemoveButton>
+                            </div>
+                          </PreviewContainer>
+                        </div>
+                      )}
+                    </Draggable>
+                  ))}
+                  {provided.placeholder}
                 </div>
-              </div>
-            ))}
-          </div>
-        </div>
-        <div className="button-row ">
-          <button type="submit">Preview</button>
-          <button type="submit" onClick={handleSubmit}>
+              )}
+            </Droppable>
+          ) : (
+            <div
+              style={{
+                padding: 15,
+                textAlign: 'center',
+                fontSize: '14px',
+                marginBottom: 10,
+              }}
+            >
+              No images uploaded or selected. Please upload some images.
+            </div>
+          )}
+        </DragDropContext>
+
+        <ButtonRow>
+          <SubPreButton type="submit" onClick={handlePreview}>
+            Preview
+          </SubPreButton>
+          <SubPreButton type="submit" onClick={handleSubmit}>
             Upload
-          </button>
-        </div>
-      </Container>
+          </SubPreButton>
+        </ButtonRow>
+      </AppContainer>
     </div>
   );
 };

@@ -27,7 +27,6 @@ interface Creator {
 }
 
 const PreviewPage: React.FC = () => {
-  checkTokenAndRedirect();
   const navigate = useNavigate();
   const previewData = JSON.parse(localStorage.getItem('previewBook') || '{}');
   console.log(previewData);
@@ -36,8 +35,6 @@ const PreviewPage: React.FC = () => {
   const [coverimageurl, setUrl] = useState<string | null>(null);
   const [contentimageurl, setimageUrl] = useState<string[]>([]);
   const [isDataSaved, setIsDataSaved] = useState(false);
-  const [isCheckingToken, setIsCheckingToken] = useState(true); // prevent rendering before token check
-  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (coverimageurl && contentimageurl.length > 0 && !isDataSaved) {
@@ -102,7 +99,6 @@ const PreviewPage: React.FC = () => {
             const response = await imagekit.upload({
               file: fileData,
               fileName: `${previewData.bookId}-${previewData.contentImages.indexOf(fileData) + 1}.jpg`,
-
               folder: contentImagesFolder,
               tags: [previewData.bookId],
             });
@@ -131,8 +127,8 @@ const PreviewPage: React.FC = () => {
         bookId: previewData.bookId,
       };
       localStorage.setItem('Metadata', JSON.stringify(metaData));
-      navigate('/success');
 
+      navigate('/success');
     } catch (error) {
       console.error('Error during upload:', error);
       alert('An error occurred during the upload process. Please try again.');
@@ -192,7 +188,6 @@ const PreviewPage: React.FC = () => {
     storybook.set('storybook_image_url', contentimageurl);
     storybook.set('cover_image_name', previewData.coverImageName);
     storybook.set('storybook_image_name', previewData.contentImageName);
-
     console.log(storybook);
     try {
       await storybook.save();
