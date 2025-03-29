@@ -1,0 +1,182 @@
+import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router';
+import { Spinner } from 'react-bootstrap';
+import {
+  checkTokenAndRedirect,
+  getToken,
+} from '../../components/utils/tokenUtils.js';
+
+import { useNavigate } from 'react-router-dom';
+
+import {
+  AuthorInfo,
+  BookCard,
+  BookContainer,
+  BookCover,
+  BookDetails,
+  BookInfo,
+  BookMeta,
+  BookTags,
+  BookTitle,
+  PublisherInfo,
+  ShowMoreButton,
+  Synopsis,
+  Tag,
+} from './BookDetailsPage.styled';
+
+import Modal from '../../components/modal';
+import { Header } from '../../components/header/Header';
+import { fetchStorybookById } from '../../api/fetchStorybookById.ts';
+import { Storybook } from '../../types/Storybook.ts';
+import { Container } from '../../components/Container.tsx';
+
+const BookPage: React.FC = () => {
+  checkTokenAndRedirect();
+  const navigate = useNavigate();
+  const { id } = useParams<{ id: string }>();
+  const [book, setBook] = useState<Storybook | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [isCheckingToken, setIsCheckingToken] = useState(true); // prevent rendering before token check
+
+  useEffect(() => {
+    const checkToken = async () => {
+      await checkTokenAndRedirect();
+      setIsCheckingToken(false); // Set to false after token check
+    };
+    checkToken();
+  }, []);
+
+  useEffect(() => {
+    if (isCheckingToken) return; // Prevent rendering until token check is complete
+    const token = getToken(); // Get the token from local storage
+    (async () => {
+      if (typeof id !== 'string') return;
+      try {
+        const result = await fetchStorybookById(id);
+        setBook(result);
+      } catch (error: unknown) {
+        console.error(error);
+        setError('Error fetching book details. Please try again.');
+      } finally {
+        setLoading(false);
+      }
+    })();
+
+    fetch(`http://localhost:8080/books/${id}`, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Failed to fetch book details');
+        }
+        return response.json();
+      })
+      .catch((error) => {
+        setError(error.message);
+        console.error('Error:', error);
+      });
+  }, [id, isCheckingToken]);
+
+  if (isCheckingToken) return null; // Prevent rendering until token check is complete
+  if (error) navigate('/'); // Redirect to login if there's an error
+
+  const toggleModal = () => {
+    setIsModalOpen(!isModalOpen);
+  };
+
+  const authors = book?.created_by || [];
+
+  if (loading || error) {
+    return (
+      <div className="page">
+        <Header />
+        <BookContainer>
+          {loading && <Spinner />}
+          {error && <p>{error}</p>}
+        </BookContainer>
+      </div>
+    );
+  }
+
+  if (!book) {
+    return (
+      <div className="page">
+        <Header />
+        <BookContainer>Cannot find book</BookContainer>
+      </div>
+    );
+  }
+
+  return (
+    <div className="page">
+      <Header />
+      <BookContainer>
+        <Container>
+          {/*<BackButton onClick={() => window.history.back()}>&lt; Back</BackButton>*/}
+          <BookCard style={{ flexDirection: 'row-reverse' }}>
+            <BookCover src={book.cover_image_url} alt="Book Cover" />
+            <BookDetails>
+              <BookTitle>{book.storybook_title}</BookTitle>
+              <BookMeta>Published: {book.published}</BookMeta>
+              <BookTags>
+                {book.genre && book.genre.length > 0 ? (
+                  book.genre?.map((tag, index) => <Tag key={index}>{tag}</Tag>)
+                ) : (
+                  <Tag>No genre available</Tag>
+                )}
+              </BookTags>
+              <BookMeta>Language: {book.language}</BookMeta>
+              <PublisherInfo>
+                <p>Publisher: {book.publisher}</p>
+                <p>Contributed by: {book.contributed_by}</p>
+              </PublisherInfo>
+              {authors.length > 0 && (
+                <AuthorInfo>
+                  {authors.slice(0, 2).map((author, index) => (
+                    <p key={index}>
+                      {author.role}: {author.name}
+                    </p>
+                  ))}
+                  {authors.length > 2 && (
+                    <ShowMoreButton onClick={toggleModal}>
+                      Show all ...
+                    </ShowMoreButton>
+                  )}
+                </AuthorInfo>
+              )}
+            </BookDetails>
+          </BookCard>
+          <Synopsis>
+            <p>{book.storybook_description}</p>
+          </Synopsis>
+          <BookInfo>
+            <p>ISBN: {book.ISBN || 'N/A'}</p>
+            <p>Book index in DB: {book.index || 'N/A'}</p>
+            <p>Book ID: {book.storybook_id || 'N/A'}</p>
+          </BookInfo>
+
+          {/* Modal for showing all authors */}
+          <Modal
+            isOpen={isModalOpen}
+            onClose={toggleModal}
+            className="modal-author"
+          >
+            <h3>Authors and Illustrators</h3>
+            {authors.map((author, index) => (
+              <p key={index}>
+                {author.role}: {author.name}
+              </p>
+            ))}
+          </Modal>
+        </Container>
+      </BookContainer>
+    </div>
+  );
+};
+
+export default BookPage;
