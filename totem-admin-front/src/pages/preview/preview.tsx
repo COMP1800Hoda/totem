@@ -1,11 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-  checkTokenAndRedirect,
-  getToken,
-} from '../../components/utils/tokenUtils.js';
-
-import {
   BookContainer,
   BackButton,
   BookCard,
@@ -105,8 +100,9 @@ const PreviewPage: React.FC = () => {
         async (resolve, reject) => {
           try {
             const response = await imagekit.upload({
-              file: fileData, // Pass base64 string directly
-              fileName: `content-${previewData.bookId}-${previewData.contentImages.indexOf(fileData) + 1}.jpg`, // Use a consistent filename
+              file: fileData,
+              fileName: `${previewData.bookId}-${previewData.contentImages.indexOf(fileData) + 1}.jpg`,
+
               folder: contentImagesFolder,
               tags: [previewData.bookId],
             });
@@ -135,8 +131,8 @@ const PreviewPage: React.FC = () => {
         bookId: previewData.bookId,
       };
       localStorage.setItem('Metadata', JSON.stringify(metaData));
+      navigate('/success');
 
-      window.location.href = '/success';
     } catch (error) {
       console.error('Error during upload:', error);
       alert('An error occurred during the upload process. Please try again.');
@@ -183,7 +179,6 @@ const PreviewPage: React.FC = () => {
     const storybook = new Storybook();
 
     // Set metadata fields
-
     storybook.set('storybook_title', previewData.bookTitle);
     storybook.set('storybook_id', previewData.bookId);
     storybook.set('Age', previewData.age);
@@ -195,6 +190,8 @@ const PreviewPage: React.FC = () => {
     storybook.set('storybook_description', previewData.abstract);
     storybook.set('cover_image_url', coverimageurl);
     storybook.set('storybook_image_url', contentimageurl);
+    storybook.set('cover_image_name', previewData.coverImageName);
+    storybook.set('storybook_image_name', previewData.contentImageName);
 
     console.log(storybook);
     try {
@@ -208,7 +205,7 @@ const PreviewPage: React.FC = () => {
   return (
     <div style={{ justifyContent: 'center', display: 'flex' }}>
       <BookContainer>
-        <BackButton onClick={() => window.history.back()}>
+        <BackButton onClick={() => navigate(-1)}>
           &lt; Return to Edit
         </BackButton>
 
