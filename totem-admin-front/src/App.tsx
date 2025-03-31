@@ -15,6 +15,7 @@ import AdminProfile from './pages/add-admin/ManageAdminDashboard.tsx';
 import Preview from './pages/preview/preview.tsx';
 import Success from './pages/success/success.tsx';
 import BookDetailsPage from './pages/book-details/BookDetailsPage.tsx';
+import EditBook from "./pages/edit-book/EditBook.tsx";
 const App: React.FC = () => {
   return (
     <Router>
@@ -28,6 +29,7 @@ const App: React.FC = () => {
         <Route path="/main" element={<HomePage />} />
         {/* done */}
         <Route path="/manage-books" element={<ManageBooks />} />
+        <Route path="/edit-book/:id" element={<EditBook />} />
         <Route path="/books/:id" element={<BookDetailsPage />} />
         {/* done */}
         <Route path="/manage-admins" element={<AdminProfile />} />

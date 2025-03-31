@@ -184,13 +184,8 @@ const FileUpload: React.FC = () => {
     event.preventDefault();
     setIsUploading(true);
 
-    let isCreatedByVaild = true;
-    for (const creator of creators) {
-      if (creator.name === '') {
-        isCreatedByVaild = false;
-      }
-    }
-    if (!bookTitle || !bookId || !age || !isCreatedByVaild) {
+    const isCreatedByValid = creators.length > 0 && creators.every(creator => creator.name !== '');
+    if (!bookTitle || !bookId || !age || !isCreatedByValid) {
       alert('Please fill in all required fields');
       setIsUploading(false);
       return;

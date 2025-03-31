@@ -33,7 +33,7 @@ app.post('/reset-password', async(req, res) => {
         return res.status(400).json({message: "Email is required"});
     }
 
-    const resetLink = `http://localhost:5188/edit-password?email=${encodeURIComponent(email)}`;
+    const resetLink = `http://localhost:5174/edit-password?email=${encodeURIComponent(email)}`;
     //Set up email data
     const mailOptions = {
         from: process.env.EMAIL,
@@ -84,6 +84,11 @@ app.use ('/main', checkAuth, (req,res) => {
 //done
 app.use('/manage-books', checkAuth, (req,res) => {
     res.json({message:'You are logged in and allow to access manage-books page', user: req.user});
+})
+
+//done
+app.use('/edit-book', checkAuth, (req,res) => {
+    res.json({message:'You are logged in and allow to access edit-book page', user: req.user});
 })
 
 //done

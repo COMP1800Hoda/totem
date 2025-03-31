@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
-import { Spinner } from 'react-bootstrap';
-import { IconTrash } from '@tabler/icons-react';
+import {FormGroup, Spinner} from 'react-bootstrap';
+import { IconPencil, IconTrash} from '@tabler/icons-react';
 import { useNavigate } from 'react-router-dom';
 import { Modal as BootstrapModal, Button, Alert } from 'react-bootstrap';
 
@@ -15,7 +15,7 @@ import {
   BookMeta,
   BookTags,
   BookTitle,
-  DeleteButton,
+  DeleteButton, EditButton,
   PublisherInfo,
   ShowMoreButton,
   Synopsis,
@@ -94,6 +94,11 @@ const BookPage: React.FC = () => {
     }
   };
 
+  const goToEditBook = (storybook_id: string) => {
+    navigate(`/edit-book/${storybook_id}`);
+  };
+
+
   if (loading || error || !book) {
     return (
       <div className="page">
@@ -154,17 +159,29 @@ const BookPage: React.FC = () => {
             <p>Book index in DB: {book.index || 'N/A'}</p>
             <p>Book ID: {book.storybook_id || 'N/A'}</p>
           </BookInfo>
-          <DeleteButton
-            type="button"
-            className="btn btn-danger"
-            onClick={() => {
-              setSelectedBookId(book.storybook_id);
-              setShowConfirmModal(true);
-            }}
-          >
-            <IconTrash />
-            <span>Remove</span>
-          </DeleteButton>
+          <FormGroup>
+            <EditButton
+              type="button"
+              className="btn"
+              onClick={() => {
+                goToEditBook(book?.storybook_id)
+              }}
+            >
+              <IconPencil />
+              <span>Edit</span>
+            </EditButton>
+            <DeleteButton
+              type="button"
+              className="btn btn-danger"
+              onClick={() => {
+                setSelectedBookId(book.storybook_id);
+                setShowConfirmModal(true);
+              }}
+            >
+              <IconTrash />
+              <span>Remove</span>
+            </DeleteButton>
+          </FormGroup>
 
           {/* Modal for showing all authors */}
           <Modal

@@ -6,7 +6,6 @@ export interface Storybook {
   created_by: createdBy[] | null;
   storybook_title: string;
   storybook_description: string | null;
-  cover_image_url: string;
   paid_storybook: boolean;
   language: string | null;
   genre: string[] | null;
@@ -15,7 +14,11 @@ export interface Storybook {
   publisher: string | null;
   ISBN: string | null;
   contributed_by: string | null;
+  storybook_image_name: string[];
   storybook_image_url: string[];
+  cover_image_url: string;
+  cover_image_name: string;
+  Age: string | null;
 }
 
 type createdBy = {

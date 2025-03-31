@@ -182,3 +182,30 @@ export const DeleteButton = styled.button`
     stroke-width: 1px;
   }
 `;
+export const EditButton = styled.button`
+  margin-top: 30px;
+  margin-right: 20px;
+  align-items: center;
+  width: 100px;
+  text-align: center;
+  font-size: 13px;
+  padding: 6px;
+  font-weight: 500;
+  margin-bottom: 20px;
+  background-color: var(--color-primary);
+    
+  &:hover{
+    background-color: var(--color-primary-hover);
+  }
+  span{
+    position: relative;
+    top:1px;
+    margin-left: 4px;
+  }
+  
+  svg {
+    width: 22px;
+    height: 22px;
+    stroke-width: 1px;
+  }
+`;
