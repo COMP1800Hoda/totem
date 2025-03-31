@@ -516,7 +516,9 @@ const FileUpload: React.FC = () => {
               <Select
                 value={age}
                 onChange={(e) => setAge(e.target.value)}
-                className="w-auto px-4"
+                style={{
+                  width: window.innerWidth < 768 ? "100%" : "525px"
+                }}
               >
                 <option value="0~2">0~2</option>
                 <option value="3~4">3~4</option>
