@@ -118,6 +118,29 @@ const BookPage: React.FC = () => {
       <BookContainer>
         <Container>
           <MainTitle text="Book Details" />
+          <FormGroup>
+            <EditButton
+              type="button"
+              className="btn"
+              onClick={() => {
+                goToEditBook(book?.storybook_id)
+              }}
+            >
+              <IconPencil />
+              <span>Edit</span>
+            </EditButton>
+            <DeleteButton
+              type="button"
+              className="btn btn-danger"
+              onClick={() => {
+                setSelectedBookId(book.storybook_id);
+                setShowConfirmModal(true);
+              }}
+            >
+              <IconTrash />
+              <span>Remove</span>
+            </DeleteButton>
+          </FormGroup>
           <BookCard style={{ flexDirection: 'row-reverse' }}>
             <BookCover src={book.cover_image_url} alt="Book Cover" />
             <BookDetails>
@@ -159,29 +182,6 @@ const BookPage: React.FC = () => {
             <p>Book index in DB: {book.index || 'N/A'}</p>
             <p>Book ID: {book.storybook_id || 'N/A'}</p>
           </BookInfo>
-          <FormGroup>
-            <EditButton
-              type="button"
-              className="btn"
-              onClick={() => {
-                goToEditBook(book?.storybook_id)
-              }}
-            >
-              <IconPencil />
-              <span>Edit</span>
-            </EditButton>
-            <DeleteButton
-              type="button"
-              className="btn btn-danger"
-              onClick={() => {
-                setSelectedBookId(book.storybook_id);
-                setShowConfirmModal(true);
-              }}
-            >
-              <IconTrash />
-              <span>Remove</span>
-            </DeleteButton>
-          </FormGroup>
 
           {/* Modal for showing all authors */}
           <Modal

@@ -161,14 +161,13 @@ export const ShowMoreButton = styled.button`
 `;
 
 export const DeleteButton = styled.button`
-  margin-top: 30px;
+  margin-bottom: 30px;
   align-items: center;
   width: 100px;
   text-align: center;
   font-size: 13px;
   padding: 6px;
   font-weight: 500;
-  margin-bottom: 20px;
   background-color: var(--color-danger);
   span{
     position: relative;
@@ -183,15 +182,14 @@ export const DeleteButton = styled.button`
   }
 `;
 export const EditButton = styled.button`
-  margin-top: 30px;
-  margin-right: 20px;
+  margin-bottom: 30px;
+  margin-right: 10px;
   align-items: center;
   width: 100px;
   text-align: center;
   font-size: 13px;
   padding: 6px;
   font-weight: 500;
-  margin-bottom: 20px;
   background-color: var(--color-primary);
     
   &:hover{
