@@ -378,6 +378,19 @@ const FileUpload: React.FC = () => {
   };
 
   const handlePreview = async () => {
+    const isCreatedByValid = creators.length > 0 && creators.every(creator => creator.name !== '');
+    if (!bookTitle || !bookId || !age || !isCreatedByValid) {
+      alert('Please fill in all required fields');
+      setIsUploading(false);
+      return;
+    }
+
+    if (files.length === 0 || !coverImage) {
+      alert('Please add cover and content images');
+      setIsUploading(false);
+      return;
+    }
+
     console.log('Cover image state:', coverImage);
 
     if (!coverImage) {
