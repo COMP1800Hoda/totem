@@ -16,45 +16,19 @@ import {
   TextArea,
   UploadHeader,
 } from './EditBook.styled.ts';
-import {generateBookID} from "../../utils/generateBookId.ts";
-import {ImagesDroppable} from "./ImagesDroppable.tsx";
 import {Spinner} from "react-bootstrap";
 import {useNavigate} from "react-router-dom";
 import {useParams} from "react-router";
 import {Storybook} from "../../types/Storybook.ts";
 import {fetchStorybookById} from "../../api/fetchStorybookById.ts";
-import {deleteRemovedImages} from "../book-details/deleteRemovedImages.ts";
-
-interface FileData {
-  file: File;
-  name: string;
-  size: string;
-  url: string;
-}
-
-interface PreviewData {
-  bookTitle: string;
-  bookId: string;
-  age: string;
-  genres: string[];
-  creators: { role: string; name: string; customRole: string }[];
-  publisher: string;
-  published: string;
-  isbn: string;
-  abstract: string;
-  coverImage: string | null;
-  contentImages: string[];
-  coverImageName: string;
-  contentImageName: string[];
-}
-
+import {deleteRemovedImages} from "../../api/deleteRemovedImages.ts";
+import {FileData, ImagesDroppable} from "../../components/ImagesDroppable.tsx";
+import {deleteImageByName} from "../../api/deleteImageByName.ts";
 
 const EditBook: React.FC = () => {
   // get original information
   const { id } = useParams<{ id: string }>();
   const [book, setBook] = useState<Storybook | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
   const [coverImageUrl, setCoverImageUrl] = useState<string | null>(null);
 
   useEffect(() => {
@@ -77,8 +51,10 @@ const EditBook: React.FC = () => {
 
         if (result.storybook_image_url?.length && result.storybook_image_name?.length) {
           const fileDataList: FileData[] = result.storybook_image_url.map((url: string, idx: number) => ({
-            url,
+            file: null,
             name: result.storybook_image_name[idx],
+            size: '',
+            url,
           }));
           setFiles(fileDataList);
         }
@@ -92,9 +68,6 @@ const EditBook: React.FC = () => {
 
       } catch (error: unknown) {
         console.error(error);
-        setError('Error fetching book details. Please try again.');
-      } finally {
-        setLoading(false);
       }
     })();
   }, [id]);
@@ -119,7 +92,6 @@ const EditBook: React.FC = () => {
     {value: "Illustrator", label: "Illustrator"},
   ];
   const [creators, setCreators] = useState(initialCreators);
-  const [roles, setRoles] = useState(initialRoles);
   const [published, setPublished] = useState<string>("");
   const [publisher, setPublisher] = useState<string>("");
   const [isbn, setISBN] = useState<string>("");
@@ -184,7 +156,7 @@ const EditBook: React.FC = () => {
   };
 
   const handleAddCreator = () => {
-    const defaultRole = roles.length > 0 ? roles[0].value : "Author";
+    const defaultRole = initialRoles.length > 0 ? initialRoles[0].value : "Author";
     setCreators([...creators, {role: defaultRole, name: "", customRole: ""}]);
   };
 
@@ -197,6 +169,7 @@ const EditBook: React.FC = () => {
       setCoverImage(event.target.files[0]);
     }
   };
+
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     setIsUploading(true);
@@ -226,58 +199,71 @@ const EditBook: React.FC = () => {
 
     for (const fileData of files) {
       if (!fileData.file) {
-        // reuse previous images
+        // reuse original images
         newContentImageNames.push(fileData.name);
         newContentImageUrls.push(fileData.url);
       } else {
         try {
-          const base64Data = await convertFileToBase64(fileData.file); // 별도 함수
+          const base64 = await convertFileToBase64(fileData.file);
           const response = await imagekit.upload({
-            file: base64Data,
+            file: base64,
             fileName: fileData.name,
             folder: contentImagesFolder,
             tags: [bookId],
+            useUniqueFileName: false,
           });
 
           newContentImageNames.push(fileData.name);
           newContentImageUrls.push(response.url);
-        } catch (error) {
-          console.error("Error uploading image:", error);
-          alert(`Upload failed: ${fileData.name}`);
+        } catch (err) {
+          console.error("Failed to upload content image:", err);
+          alert(`Failed to upload image: ${fileData.name}`);
           setIsUploading(false);
           return;
         }
       }
     }
-    // === Handle removed image===
+
+
+    // === Handle removed content images ===
     await deleteRemovedImages({
-      storybookId: bookId,
-      oldImageNames: [book?.cover_image_name ?? ''],
-      newImageNames: [coverImage?.name ?? book?.cover_image_name ?? ''],
-      folderPath: `/book-cover-images/${bookId}`,
+      oldImageNames: book?.storybook_image_name ?? [],
+      newImageNames: newContentImageNames,
+      folderPath: contentImagesFolder,
     });
 
     // === Handle Cover Image ===
     let coverImageUploaded = book?.cover_image_url ?? null;
     let coverImageName = book?.cover_image_name ?? '';
 
-    if (coverImage && book?.cover_image_name && book.cover_image_name !== coverImage.name) {
+    if (coverImage) {
       try {
-        const fileId = await imagekit
-          .listFiles({
-            searchQuery: `name = "${book.cover_image_name}" AND folder = "${coverImageFolder}"`,
-          })
-          .then(res => res[0]?.fileId);
-
-        if (fileId) {
-          await imagekit.deleteFile(fileId);
-          console.log("Old cover image deleted:", book.cover_image_name);
+        // delete old cover
+        if (book?.cover_image_name) {
+          await deleteImageByName(coverImageFolder, book.cover_image_name);
         }
+
+        // upload new cover
+        const base64Cover = await convertFileToBase64(coverImage);
+        const response = await imagekit.upload({
+          file: base64Cover,
+          fileName: coverImage.name,
+          folder: coverImageFolder,
+          tags: [bookId],
+          useUniqueFileName: false,
+        });
+
+        coverImageUploaded = response.url;
+        coverImageName = coverImage.name;
+        console.log(" New cover image uploaded:", coverImageUploaded);
+
       } catch (err) {
-        console.warn("⚠Failed to delete old cover image:", err);
+        console.error(" Failed to upload new cover image:", err);
+        alert("Cover image upload failed.");
+        setIsUploading(false);
+        return;
       }
     }
-
     try {
       await Promise.all(uploadPromises);
 
@@ -351,73 +337,6 @@ const EditBook: React.FC = () => {
       console.log("Error saving metadata:", error);
       return false;
     }
-  };
-
-  const handlePreview = async () => {
-    console.log('Cover image state:', coverImage);
-
-    if (!coverImage) {
-      alert('Please upload a cover image.');
-      return;
-    }
-
-    let coverImageBase64: string | null = null;
-
-    if (coverImage.type.startsWith('image/')) {
-      try {
-        coverImageBase64 = await convertFileToBase64(coverImage);
-        console.log('Base64 cover image:', coverImageBase64);
-      } catch (error) {
-        console.error('Error converting cover image to Base64:', error);
-        alert('Failed to process the cover image. Please try again.');
-        return;
-      }
-    }
-
-    // Convert content images to Base64
-    const contentImagesBase64: string[] = [];
-    const newImageNames: string[] = [];
-
-    for (const fileData of files) {
-      const imageName = fileData.file.name;
-      console.log(imageName);
-      newImageNames.push(imageName);
-
-      if (fileData.file.type.startsWith('image/')) {
-        try {
-          const base64 = await convertFileToBase64(fileData.file);
-          contentImagesBase64.push(base64);
-          console.log('Base64 content image:', base64);
-        } catch (error) {
-          console.error('Error converting content image to Base64:', error);
-          alert('Failed to process a content image. Please try again.');
-          return;
-        }
-      }
-    }
-
-    console.log('Stored image names:', newImageNames);
-
-    const previewData: PreviewData = {
-      bookTitle,
-      bookId,
-      age,
-      genres,
-      creators,
-      publisher,
-      published,
-      isbn,
-      abstract,
-      coverImage: coverImageBase64,
-      contentImages: contentImagesBase64,
-      coverImageName: coverImage.name,
-      contentImageName: newImageNames
-    }
-
-    console.log('Preview data:', previewData); // Debugging
-
-    localStorage.setItem('previewBook', JSON.stringify(previewData));
-    navigate('/preview');
   };
 
   const convertFileToBase64 = (file: File): Promise<string> => {
@@ -693,11 +612,9 @@ const EditBook: React.FC = () => {
         </FormGroup>
         <ButtonRow>
           {!isUploading ? (
-            <>
-              {/*<SubPreButton type="submit" onClick={handlePreview}>Preview</SubPreButton>*/}
-              <SubPreButton type="submit" onClick={handleSubmit}>
-                Edit
-              </SubPreButton></>
+            <SubPreButton type="submit" onClick={handleSubmit}>
+              Edit
+            </SubPreButton>
           ) : (<Spinner/>)}
         </ButtonRow>
       </AppContainer>

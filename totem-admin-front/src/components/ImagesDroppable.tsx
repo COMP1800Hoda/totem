@@ -7,11 +7,23 @@ import {
   Input,
   PreviewContainer,
   PreviewRemoveButton
-} from "./EditBook.styled.ts";
-import DraggingIcon from "../../assets/draggingdot.svg";
-import {hasDuplicatedFile} from "../../utils/hasDuplicatedFile";
+} from "../pages/file-upload/fileUpload_style.ts";
+import DraggingIcon from "../assets/draggingdot.svg";
+import {hasDuplicatedFile} from "../utils/hasDuplicatedFile";
 
-export const ImagesDroppable = ({files, setFiles}) => {
+export interface FileData {
+  file: File | null;
+  name: string;
+  size: string;
+  url: string;
+}
+
+interface ImagesDroppableProps {
+  files: FileData[];
+  setFiles: React.Dispatch<React.SetStateAction<FileData[]>>;
+}
+
+export const ImagesDroppable = ({files, setFiles}: ImagesDroppableProps) => {
   const contentInputRef = useRef<HTMLInputElement | null>(null);
   // Handle drag and drop effect
   const handleDragOver = (event: React.DragEvent<HTMLDivElement>) => {
@@ -136,7 +148,7 @@ export const ImagesDroppable = ({files, setFiles}) => {
                 ref={provided.innerRef}
                 style={{display: "flex", flexDirection: "column"}}
               >
-                {files.map((file, index) => (
+                {files.map((file, index: number) => (
                   <Draggable key={file.name} draggableId={file.name} index={index}>
                     {(provided) => (
                       <div

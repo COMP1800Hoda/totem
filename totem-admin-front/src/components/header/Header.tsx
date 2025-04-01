@@ -14,6 +14,7 @@ export const Header: React.FC<HeaderSearchProps> = () => {
   useEffect(() => {
     const openedOffcanvas = document.querySelector('.offcanvas.show');
     if (openedOffcanvas) {
+      //@ts-ignore
       const bsOffcanvas = Offcanvas?.getInstance?.(openedOffcanvas);
       bsOffcanvas?.hide();
     }

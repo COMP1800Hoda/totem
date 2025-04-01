@@ -19,16 +19,9 @@ import {
   UploadHeader,
 } from './fileUpload_style';
 import { generateBookID } from '../../utils/generateBookId.ts';
-import { ImagesDroppable } from './ImagesDroppable.tsx';
+import {FileData, ImagesDroppable} from '../../components/ImagesDroppable.tsx';
 import { Spinner } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-
-interface FileData {
-  file: File;
-  name: string;
-  size: string;
-  url: string;
-}
 
 interface PreviewData {
   bookTitle: string;
@@ -68,7 +61,6 @@ const FileUpload: React.FC = () => {
     { value: 'Illustrator', label: 'Illustrator' },
   ];
   const [creators, setCreators] = useState(initialCreators);
-  const [roles, setRoles] = useState(initialRoles);
   const [published, setPublished] = useState<string>('');
   const [publisher, setPublisher] = useState<string>('');
   const [isbn, setISBN] = useState<string>('');
@@ -167,7 +159,7 @@ const FileUpload: React.FC = () => {
   };
 
   const handleAddCreator = () => {
-    const defaultRole = roles.length > 0 ? roles[0].value : 'Author';
+    const defaultRole = initialRoles.length > 0 ? initialRoles[0].value : 'Author';
     setCreators([...creators, { role: defaultRole, name: '', customRole: '' }]);
   };
 
@@ -206,7 +198,7 @@ const FileUpload: React.FC = () => {
     const contentImageNames: string[] = [];
 
     let coverImageUploaded;
-    let contentUploaded: string[] = [];
+    const contentUploaded: string[] = [];
     // Upload cover image
     if (coverImage) {
       const coverUploadPromise = new Promise<void>(async (resolve, reject) => {
@@ -220,6 +212,7 @@ const FileUpload: React.FC = () => {
                 fileName: coverImage.name,
                 folder: coverImageFolder,
                 tags: [bookId],
+                useUniqueFileName: false,
               });
               const coverimageUrl = response.url;
               coverImageUploaded = response.url;
@@ -259,9 +252,15 @@ const FileUpload: React.FC = () => {
                   fileName: fileData.name,
                   folder: contentImagesFolder,
                   tags: [bookId],
+                  useUniqueFileName: false,
                 });
 
-                const imageName = fileData.file.name;
+                if (!fileData.file) {
+                  console.error('cannot find file')
+                  return;
+                }
+
+                const imageName = fileData.file.name || '';
                 console.log(imageName);
                 contentImageNames.push(imageName);
                 const imageUrl = response.url;
@@ -291,7 +290,8 @@ const FileUpload: React.FC = () => {
             alert(`Error reading content image ${fileData.name}`);
             reject(error);
           };
-          reader.readAsDataURL(fileData.file);
+          if(fileData.file)
+            reader.readAsDataURL(fileData.file);
         }
       );
       uploadPromises.push(contentUploadPromise);
@@ -403,11 +403,11 @@ const FileUpload: React.FC = () => {
     const newImageNames: string[] = [];
 
     for (const fileData of files) {
-      const imageName = fileData.file.name;
+      const imageName = fileData?.file?.name || '';
       console.log(imageName);
       newImageNames.push(imageName);
 
-      if (fileData.file.type.startsWith('image/')) {
+      if (fileData?.file?.type.startsWith('image/')) {
         try {
           const base64 = await convertFileToBase64(fileData.file);
           contentImagesBase64.push(base64);
