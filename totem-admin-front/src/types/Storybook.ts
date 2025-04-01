@@ -24,4 +24,5 @@ export interface Storybook {
 type createdBy = {
   role: string;
   name: string;
+  customRole: string;
 }

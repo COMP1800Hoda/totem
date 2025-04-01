@@ -131,6 +131,7 @@ const PreviewPage: React.FC = () => {
             fileName: previewData.coverImageName,
             folder: coverImageFolder,
             tags: [previewData.bookId],
+            useUniqueFileName: false,
           });
           coverImageUrl = response.url;
           console.log('Cover image uploaded successfully:', coverImageUrl);
@@ -154,6 +155,7 @@ const PreviewPage: React.FC = () => {
               fileName: previewData.contentImageName[i],
               folder: contentImagesFolder,
               tags: [previewData.bookId],
+              useUniqueFileName: false,
             });
             contentImageUrls.push(response.url);
             console.log('Content image uploaded successfully:', response.url);
