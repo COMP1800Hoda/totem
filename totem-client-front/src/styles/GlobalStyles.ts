@@ -48,7 +48,7 @@ table {
 
 :root {
   // colors
-  --color-primary: ${COLORS.primary};
+  --color-primary: ${COLORS.Lightest};
   --color-text-primary: #333;
   
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;

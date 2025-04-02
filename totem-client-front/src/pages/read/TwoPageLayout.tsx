@@ -1,6 +1,6 @@
-import React, { useRef, useEffect } from "react";
-import HTMLFlipBook from "react-pageflip";
-import { Page } from "./BookTypes";
+import React, { useRef, useEffect } from 'react';
+import HTMLFlipBook from 'react-pageflip';
+import { Page } from './BookTypes';
 
 interface TwoPageLayoutProps {
   pages: Page[];
@@ -38,8 +38,8 @@ export const TwoPageLayout: React.FC<TwoPageLayoutProps> = ({
     const timer = setTimeout(() => {
       if (flipBook.current && flipBook.current.pageFlip) {
         const pageIndex = pages.length - currentPage; // Reverse index for RTL
-        console.log("Navigating to page:", pageIndex);
-        flipBook.current.pageFlip().flip(pageIndex, "top");
+        console.log('Navigating to page:', pageIndex);
+        flipBook.current.pageFlip().flip(pageIndex, 'top');
       }
     }, 100);
     return () => clearTimeout(timer);
@@ -51,24 +51,24 @@ export const TwoPageLayout: React.FC<TwoPageLayoutProps> = ({
   return (
     <div
       style={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        height: "100vh",
-        backgroundColor: "#f0f0f0",
-        position: "relative",
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '100vh',
+        backgroundColor: '#f0f0f0',
+        position: 'relative',
       }}
       onClick={onPageClick}
     >
       {/* Left overlay for flipping to the next page (RTL) */}
       <div
         style={{
-          position: "absolute",
+          position: 'absolute',
           left: 0,
           top: 0,
-          width: "25%",
-          height: "100%",
-          cursor: "pointer",
+          width: '25%',
+          height: '100%',
+          cursor: 'pointer',
           zIndex: 10,
         }}
         onClick={handleFlipNext}
@@ -77,12 +77,12 @@ export const TwoPageLayout: React.FC<TwoPageLayoutProps> = ({
       {/* Right overlay for flipping to the previous page (RTL) */}
       <div
         style={{
-          position: "absolute",
+          position: 'absolute',
           right: 0,
           top: 0,
-          width: "25%",
-          height: "100%",
-          cursor: "pointer",
+          width: '25%',
+          height: '100%',
+          cursor: 'pointer',
           zIndex: 10,
         }}
         onClick={handleFlipPrev}
@@ -106,7 +106,7 @@ export const TwoPageLayout: React.FC<TwoPageLayoutProps> = ({
         startPage={pages.length - currentPage} // Adjusted for RTL
         disableFlipByClick={true}
         flippingTime={450}
-        style={{ margin: "0 auto" }}
+        style={{ margin: '0 auto' }}
         // RTL specific settings
         flippingDirection="backward" // This is crucial for RTL books
         drawShadow={true}
@@ -117,21 +117,21 @@ export const TwoPageLayout: React.FC<TwoPageLayoutProps> = ({
           <div key={index + 1}>
             <div
               style={{
-                display: "flex",
-                width: "100%",
-                height: "100%",
-                justifyContent: "center",
-                alignItems: "center",
-                backgroundColor: "#f0f0f0",
+                display: 'flex',
+                width: '100%',
+                height: '100%',
+                justifyContent: 'center',
+                alignItems: 'center',
+                backgroundColor: '#f0f0f0',
               }}
             >
               <img
                 src={page.imageUrl}
                 alt={`Page ${page.pageNumber}`}
                 style={{
-                  width: "100%",
-                  height: "100%",
-                  objectFit: "contain",
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'contain',
                 }}
               />
             </div>

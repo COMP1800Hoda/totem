@@ -1,4 +1,5 @@
-import Parse from '../../database.js'
+import Parse from "../database.js"
+
 import { Storybook } from '../types/Storybook.ts';
 
 export async function fetchStorybookById(storybook_id: string): Promise<Storybook> {
