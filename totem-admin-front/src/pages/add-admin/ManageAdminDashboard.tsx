@@ -57,7 +57,8 @@ const AdminProfile = () => {
       })
       .then((data) => {
         console.log('Admin data response:', data); // Log the entire response
-        if (data && Array.isArray(data.admins)) {
+        // if (data && Array.isArray(data.admins)) {
+        if (data) {
           console.log('Number of admins:', data.admins.length);
         } else {
           console.log('Admin data is missing or not in the expected format.');
