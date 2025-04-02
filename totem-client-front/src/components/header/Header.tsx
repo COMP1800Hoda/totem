@@ -1,7 +1,7 @@
 import React from 'react';
-import { IconSearch } from '@tabler/icons-react';
+// import { IconSearch } from '@tabler/icons-react';
 
-import { HeaderContainer, Inner, SearchContainer } from './Header.styled.ts';
+import { HeaderContainer, Inner} from './Header.styled.ts';
 import { COLORS } from '../../constants/colors.ts';
 
 interface HeaderSearchProps {
