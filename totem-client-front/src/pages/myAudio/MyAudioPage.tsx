@@ -1,36 +1,49 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router'; // Import useNavigate
+import { useNavigate } from 'react-router';
 import { Header } from '../../components/header/Header';
 import Footer from '../../components/footer/Footer';
 import { MyAudioContainer, AudioGrid, AudioList, AudioItem, AudioThumbnail } from './MyAudioPage.styled';
 import { COLORS } from '../../constants/colors.ts';
 
-// Define Audio type
+// Updated Audio interface to match API response
 interface Audio {
   objectId: string;
   cover_image_url: string;
   title: string;
+  Name: string; // Note the capital N to match API response
 }
 
-// Audio item component to be reused in both grid and list views
-const AudioItemComponent = ({ src, alt, title, objectId }: { src: string; alt: string; title: string; objectId: string }) => {
-  const navigate = useNavigate(); // Use the useNavigate hook
+const AudioItemComponent = ({ 
+  src, 
+  alt, 
+  title, 
+  name, 
+  objectId 
+}: { 
+  src: string; 
+  alt: string; 
+  title: string; 
+  name: string;
+  objectId: string 
+}) => {
+  const navigate = useNavigate();
 
   const handleClick = () => {
-    navigate(`/audios/${objectId}`); // Navigate to the audio detail page
+    navigate(`/audios/${objectId}`);
   };
 
   return (
     <AudioItem onClick={handleClick}>
       <AudioThumbnail src={src} alt={alt} />
-      <div>{title}</div>
+      <div style={{ fontWeight: 'bold' }}>{title}</div>
+      <div style={{ color: COLORS.DarkGray }}>{name}</div>
     </AudioItem>
   );
 };
 
 const MyAudioPage: React.FC = () => {
-  const [isGridView, setIsGridView] = useState(true); // Default to Grid View
-  const [audios, setAudios] = useState<Audio[]>([]); // State to store fetched audios
+  const [isGridView, setIsGridView] = useState(true);
+  const [audios, setAudios] = useState<Audio[]>([]);
 
   const toggleView = () => {
     setIsGridView((prev) => !prev);
@@ -41,14 +54,14 @@ const MyAudioPage: React.FC = () => {
       const response = await fetch("https://parseapi.back4app.com/classes/Audios", {
         method: "GET",
         headers: {
-          "X-Parse-Application-Id": "XWNVzANvs7w6pYMl4fZWLCcikgXdMvCZhEnI48sH", // Replace with your actual Application ID
-          "X-Parse-REST-API-Key": "mRZK1BOLh5EIaOR9Ircc2OhX5OU28aidSsZAtyJP", // Replace with your actual API key
+          "X-Parse-Application-Id": "XWNVzANvs7w6pYMl4fZWLCcikgXdMvCZhEnI48sH",
+          "X-Parse-REST-API-Key": "mRZK1BOLh5EIaOR9Ircc2OhX5OU28aidSsZAtyJP",
           "Content-Type": "application/json",
         },
       });
       const data = await response.json();
       if (data.results) {
-        setAudios(data.results); // Take the first 3 audios for display
+        setAudios(data.results);
       } else {
         console.error("Invalid data format:", data);
       }
@@ -57,7 +70,6 @@ const MyAudioPage: React.FC = () => {
     }
   };
 
-  // Fetch audios when the component mounts
   useEffect(() => {
     fetchAudios();
   }, []);
@@ -66,21 +78,32 @@ const MyAudioPage: React.FC = () => {
     <MyAudioContainer>
       <Header />
       <div style={{ padding: '20px', marginTop: '80px', textAlign: 'center' }}>
-        <h1>Recently played audio.</h1>
-        <button onClick={toggleView} style={{ margin: '20px', padding: '10px 20px', cursor: 'pointer', color: COLORS.Dark, backgroundColor: COLORS.Lightest , borderRadius: '6px', border: `2px solid ${COLORS.Dark}` }}>
+        <h1>Recently played audio</h1>
+        <button 
+          onClick={toggleView} 
+          style={{ 
+            margin: '20px', 
+            padding: '10px 20px', 
+            cursor: 'pointer', 
+            color: COLORS.Dark, 
+            backgroundColor: COLORS.Lightest,
+            borderRadius: '6px', 
+            border: `2px solid ${COLORS.Dark}` 
+          }}
+        >
           Toggle {isGridView ? 'List' : 'Grid'} View
         </button>
       </div>
-      {/* Conditionally render either Grid or List View */}
       {isGridView ? (
         <AudioGrid>
           {audios.map((audio) => (
             <AudioItemComponent
               key={audio.objectId}
-              src={`/src/assets/audio${audio.objectId}.png`}
+              src={audio.cover_image_url || `/src/assets/audio${audio.objectId}.png`}
               alt={audio.title}
               title={audio.title}
-              objectId={audio.objectId} // Pass objectId to AudioItemComponent
+              name={audio.Name} // Using audio.Name to match API response
+              objectId={audio.objectId}
             />
           ))}
         </AudioGrid>
@@ -89,10 +112,11 @@ const MyAudioPage: React.FC = () => {
           {audios.map((audio) => (
             <AudioItemComponent
               key={audio.objectId}
-              src={`/src/assets/audio${audio.objectId}.png`}
+              src={audio.cover_image_url || `/src/assets/audio${audio.objectId}.png`}
               alt={audio.title}
               title={audio.title}
-              objectId={audio.objectId} // Pass objectId to AudioItemComponent
+              name={audio.Name} // Using audio.Name to match API response
+              objectId={audio.objectId}
             />
           ))}
         </AudioList>

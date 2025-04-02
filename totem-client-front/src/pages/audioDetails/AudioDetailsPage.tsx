@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { Header } from "../../components/header/Header";
 import Footer from "../../components/footer/Footer";
-import { PageContainer, AudioPlayer} from "./AudioDetailsPage.styled";
+import { PageContainer, AudioPlayer, BackButton} from "./AudioDetailsPage.styled";
 
 interface Audio {
   objectId: string;
@@ -60,9 +60,9 @@ const AudioDetailsPage: React.FC = () => {
   if (!audio) return <p>Audio not found.</p>;
 
   return (
-    <div>
-      <Header />
       <PageContainer>
+      <Header />
+      <BackButton onClick={() => window.history.back()}>&lt; Back</BackButton>
         <h1>{audio.name}</h1>
         <img src={`/src/assets/audio${audio.objectId}.png`} alt={audio.name} style={{ width: "25em" }} />
         <p>Created At: {new Date(audio.createdAt).toLocaleString()}</p>
@@ -75,9 +75,8 @@ const AudioDetailsPage: React.FC = () => {
         ) : (
           <p>No audio file available.</p>
         )}
+        <Footer />
       </PageContainer>
-      <Footer />
-    </div>
   );
 };
 
