@@ -38,7 +38,10 @@ export const Header: React.FC<HeaderSearchProps> = () => {
     <>
       <HeaderContainer hideBorder={false}>
         <Inner>
-          <h1 onClick={() => navigate('/main')} style={{ fontSize: 20 }}>
+          <h1
+            onClick={() => navigate('/main')}
+            style={{ fontSize: 20, cursor: 'pointer' }}
+          >
             Totem
           </h1>
           <IconMenu2
