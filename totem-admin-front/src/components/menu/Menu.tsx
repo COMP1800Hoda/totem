@@ -10,7 +10,7 @@ import { MenuSubItem } from './MenuSubItem.tsx';
  * @type {boolean}
  */
 interface MenuProps {
-  isSuperAdmin: boolean;
+  isSuperAdmin?: boolean;
 }
 
 export const Menu: React.FC<MenuProps> = ({ isSuperAdmin }) => {

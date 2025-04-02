@@ -5,7 +5,6 @@ import { Menu } from '../../components/menu/Menu.tsx';
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { jwtDecode } from 'jwt-decode';
-import Parse from '../../database.js';
 import { checkTokenAndRedirect, getToken } from '../../utils/tokenUtils.js';
 
 export const HomePage = () => {
