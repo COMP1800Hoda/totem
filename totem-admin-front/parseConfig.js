@@ -16,6 +16,6 @@ ParseConfig.initialize(
     process.env.BACK4APP_JS_KEY
 );
 
-ParseConfig.serverURL =  process.env.BACK4APP_SERVER_URL;
+ParseConfig.serverURL = process.env.BACK4APP_SERVER_URL;
 
 export default ParseConfig;
