@@ -57,7 +57,6 @@ const ReadPage: React.FC = () => {
           pages={pages}
           currentPage={currentPage}
           onFlip={setCurrentPage}
-          onFlipEnd={() => {}}
           onPageClick={handlePageClick}
         />
       ) : (
