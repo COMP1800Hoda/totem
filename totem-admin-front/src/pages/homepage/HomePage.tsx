@@ -40,7 +40,7 @@ export const HomePage = () => {
         navigate('/'); // Redirect to login if token decoding fails
       }
 
-      fetch('http://localhost:8080/main', {
+      fetch('https://totemchildrenstorybookadmin-1g9u4lon.b4a.run/main', {
         method: 'GET',
         headers: {
           Authorization: `Bearer ${token}`,

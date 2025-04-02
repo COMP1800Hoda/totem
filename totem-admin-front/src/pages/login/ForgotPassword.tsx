@@ -25,13 +25,16 @@ const ForgotPassword = () => {
       }
 
       // change this based on the port
-      const response = await fetch('http://localhost:8080/reset-password', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email }),
-      });
+      const response = await fetch(
+        'https://totemchildrenstorybookadmin-1g9u4lon.b4a.run/reset-password',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ email }),
+        }
+      );
 
       if (response.ok) {
         setMessage('Password reset link sent. Check your email.');

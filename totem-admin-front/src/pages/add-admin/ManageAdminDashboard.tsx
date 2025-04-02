@@ -40,12 +40,15 @@ const AdminProfile = () => {
 
     const token = getToken(); // Get the token from local storage
 
-    fetch('http://localhost:8080/manage-admins', {
-      method: 'GET',
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
+    fetch(
+      'https://totemchildrenstorybookadmin-1g9u4lon.b4a.run/manage-admins',
+      {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    )
       .then((response) => {
         if (!response.ok) {
           throw new Error('Failed to fetch admins');

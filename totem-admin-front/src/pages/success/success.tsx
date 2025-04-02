@@ -30,7 +30,7 @@ const SuccessPage: React.FC = () => {
 
   useEffect(() => {
     const token = getToken(); // Get the token from local storage
-    fetch('http://localhost:8080/success', {
+    fetch('https://totemchildrenstorybookadmin-1g9u4lon.b4a.run/success', {
       method: 'GET',
       headers: {
         Authorization: `Bearer ${token}`,

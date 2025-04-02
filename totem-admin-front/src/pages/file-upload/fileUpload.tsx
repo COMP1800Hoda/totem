@@ -19,7 +19,10 @@ import {
   UploadHeader,
 } from './fileUpload_style';
 import { generateBookID } from '../../utils/generateBookId.ts';
-import {FileData, ImagesDroppable} from '../../components/ImagesDroppable.tsx';
+import {
+  FileData,
+  ImagesDroppable,
+} from '../../components/ImagesDroppable.tsx';
 import { Spinner } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 
@@ -81,7 +84,7 @@ const FileUpload: React.FC = () => {
 
   useEffect(() => {
     const token = getToken(); // Get the token from local storage
-    fetch('http://localhost:8080/add-book', {
+    fetch('https://totemchildrenstorybookadmin-1g9u4lon.b4a.run/add-book', {
       method: 'GET',
       headers: {
         Authorization: `Bearer ${token}`,
@@ -159,7 +162,8 @@ const FileUpload: React.FC = () => {
   };
 
   const handleAddCreator = () => {
-    const defaultRole = initialRoles.length > 0 ? initialRoles[0].value : 'Author';
+    const defaultRole =
+      initialRoles.length > 0 ? initialRoles[0].value : 'Author';
     setCreators([...creators, { role: defaultRole, name: '', customRole: '' }]);
   };
 
@@ -176,7 +180,8 @@ const FileUpload: React.FC = () => {
     event.preventDefault();
     setIsUploading(true);
 
-    const isCreatedByValid = creators.length > 0 && creators.every(creator => creator.name !== '');
+    const isCreatedByValid =
+      creators.length > 0 && creators.every((creator) => creator.name !== '');
     if (!bookTitle || !bookId || !age || !isCreatedByValid) {
       alert('Please fill in all required fields');
       setIsUploading(false);
@@ -256,7 +261,7 @@ const FileUpload: React.FC = () => {
                 });
 
                 if (!fileData.file) {
-                  console.error('cannot find file')
+                  console.error('cannot find file');
                   return;
                 }
 
@@ -290,8 +295,7 @@ const FileUpload: React.FC = () => {
             alert(`Error reading content image ${fileData.name}`);
             reject(error);
           };
-          if(fileData.file)
-            reader.readAsDataURL(fileData.file);
+          if (fileData.file) reader.readAsDataURL(fileData.file);
         }
       );
       uploadPromises.push(contentUploadPromise);
@@ -512,7 +516,7 @@ const FileUpload: React.FC = () => {
                 value={age}
                 onChange={(e) => setAge(e.target.value)}
                 style={{
-                  width: window.innerWidth < 768 ? "100%" : "525px"
+                  width: window.innerWidth < 768 ? '100%' : '525px',
                 }}
               >
                 <option value="0~2">0~2</option>
