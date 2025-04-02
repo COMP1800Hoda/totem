@@ -48,7 +48,7 @@ const FileUpload: React.FC = () => {
 
   const [bookTitle, setBookTitle] = useState<string>('');
   const [bookId, setBookId] = useState<string>('');
-  const [age, setAge] = useState<string>('0~2');
+  const [age, setAge] = useState<string>('');
   const [genres, setGenres] = useState([
     'Action Adventure',
     'Historical Fiction',
@@ -528,6 +528,7 @@ const FileUpload: React.FC = () => {
                   width: window.innerWidth < 768 ? "100%" : "525px"
                 }}
               >
+                <option value="" disabled selected>Select Age</option>
                 <option value="0~2">0~2</option>
                 <option value="3~4">3~4</option>
                 <option value="5~6">5~6</option>
