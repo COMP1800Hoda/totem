@@ -52,6 +52,14 @@ const AdminProfile = () => {
         }
         return response.json();
       })
+      .then((data) => {
+        console.log('Admin data response:', data); // Log the entire response
+        if (data && Array.isArray(data.admins)) {
+          console.log('Number of admins:', data.admins.length);
+        } else {
+          console.log('Admin data is missing or not in the expected format.');
+        }
+      })
       .catch((error) => {
         setError(error.message);
         console.log('Error:', error);
