@@ -12,10 +12,10 @@ import dotenv from 'dotenv';
 dotenv.config(); // Load env variables
 
 ParseConfig.initialize(
-    process.env.BACK4APP_APP_ID,
-    process.env.BACK4APP_JS_KEY
+    "XWNVzANvs7w6pYMl4fZWLCcikgXdMvCZhEnI48sH",
+    "NFHym7RCYmwrHL2Ohqr7769mcUt66ikBF13liUdt"
 );
 
-ParseConfig.serverURL = process.env.BACK4APP_SERVER_URL;
+ParseConfig.serverURL = "https://parseapi.back4app.com";
 
 export default ParseConfig;
