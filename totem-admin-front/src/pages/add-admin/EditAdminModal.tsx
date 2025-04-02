@@ -3,7 +3,7 @@
  * It allows the admin to update the name, email, and role of an existing admin.
  *
  */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
 import Parse from '../../database';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -22,6 +22,17 @@ const EditAdminModal: React.FC<EditAdminModalProps> = ({
   onAdminUpdated, // refresh the admin table
 }) => {
   const [editedAdmin, setEditedAdmin] = useState({ ...admin });
+
+  /**
+   * This effect is used to set the initial state of the editedAdmin when the admin prop changes.
+   * It ensures that the Edit Admin Modal displays the correct information when opened.
+   * The useEffect hook is triggered whenever the admin prop changes, updating the editedAdmin state accordingly.
+   */
+  useEffect(() => {
+    setEditedAdmin({ ...admin });
+  }, [admin]);
+
+  console.log('editedAdmin in editModal.tsx:', editedAdmin.name);
 
   const handleEditAdmin = async () => {
     try {
@@ -57,7 +68,6 @@ const EditAdminModal: React.FC<EditAdminModalProps> = ({
               }
             />
           </Form.Group>
-
           <Form.Group controlId="formEditAdminEmail">
             <Form.Label>Email</Form.Label>
             <Form.Control
@@ -68,14 +78,15 @@ const EditAdminModal: React.FC<EditAdminModalProps> = ({
               }
             />
           </Form.Group>
-
           <Form.Group controlId="formEditAdminRole">
             <Form.Label>Role</Form.Label>
             <Form.Select
               value={editedAdmin.role}
-              onChange={(e) =>
-                setEditedAdmin({ ...editedAdmin, role: e.target.value })
-              }
+              onChange={(e) => {
+                const newEditedAdmin = { ...editedAdmin, role: e.target.value };
+                setEditedAdmin(newEditedAdmin);
+                console.log('editedAdmin after role change:', newEditedAdmin);
+              }}
             >
               <option value="Normal Admin">Normal Admin</option>
               <option value="Super Admin">Super Admin</option>

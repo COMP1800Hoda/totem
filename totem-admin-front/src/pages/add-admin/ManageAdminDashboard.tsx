@@ -55,15 +55,6 @@ const AdminProfile = () => {
         }
         return response.json();
       })
-      .then((data) => {
-        console.log('Admin data response:', data); // Log the entire response
-        // if (data && Array.isArray(data.admins)) {
-        if (data) {
-          console.log('Number of admins:', data.admins.length);
-        } else {
-          console.log('Admin data is missing or not in the expected format.');
-        }
-      })
       .catch((error) => {
         setError(error.message);
         console.log('Error:', error);
@@ -164,7 +155,9 @@ const AdminProfile = () => {
                     variant="success"
                     size="sm"
                     onClick={() => {
-                      setSelectedAdmin(admin), setShowEditModal(true);
+                      setSelectedAdmin(admin);
+                      console.log('Selected Admin:', admin.name);
+                      setShowEditModal(true);
                     }}
                   >
                     EDIT
@@ -176,6 +169,7 @@ const AdminProfile = () => {
                     size="sm"
                     onClick={() => {
                       setAdminToDelete(admin.id);
+                      console.log('Selected Admin:', admin.name);
                       setShowConfirmModal(true);
                     }}
                   >
@@ -193,12 +187,15 @@ const AdminProfile = () => {
           onAdminAdded={fetchAdmins}
         />
         {selectedAdmin && (
-          <EditAdminModal
-            show={showEditModal}
-            onClose={() => setShowEditModal(false)}
-            admin={selectedAdmin}
-            onAdminUpdated={fetchAdmins}
-          />
+          <>
+            {console.log('Edit Modal Rendered with:', selectedAdmin)}
+            <EditAdminModal
+              show={showEditModal}
+              onClose={() => setShowEditModal(false)}
+              admin={selectedAdmin}
+              onAdminUpdated={fetchAdmins}
+            />
+          </>
         )}
 
         {/* Confirm Modal */}
