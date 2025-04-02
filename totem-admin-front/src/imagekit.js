@@ -1,9 +1,9 @@
 import ImageKit from "imagekit";
 
 const imagekit = new ImageKit({
-    publicKey: import.meta.env.VITE_IMAGEKIT_PUBLIC_KEY, 
-    urlEndpoint: import.meta.env.VITE_IMAGEKIT_URL_ENDPOINT, 
-    privateKey: import.meta.env.VITE_IMAGEKIT_PRIVATE_KEY,
+    publicKey: "public_P17LRkYTu9eJUdN3WnyzbodiT1U=",
+    urlEndpoint: "https://ik.imagekit.io/Comp3800Group12", 
+    privateKey: "private_PeSFDBIdeSuhtUZaec1saMxjqoU=",
   });
 
 export default imagekit;
