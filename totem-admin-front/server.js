@@ -11,7 +11,7 @@ import checkAuth from './src/middlewares/checkAuth.js';
 import path from 'path'; // Import the 'path' module
 
 const app = express();
-const PORT = 3000;
+const PORT = 8080;
 
 app.use(cors());
 app.use(express.json());
@@ -56,12 +56,14 @@ app.post('/reset-password', async(req, res) => {
 })
 
 app.post('/', async(req,res) => {
+    console.log("Login route hit! Request body:", req.body);
     const {email, password} = req.body;
     try{
         const query = new ParseConfig.Query('Admin');
         query.equalTo('admin_email', email);
         const admin = await query.first();
         if(!admin){
+            console.log("In server.js Email not found");
             return res.status(401).json({message: "Email not found"});
         }
         const hashedPassword = admin.get('admin_hashed_password');
@@ -69,11 +71,13 @@ app.post('/', async(req,res) => {
         if(!isMatch){
             return res.status(401).json({message: 'Incorrect password'});
         }  
+        const adminRole = admin.get('admin_role');
+
         // change expiration time to any time you want for testing        
-        const token = jwt.sign({email: email}, JWT_SECRET, {expiresIn: '1200000s'});
+        const token = jwt.sign({email: email, adminRole: adminRole}, JWT_SECRET, {expiresIn: '1200000s'});
         res.json({token, message: 'Login successful'});
     } catch(error){
-        console.log("error: ", error);
+        console.log("error in logging route: ", error);
         res.status(500).json({message: "Internal server error"});
     }
 })

@@ -28,9 +28,12 @@ const Login = () => {
       });
       const data = await response.json();
       if (!response.ok) {
-        throw new Error(data.message || 'Failed to login. Please try again');
+        setError(
+          data.message || 'Login failed. Please check your credentials.'
+        );
+        throw new Error(data.message || 'Login failed');
       }
-      localStorage.setItem('token', data.token); //// Store JWT in local storage
+      localStorage.setItem('token', data.token); // Store JWT in local storage
       //to send JWT in Authorization header for subsequent requests
       console.log('token: ', data.token);
       console.log('successful login');
@@ -38,7 +41,7 @@ const Login = () => {
     } catch (err: any) {
       setError(
         err.response?.data?.message ||
-          'An error occurred in catch. Please try again.'
+          'Incorrect email or password. Please try again.'
       );
     }
   };
