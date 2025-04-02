@@ -1,16 +1,28 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router'; // Import useNavigate
 import {
-  BookContainer, BackButton, BookCard, BookCover, BookDetails,
-  BookTitle, BookMeta, BookTags, Tag, ReadButton, Synopsis, BookInfo,
-  AuthorInfo, PublisherInfo, ShowMoreButton, FooterWrapper
+  BookContainer,
+  BackButton,
+  BookCard,
+  BookCover,
+  BookDetails,
+  BookTitle,
+  BookMeta,
+  BookTags,
+  Tag,
+  ReadButton,
+  Synopsis,
+  BookInfo,
+  AuthorInfo,
+  PublisherInfo,
+  ShowMoreButton,
+  FooterWrapper,
 } from './BookDetailsPage.styled';
 import Footer from '../../components/footer/Footer'; // Import the Footer component
 import Modal from '../../components/modal'; // Import the Modal component
-import { COLORS } from '../../constants/colors.ts';
 import { Header } from '../../components/header/Header';
-import {Storybook} from "../../types/Storybook.ts";
-import {fetchStorybookById} from "../../api/fetchStorybookById.ts"; // Import the Header component
+import { Storybook } from '../../types/Storybook.ts';
+import { fetchStorybookById } from '../../api/fetchStorybookById.ts'; // Import the Header component
 
 const BookPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -22,20 +34,18 @@ const BookPage: React.FC = () => {
 
   useEffect(() => {
     (async () => {
-      if (typeof id !== 'string')
-        return;
+      if (typeof id !== 'string') return;
       try {
         const result = await fetchStorybookById(id);
         setBook(result);
       } catch (error: unknown) {
-        console.error(error)
-        setError("Error fetching book details. Please try again.");
+        console.error(error);
+        setError('Error fetching book details. Please try again.');
       } finally {
         setLoading(false);
       }
     })();
   }, [id]);
-
 
   const toggleModal = () => {
     setIsModalOpen(!isModalOpen);
@@ -51,7 +61,7 @@ const BookPage: React.FC = () => {
     <BookContainer>
       <Header />
       <BackButton onClick={() => window.history.back()}>&lt; Back</BackButton>
-      <BookCard style={{ flexDirection: "row-reverse" }}>
+      <BookCard style={{ flexDirection: 'row-reverse' }}>
         <BookCover src={book.cover_image_url} alt="Book Cover" />
         <BookDetails>
           <BookTitle>{book.storybook_title}</BookTitle>
@@ -71,7 +81,9 @@ const BookPage: React.FC = () => {
           {authors.length > 0 && (
             <AuthorInfo>
               {authors.slice(0, 2).map((author, index) => (
-                <p key={index}>{author.role}: {author.name}</p>
+                <p key={index}>
+                  {author.role}: {author.name}
+                </p>
               ))}
               {authors.length > 2 && (
                 <ShowMoreButton onClick={toggleModal}>
@@ -89,14 +101,16 @@ const BookPage: React.FC = () => {
         <p>{book.storybook_description}</p>
       </Synopsis>
       <BookInfo>
-        <p>ISBN: {book.ISBN || "N/A"}</p>
+        <p>ISBN: {book.ISBN || 'N/A'}</p>
       </BookInfo>
 
       {/* Modal for showing all authors */}
       <Modal isOpen={isModalOpen} onClose={toggleModal}>
         <h3>Authors and Illustrators</h3>
         {authors.map((author, index) => (
-          <p key={index}>{author.role}: {author.name}</p>
+          <p key={index}>
+            {author.role}: {author.name}
+          </p>
         ))}
       </Modal>
       <FooterWrapper>

@@ -56,13 +56,13 @@ const AddAdminModal: React.FC<AddAdminModalProps> = ({
   };
 
   return (
-    <Modal show={show} onHide={onClose}>
+    <Modal centered show={show} onHide={onClose}>
       <Modal.Header closeButton>
         <Modal.Title>Add New Admin</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Form>
-          <Form.Group controlId="formAdminName">
+          <Form.Group controlId="formAdminName" className="mb-4">
             <Form.Label>Name</Form.Label>
             <Form.Control
               type="text"
@@ -74,7 +74,7 @@ const AddAdminModal: React.FC<AddAdminModalProps> = ({
             />
           </Form.Group>
 
-          <Form.Group controlId="formAdminEmail">
+          <Form.Group controlId="formAdminEmail" className="mb-4">
             <Form.Label>Email</Form.Label>
             <Form.Control
               type="email"
@@ -86,7 +86,7 @@ const AddAdminModal: React.FC<AddAdminModalProps> = ({
             />
           </Form.Group>
 
-          <Form.Group controlId="formAdminPassword">
+          <Form.Group controlId="formAdminPassword" className="mb-4">
             <Form.Label>Password</Form.Label>
             <Form.Control
               type="password"
@@ -98,7 +98,7 @@ const AddAdminModal: React.FC<AddAdminModalProps> = ({
             />
           </Form.Group>
 
-          <Form.Group controlId="formAdminRole">
+          <Form.Group controlId="formAdminRole" className="mb-2">
             <Form.Label>Role</Form.Label>
             <Form.Select
               value={newAdmin.role}

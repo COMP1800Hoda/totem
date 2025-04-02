@@ -29,7 +29,7 @@ const AdminProfile = () => {
 
   useEffect(() => {
     const checkToken = async () => {
-      await checkTokenAndRedirect();
+      checkTokenAndRedirect();
       setIsCheckingToken(false); // Set to false after token check
     };
     checkToken();
@@ -40,12 +40,15 @@ const AdminProfile = () => {
 
     const token = getToken(); // Get the token from local storage
 
-    fetch('http://localhost:8080/manage-admins', {
-      method: 'GET',
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
+    fetch(
+      'https://totemchildrenstorybookadmin-1g9u4lon.b4a.run/manage-admins',
+      {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    )
       .then((response) => {
         if (!response.ok) {
           throw new Error('Failed to fetch admins');
@@ -152,7 +155,9 @@ const AdminProfile = () => {
                     variant="success"
                     size="sm"
                     onClick={() => {
-                      setSelectedAdmin(admin), setShowEditModal(true);
+                      setSelectedAdmin(admin);
+                      console.log('Selected Admin:', admin.name);
+                      setShowEditModal(true);
                     }}
                   >
                     EDIT
@@ -164,6 +169,7 @@ const AdminProfile = () => {
                     size="sm"
                     onClick={() => {
                       setAdminToDelete(admin.id);
+                      console.log('Selected Admin:', admin.name);
                       setShowConfirmModal(true);
                     }}
                   >
@@ -178,19 +184,23 @@ const AdminProfile = () => {
         <AddAdminModal
           show={showAddModal}
           onClose={() => setShowAddModal(false)}
-          onAdminAdded={fetchAdmins}
+          onAdminAdded={fetchAdmins} // pass as param to refresh the admin table
         />
         {selectedAdmin && (
-          <EditAdminModal
-            show={showEditModal}
-            onClose={() => setShowEditModal(false)}
-            admin={selectedAdmin}
-            onAdminUpdated={fetchAdmins}
-          />
+          <>
+            {console.log('Edit Modal Rendered with:', selectedAdmin)}
+            <EditAdminModal
+              show={showEditModal}
+              onClose={() => setShowEditModal(false)}
+              admin={selectedAdmin} // pass the selected admin to the modal
+              onAdminUpdated={fetchAdmins} // pass as param to refresh the admin table
+            />
+          </>
         )}
 
         {/* Confirm Modal */}
         <Modal
+          centered
           show={showConfirmModal}
           onHide={() => setShowConfirmModal(false)}
         >

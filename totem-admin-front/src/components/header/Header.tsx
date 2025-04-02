@@ -6,7 +6,7 @@ import { Menu } from '../menu/Menu.tsx';
 import { useLocation } from 'react-router-dom';
 import { Offcanvas } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-import {Link} from "react-router";
+import { jwtDecode } from 'jwt-decode';
 interface HeaderSearchProps {}
 
 export const Header: React.FC<HeaderSearchProps> = () => {
@@ -24,15 +24,25 @@ export const Header: React.FC<HeaderSearchProps> = () => {
     document.body.style.paddingRight = 'unset';
   }, [location.pathname]);
 
+  const getAdminRole = () => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      const decodedToken: any = jwtDecode(token);
+      return decodedToken?.adminRole;
+    }
+  };
+  getAdminRole();
+  const isSuperAdmin = getAdminRole() === 'Super Admin';
   return (
     <>
       <HeaderContainer hideBorder={false}>
         <Inner>
-          <Link to={"/main"}>
-            <h1 onClick={() => navigate('/main')} style={{ fontSize: 20, cursor: 'pointer' }}>
-              Totem
-            </h1>
-          </Link>
+          <h1
+            onClick={() => navigate('/main')}
+            style={{ fontSize: 20, cursor: 'pointer' }}
+          >
+            Totem
+          </h1>
           <IconMenu2
             color={COLORS.darkGray}
             size={24}
@@ -62,7 +72,7 @@ export const Header: React.FC<HeaderSearchProps> = () => {
           ></button>
         </div>
         <div className="offcanvas-body">
-          <Menu />
+          <Menu isSuperAdmin={isSuperAdmin} />
         </div>
       </DrawerContainer>
     </>
