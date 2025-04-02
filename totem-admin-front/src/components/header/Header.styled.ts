@@ -29,4 +29,5 @@ export const Inner = styled.div`
 
 export const DrawerContainer = styled.div`
   background-color: var(--color-background);
+  color: var(--color-text-primary);
 `
