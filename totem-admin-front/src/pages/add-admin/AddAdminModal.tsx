@@ -56,7 +56,7 @@ const AddAdminModal: React.FC<AddAdminModalProps> = ({
   };
 
   return (
-    <Modal show={show} onHide={onClose}>
+    <Modal centered show={show} onHide={onClose}>
       <Modal.Header closeButton>
         <Modal.Title>Add New Admin</Modal.Title>
       </Modal.Header>

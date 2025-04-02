@@ -200,6 +200,7 @@ const AdminProfile = () => {
 
         {/* Confirm Modal */}
         <Modal
+          centered
           show={showConfirmModal}
           onHide={() => setShowConfirmModal(false)}
         >

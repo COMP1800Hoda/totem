@@ -50,7 +50,7 @@ const EditAdminModal: React.FC<EditAdminModalProps> = ({
   };
 
   return (
-    <Modal show={show} onHide={onClose}>
+    <Modal centered show={show} onHide={onClose}>
       <Modal.Header closeButton>
         <Modal.Title>Edit Admin Profile</Modal.Title>
       </Modal.Header>
