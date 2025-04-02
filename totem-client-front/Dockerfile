@@ -10,4 +10,4 @@ COPY . .
 ENV NODE_OPTIONS="--max-old-space-size=4096"
 
 RUN npm run build  # Build the React frontend
-CMD ["npm", "run", "dev"]
+CMD ["npx", "serve", "-s", "build", "-l", "3000"]
