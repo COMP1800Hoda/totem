@@ -7,7 +7,7 @@ import bcrypt from 'bcryptjs';
 import ParseConfig from './parseConfig.js'
 import jwt from 'jsonwebtoken';
 import checkAuth from './src/middlewares/checkAuth.js';
-
+import sendResetEmail from './src/utils/sendResetEmail.js';
 import path from 'path'; // Import the 'path' module
 
 const app = express();
@@ -19,41 +19,37 @@ dotenv.config();
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
-//Nodemailer
 
-const transporter = nodeMailer.createTransport({
-    service: "gmail",
-    auth: {
-        user: process.env.EMAIL,
-        pass: process.env.PASSWORD
-    },
-});
-
-app.post('/reset-password', async(req, res) => {
+app.post('/reset-password-request', async(req, res) => {
     const {email} = req.body;
     // Check if email is valid
     if(!email){
         return res.status(400).json({message: "Email is required"});
     }
 
-    const resetLink = `http://localhost:5176/edit-password?email=${encodeURIComponent(email)}`;
-    //Set up email data
-    const mailOptions = {
-        from: process.env.EMAIL,
-        to: email,
-        subject: "Reset Password Request for Totem Children Storybook",
-        text: `Click on the link to reset your password ${resetLink}. This link will redirect you to the reset password page.`,
-    };
+    //The token store the email for later use
+    // set epiration time to 5 minutes for the reset password link
+    const token = jwt.sign({email: email}, JWT_SECRET, {expiresIn: '5m'});
 
-    try{
-        await transporter.sendMail(mailOptions);
-        res.status(200).json({message: "Email sent successfully"});
-        console.log("Email sent successfully");
-    } catch(error){
-        console.log(error);
-        return res.status(500).json({message: "Error sending email"});
+    // HOSTED LINK
+    // const resetLink = `https://totemchildrenstorybookadmin-1g9u4lon.b4a.run/edit-password?token=${token}}`;
+
+    // change this based on the port your front end is running on if you test it locally
+    // const resetLink = `http://localhost:5173/edit-password?token=${token}}`;
+
+    const resetLink = `https://totemchildrenstorybookadmin-1g9u4lon.b4a.run/edit-password?token=${token}}`;
+    console.log("reset link: ", resetLink);
+    const emailResponse = await sendResetEmail(email, resetLink);
+
+    if(emailResponse.success){
+        console.log('Email sent successfully:', emailResponse.message);
+        return res.status(200).json({message: "from server.js : Email sent successfully"});
+    } else {
+        console.log('Error sending email:', emailResponse.message);
+        return res.status(500).json({message: "from server.js : Failed to send email"});
     }
 })
+
 
 app.post('/', async(req,res) => {
     console.log("Login route hit! Request body:", req.body);
