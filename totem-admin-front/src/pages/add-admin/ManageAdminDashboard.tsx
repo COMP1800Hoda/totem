@@ -29,7 +29,7 @@ const AdminProfile = () => {
 
   useEffect(() => {
     const checkToken = async () => {
-      await checkTokenAndRedirect();
+      checkTokenAndRedirect();
       setIsCheckingToken(false); // Set to false after token check
     };
     checkToken();

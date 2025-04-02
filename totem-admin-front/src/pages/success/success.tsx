@@ -22,7 +22,7 @@ const SuccessPage: React.FC = () => {
   //start of JWT_authorization code
   useEffect(() => {
     const checkToken = async () => {
-      await checkTokenAndRedirect();
+      checkTokenAndRedirect();
       setIsCheckingToken(false); // Set to false after token check
     };
     checkToken();
