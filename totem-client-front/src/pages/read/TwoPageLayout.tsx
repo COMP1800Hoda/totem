@@ -80,30 +80,37 @@ export const TwoPageLayout: React.FC<TwoPageLayoutProps> = ({
         onClick={handleFlipPrev}
       />
 
-      <HTMLFlipBook
-        ref={flipBook}
-        width={500}
-        height={700}
-        size="stretch"
-        minWidth={550}
-        maxWidth={1100}
-        minHeight={700}
-        maxHeight={1400}
-        maxShadowOpacity={0.5}
-        showCover={true}
-        mobileScrollSupport={true}
-        onFlip={(e) => {
-          const newPage = pages.length - e.data;
-          onFlip(newPage);
-        }}
-        usePortrait={false}
-        startPage={pages.length - currentPage}
-        disableFlipByClick={true}
-        flippingTime={450}
-        style={{ margin: "0 auto" }}
-        drawShadow={true}
-        showPageCorners={false}
-      >
+    <HTMLFlipBook
+      ref={flipBook}
+      width={500}
+      height={700}
+      size="stretch"
+      minWidth={550}
+      maxWidth={1100}
+      minHeight={700}
+      maxHeight={1400}
+      maxShadowOpacity={0.5}
+      showCover={true}
+      mobileScrollSupport={true}
+      onFlip={(e) => {
+        const newPage = pages.length - e.data;
+        onFlip(newPage);
+      }}
+      usePortrait={false}
+      startPage={pages.length - currentPage}
+      disableFlipByClick={true}
+      flippingTime={450}
+      style={{ margin: "0 auto" }}
+      drawShadow={true}
+      showPageCorners={false}
+      // Adding the missing required props
+      className="flip-book"
+      startZIndex={0}
+      autoSize={false}
+      clickEventForward={false}
+      useMouseEvents={true}
+      swipeDistance={10}
+    >
         {reversedPages.map((page, index) => (
           <div key={`page-${index}`} className="page">
             <img
