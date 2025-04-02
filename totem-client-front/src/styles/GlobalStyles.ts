@@ -48,14 +48,14 @@ table {
 
 :root {
   // colors
-  --color-primary: ${COLORS.Lightest};
-  --color-text-primary: #333;
+  --color-primary: ${COLORS.Light};
+  --color-text-primary: ${COLORS.Darkest};
   
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
-  color: var(--color-text-primary);
+  color: ${COLORS.Darkest};
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;

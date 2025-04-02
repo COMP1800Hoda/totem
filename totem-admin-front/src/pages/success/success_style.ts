@@ -34,7 +34,7 @@ export const SuccessHeader = styled.div`
 export const Succestext = styled.div`
   font-size: 1.0em;
   color: #333; /* Dark gray color for text */
-  text-align: left;
+  text-align: center;
   margin-left:8px;
   padding:0;
 `;

@@ -7,7 +7,6 @@ import { useLocation } from 'react-router-dom';
 import { Offcanvas } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
-
 interface HeaderSearchProps {}
 
 export const Header: React.FC<HeaderSearchProps> = () => {

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router-dom"; // Changed from "react-router" to "react-router-dom"
 import { Header } from '../../components/header/Header';
 import Footer from '../../components/footer/Footer';
 import { 
@@ -11,31 +11,35 @@ import {
 } from "./HomePage.styled";
 import {Storybook} from "../../types/Storybook.ts";
 
-// Define Audio type
+// Updated Audio interface to match API response
 interface Audio {
   objectId: string;
-  cover_image_url: string;
-  title: string;
+  cover_image_url?: string; // Made optional
+  Name: string; // Note capital N to match API
+  name?: string; // Optional lowercase for backward compatibility
 }
 
 // Book Component
 const BookComponent: React.FC<Storybook> = ({ storybook_id, cover_image_url, storybook_title }) => {
   const navigate = useNavigate();
   return (
-    <div style={{ textAlign: 'center' }} onClick={() => navigate(`/books/${storybook_id}`)}>
+    <div style={{ textAlign: 'center', cursor: 'pointer' }} onClick={() => navigate(`/books/${storybook_id}`)}>
       <BookThumbnail src={cover_image_url} alt={storybook_title} />
       <div>{storybook_title}</div>
     </div>
   );
 };
 
-// Audio Component
-const AudioComponent: React.FC<Audio> = ({ objectId, title}) => {
+// Updated Audio Component
+const AudioComponent: React.FC<Audio> = ({ objectId, cover_image_url, Name, name }) => {
   const navigate = useNavigate();
+  const displayName = Name || name || 'Untitled'; // Fallback to name or 'Untitled'
+  const imageSrc = cover_image_url || `/src/assets/audio${objectId}.png`;
+  
   return (
-    <div style={{ textAlign: 'center' }} onClick={() => navigate(`/audios/${objectId}`)}>
-      <BookThumbnail src={`/src/assets/audio${objectId}.png`} alt={title} />
-      <div>{title}</div>
+    <div style={{ textAlign: 'center', cursor: 'pointer' }} onClick={() => navigate(`/audios/${objectId}`)}>
+      <BookThumbnail src={imageSrc} alt={displayName} />
+      <div>{displayName}</div>
     </div>
   );
 };
@@ -43,6 +47,7 @@ const AudioComponent: React.FC<Audio> = ({ objectId, title}) => {
 const Home: React.FC = () => {
   const [books, setBooks] = useState<Storybook[]>([]);
   const [audios, setAudios] = useState<Audio[]>([]);
+
   useEffect(() => {
     const fetchBooks = async () => {
       try {
@@ -56,7 +61,7 @@ const Home: React.FC = () => {
         });
         const data = await response.json();
         if (data.results) {
-          setBooks(data.results.slice(0, 3)); // Take the first 3 books for display
+          setBooks(data.results.slice(0, 3));
         } else {
           console.error("Invalid data format:", data);
         }
@@ -80,8 +85,16 @@ const Home: React.FC = () => {
           },
         });
         const data = await response.json();
+        
         if (data.results) {
-          setAudios(data.results.slice(0, 3)); // Take the first 3 audios for display
+          // Map the API response to our Audio interface
+          const formattedAudios = data.results.map((audio: any) => ({
+            objectId: audio.objectId,
+            cover_image_url: audio.cover_image_url,
+            Name: audio.Name, // Using the capital N property from API
+            name: audio.name // Optional lowercase
+          }));
+          setAudios(formattedAudios.slice(0, 3));
         } else {
           console.error("Invalid data format:", data);
         }
@@ -89,7 +102,6 @@ const Home: React.FC = () => {
         console.error("Error fetching audios:", error);
       }
     };
-
 
     fetchAudios();
   }, []);
@@ -118,7 +130,13 @@ const Home: React.FC = () => {
         </SectionHeader>
         <div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap', gap: '20px' }}>
           {audios.map((audio) => (
-            <AudioComponent key={audio.objectId} {...audio} />
+            <AudioComponent 
+              key={audio.objectId} 
+              objectId={audio.objectId}
+              cover_image_url={audio.cover_image_url}
+              Name={audio.Name}
+              name={audio.name}
+            />
           ))}
         </div>
       </Section>

@@ -98,7 +98,7 @@ export const BookInfo = styled.div`
 
 export const ThumbnailContainer = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); 
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); 
   gap: 0; /* Remove gap between items */
   padding: 0; /* Remove padding */
   margin: 0; /* Remove margin */
@@ -108,7 +108,7 @@ export const ThumbnailContainer = styled.div`
 
 
 export const ThumbnailWrapper = styled.div`
-  flex: 0 0 auto;
+  flex: 0 0;
   width: 100px;
   border: none
   padding: 0;

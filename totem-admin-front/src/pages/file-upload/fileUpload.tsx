@@ -51,7 +51,7 @@ const FileUpload: React.FC = () => {
 
   const [bookTitle, setBookTitle] = useState<string>('');
   const [bookId, setBookId] = useState<string>('');
-  const [age, setAge] = useState<string>('0~2');
+  const [age, setAge] = useState<string>('');
   const [genres, setGenres] = useState([
     'Action Adventure',
     'Historical Fiction',
@@ -382,6 +382,19 @@ const FileUpload: React.FC = () => {
   };
 
   const handlePreview = async () => {
+    const isCreatedByValid = creators.length > 0 && creators.every(creator => creator.name !== '');
+    if (!bookTitle || !bookId || !age || !isCreatedByValid) {
+      alert('Please fill in all required fields');
+      setIsUploading(false);
+      return;
+    }
+
+    if (files.length === 0 || !coverImage) {
+      alert('Please add cover and content images');
+      setIsUploading(false);
+      return;
+    }
+
     console.log('Cover image state:', coverImage);
 
     if (!coverImage) {
@@ -519,6 +532,7 @@ const FileUpload: React.FC = () => {
                   width: window.innerWidth < 768 ? '100%' : '525px',
                 }}
               >
+                <option value="" disabled selected>Select Age</option>
                 <option value="0~2">0~2</option>
                 <option value="3~4">3~4</option>
                 <option value="5~6">5~6</option>

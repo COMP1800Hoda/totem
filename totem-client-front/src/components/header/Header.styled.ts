@@ -5,7 +5,7 @@ export const HeaderContainer = styled.header<{
   hideBorder?: boolean;
 }>`
   position: fixed;
-  z-index: 99;
+  z-index: 50;
   left: 0;
   top: 0;
   right: 0;

@@ -1,5 +1,4 @@
 import React from 'react';
-
 import { HeaderContainer, Inner } from './Header.styled.ts';
 interface HeaderSearchProps {}
 
