@@ -1,12 +1,19 @@
-FROM node:22
+FROM node:22 AS builder
 
-WORKDIR /totem-admin-front
+WORKDIR /app
 
-COPY ["package.json", "package-lock.json*", "./"]
-RUN npm install --production
+COPY package.json package-lock.json* ./
+RUN npm install
 
 COPY . .
 
-EXPOSE 3000
+RUN npm run build
 
-CMD ["npm", "run", "start"]
+# Stage 2: Serve the static files using a lightweight server (e.g., Nginx)
+FROM nginx:alpine
+
+COPY --from=builder /app/dist /usr/share/nginx/html
+
+EXPOSE 80
+
+CMD ["nginx", "-g", "daemon off;"]
