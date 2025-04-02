@@ -15,27 +15,35 @@ import AdminProfile from './pages/add-admin/ManageAdminDashboard.tsx';
 import Preview from './pages/preview/preview.tsx';
 import Success from './pages/success/success.tsx';
 import BookDetailsPage from './pages/book-details/BookDetailsPage.tsx';
-import EditBook from "./pages/edit-book/EditBook.tsx";
+import EditBook from './pages/edit-book/EditBook.tsx';
+
 const App: React.FC = () => {
   return (
     <Router>
       <Routes>
-        {/* done */}
+        {/* done JWT*/}
         <Route path="/" element={<Login />} />
+        {/* NOT done JWT*/}
         <Route path="/forgot-password" element={<ForgotPassword />} />
+        {/* NOT done JWT*/}
         <Route path="/confirm-page" element={<ConfirmPage />} />
+        {/* NOT done JWT*/}
         <Route path="/edit-password" element={<EditPassword />} />
-        {/* done */}
+        {/* done JWT*/}
         <Route path="/main" element={<HomePage />} />
-        {/* done */}
+        {/* done JWT*/}
         <Route path="/manage-books" element={<ManageBooks />} />
+        {/* NOT done JWT*/}
         <Route path="/edit-book/:id" element={<EditBook />} />
+        {/* NOT done JWT*/}
         <Route path="/books/:id" element={<BookDetailsPage />} />
-        {/* done */}
+        {/* done JWT*/}
         <Route path="/manage-admins" element={<AdminProfile />} />
-        {/* done */}
+        {/* done JWT */}
         <Route path="/add-book" element={<FileUpload />} />
+        {/* done JWT */}
         <Route path="/preview" element={<Preview />} />
+        {/* done JWT */}
         <Route path="/success" element={<Success />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
