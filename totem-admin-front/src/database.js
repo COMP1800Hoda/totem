@@ -21,6 +21,6 @@ Parse.initialize(
     "NFHym7RCYmwrHL2Ohqr7769mcUt66ikBF13liUdt"
 );
 
-Parse.serverURL = import.meta.env.VITE_SERVER_URL;
+Parse.serverURL = "https://parseapi.back4app.com/";
 
 export default Parse;
