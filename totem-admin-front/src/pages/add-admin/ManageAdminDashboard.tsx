@@ -184,7 +184,7 @@ const AdminProfile = () => {
         <AddAdminModal
           show={showAddModal}
           onClose={() => setShowAddModal(false)}
-          onAdminAdded={fetchAdmins}
+          onAdminAdded={fetchAdmins} // pass as param to refresh the admin table
         />
         {selectedAdmin && (
           <>
@@ -192,8 +192,8 @@ const AdminProfile = () => {
             <EditAdminModal
               show={showEditModal}
               onClose={() => setShowEditModal(false)}
-              admin={selectedAdmin}
-              onAdminUpdated={fetchAdmins}
+              admin={selectedAdmin} // pass the selected admin to the modal
+              onAdminUpdated={fetchAdmins} // pass as param to refresh the admin table
             />
           </>
         )}

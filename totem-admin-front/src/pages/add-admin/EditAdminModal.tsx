@@ -42,7 +42,7 @@ const EditAdminModal: React.FC<EditAdminModalProps> = ({
       adminToUpdate.set('admin_email', editedAdmin.email);
       adminToUpdate.set('admin_role', editedAdmin.role);
       await adminToUpdate.save();
-      onAdminUpdated();
+      onAdminUpdated(); // refresh the admin table
       onClose();
     } catch (error) {
       console.log('Error updating admin: ', error);
