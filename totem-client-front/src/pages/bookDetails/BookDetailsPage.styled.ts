@@ -79,11 +79,10 @@ export const BookMeta = styled.p`
 `;
 
 export const BookTags = styled.div`
-  display: flex;
-  gap: 0.5em;
 `;
 
 export const Tag = styled.span`
+  text-align: right;
   background: #ddd;
   padding: 0.25em 0.5em;
   border-radius: 0.2em;
