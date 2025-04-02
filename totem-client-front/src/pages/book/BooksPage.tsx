@@ -9,7 +9,7 @@ import {CreatedBy, Storybook} from "../../types/Storybook.ts";
 const BooksPage: React.FC = () => {
   const [layoutType, setLayoutType] = useState<'twoColumns' | 'threeColumns'>('threeColumns');
   const [books, setBooks] = useState<Storybook[]>([]);
-  const [limit] = useState(10);  // Limit set to 10 books initially
+  const [limit] = useState(12);  // Limit set to 10 books initially
   const [skip, setSkip] = useState(0);   // Start from the first book
   const [hasMore, setHasMore] = useState(true); // Track if there are more books to load
   const navigate = useNavigate();
@@ -57,8 +57,8 @@ const BooksPage: React.FC = () => {
       const response = await fetch(`https://parseapi.back4app.com/classes/storybook?limit=${limit}&skip=${nextSkip}`, {
         method: "GET",
         headers: {
-          "X-Parse-Application-Id": "XWNVzANvs7w6pYMl4fZWLCcikgXdMvCZhEnI48sH",
-          "X-Parse-REST-API-Key": "mRZK1BOLh5EIaOR9Ircc2OhX5OU28aidSsZAtyJP",
+          "X-Parse-Application-Id": import.meta.env.VITE_APP_ID,
+          "X-Parse-REST-API-Key": import.meta.env.VITE_RESTAPI_Key,
           "Content-Type": "application/json"
         }
       });

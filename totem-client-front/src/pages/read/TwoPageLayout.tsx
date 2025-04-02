@@ -106,10 +106,10 @@ export const TwoPageLayout: React.FC<TwoPageLayoutProps> = ({
       // Adding the missing required props
       className="flip-book"
       startZIndex={0}
-      autoSize={false}
+      autoSize={true}
       clickEventForward={false}
       useMouseEvents={true}
-      swipeDistance={10}
+      swipeDistance={10} 
     >
 
         {reversedPages.map((page, index) => (
