@@ -74,7 +74,7 @@ const Home: React.FC = () => {
               'X-Parse-Application-Id':
                 'XWNVzANvs7w6pYMl4fZWLCcikgXdMvCZhEnI48sH',
               'X-Parse-REST-API-Key':
-                'NFHym7RCYmwrHL2Ohqr7769mcUt66ikBF13liUdt',
+                'mRZK1BOLh5EIaOR9Ircc2OhX5OU28aidSsZAtyJP',
               'Content-Type': 'application/json',
             },
           }
