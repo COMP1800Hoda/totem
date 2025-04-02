@@ -6,6 +6,7 @@ import { Menu } from '../menu/Menu.tsx';
 import { useLocation } from 'react-router-dom';
 import { Offcanvas } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
+import {Link} from "react-router";
 interface HeaderSearchProps {}
 
 export const Header: React.FC<HeaderSearchProps> = () => {
@@ -27,9 +28,11 @@ export const Header: React.FC<HeaderSearchProps> = () => {
     <>
       <HeaderContainer hideBorder={false}>
         <Inner>
-          <h1 onClick={() => navigate('/main')} style={{ fontSize: 20 }}>
-            Totem
-          </h1>
+          <Link to={"/main"}>
+            <h1 onClick={() => navigate('/main')} style={{ fontSize: 20, cursor: 'pointer' }}>
+              Totem
+            </h1>
+          </Link>
           <IconMenu2
             color={COLORS.darkGray}
             size={24}
