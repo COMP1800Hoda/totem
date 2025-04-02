@@ -11,6 +11,6 @@ ENV NODE_OPTIONS="--max-old-space-size=4096"
 
 RUN npm run build  # Build the React frontend
 
-EXPOSE 3000
+EXPOSE 8080
 
 CMD ["node", "server.js"]
