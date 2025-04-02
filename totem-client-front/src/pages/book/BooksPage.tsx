@@ -76,7 +76,7 @@ const BooksPage: React.FC = () => {
     <BooksContainer>
       <Header />
       <div style={{ padding: '20px', marginTop: '80px', textAlign: 'center' }}>
-        <h1>This is the Books page.</h1>
+        <h1>Book Catalogue.</h1>
         <button
           onClick={toggleLayout}
           style={{ margin: '20px', padding: '10px 20px', cursor: 'pointer', color: COLORS.Dark, backgroundColor: COLORS.Lightest , borderRadius: '6px', border: `2px solid ${COLORS.Dark}`}}
