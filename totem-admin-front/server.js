@@ -7,6 +7,9 @@ import bcrypt from 'bcryptjs';
 import ParseConfig from './parseConfig.js'
 import jwt from 'jsonwebtoken';
 import checkAuth from './src/middlewares/checkAuth.js';
+
+import path from 'path'; // Import the 'path' module
+
 const app = express();
 const PORT = 3000;
 
@@ -111,6 +114,14 @@ app.use ('/success', checkAuth, (req,res) => {
     res.json({message:'You are logged in and allow to access success page', user: req.user});
 })
 
+// Serve static files from the 'dist' folder
+const __dirname = path.resolve(); // Get the current directory
+app.use(express.static(path.join(__dirname, 'dist')));
+
+// Catch-all route to serve index.html for SPA navigation
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'dist', 'index.html'));
+});
 
 app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
