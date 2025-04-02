@@ -17,10 +17,10 @@ import Parse from "parse/dist/parse.min.js";
  * because Vite.js automatically loads .env variables from .env files.
  */
 Parse.initialize(
-    "XWNVzANvs7w6pYMl4fZWLCcikgXdMvCZhEnI48sH",
-    "NFHym7RCYmwrHL2Ohqr7769mcUt66ikBF13liUdt"
+    import.meta.env.VITE_APP_ID,
+    import.meta.env.VITE_JS_KEY
 );
 
-Parse.serverURL = "https://parseapi.back4app.com/";
+Parse.serverURL = import.meta.env.VITE_SERVER_URL;
 
 export default Parse;

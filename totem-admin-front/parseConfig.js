@@ -12,10 +12,10 @@ import dotenv from 'dotenv';
 dotenv.config(); // Load env variables
 
 ParseConfig.initialize(
-    process.env.BACK4APP_APP_ID,
-    process.env.BACK4APP_JS_KEY
+    import.meta.env.VITE_APP_ID,
+    import.meta.env.VITE_JS_KEY
 );
 
-ParseConfig.serverURL = process.env.BACK4APP_SERVER_URL;
+ParseConfig.serverURL = import.meta.env.VITE_SERVER_URL;
 
 export default ParseConfig;
