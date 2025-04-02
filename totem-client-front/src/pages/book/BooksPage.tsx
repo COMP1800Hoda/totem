@@ -9,7 +9,7 @@ import {CreatedBy, Storybook} from "../../types/Storybook.ts";
 const BooksPage: React.FC = () => {
   const [layoutType, setLayoutType] = useState<'twoColumns' | 'threeColumns'>('threeColumns');
   const [books, setBooks] = useState<Storybook[]>([]);
-  const [limit] = useState(10);  // Limit set to 10 books initially
+  const [limit] = useState(12);  // Limit set to 10 books initially
   const [skip, setSkip] = useState(0);   // Start from the first book
   const [hasMore, setHasMore] = useState(true); // Track if there are more books to load
   const navigate = useNavigate();
