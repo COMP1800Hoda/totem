@@ -14,7 +14,7 @@ import { Storybook } from '../../types/Storybook.ts';
 // Updated Audio interface to match API response
 interface Audio {
   objectId: string;
-  cover_image_url?: string; // Made optional
+  cover_image_url?: any; // Made optional
   Name: string; // Note capital N to match API
   name?: string; // Optional lowercase for backward compatibility
 }
@@ -46,7 +46,15 @@ const AudioComponent: React.FC<Audio> = ({
 }) => {
   const navigate = useNavigate();
   const displayName = Name || name || 'Untitled'; // Fallback to name or 'Untitled'
-  const imageSrc = cover_image_url || `/assets/$audio${objectId}.png`;
+  // const imageSrc = cover_image_url || `/assets/$audio${objectId}.png`;
+  const [imageSrc, setImageSrc] = useState('');
+
+  useEffect(() => {
+    // Define audioImages within the useEffect hook
+    const audioImages = import.meta.glob('/assets/*.png', { eager: true });
+    const imageName = `assets/audio${objectId}.png`; // Adjust path and filename pattern as needed
+    setImageSrc(audioImages[imageName] || cover_image_url || '');
+  }, [objectId, cover_image_url]);
 
   console.log('imgSrc in HomePage', imageSrc);
   return (
