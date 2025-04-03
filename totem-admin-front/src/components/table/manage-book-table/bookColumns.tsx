@@ -68,7 +68,6 @@ export const bookColumns: ColumnDef<Storybook>[] = [
     header: 'Created By',
     size: 160,
     cell: (info) => {
-      console.log('created by', info.getValue())
       // @ts-ignore
       const authors = [...(info.getValue() || [])];
       if (authors.length == 0) {

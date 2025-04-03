@@ -30,7 +30,7 @@ import { MainTitle } from '../../components/text/MainTitle.tsx';
 import { deleteStorybook } from '../../api/deleteStorybook.ts';
 
 const BookPage: React.FC = () => {
-  const { id } = useParams<{ id: string }>();
+  const {id} = useParams<{ id: string }>();
   const [book, setBook] = useState<Storybook | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [deleting, setDeleting] = useState<boolean>(false);
@@ -102,9 +102,9 @@ const BookPage: React.FC = () => {
   if (loading || error || !book) {
     return (
       <div className="page">
-        <Header />
+        <Header/>
         <BookContainer>
-          {loading && <Spinner />}
+          {loading && <Spinner/>}
           {error && <p>{error}</p>}
           {!loading && !book && <p>Cannot find book</p>}
         </BookContainer>
@@ -112,12 +112,14 @@ const BookPage: React.FC = () => {
     );
   }
 
+
+
   return (
     <div className="page">
-      <Header />
+      <Header/>
       <BookContainer>
         <Container>
-          <MainTitle text="Book Details" />
+          <MainTitle text="Book Details"/>
           <FormGroup>
             <EditButton
               type="button"
@@ -126,7 +128,7 @@ const BookPage: React.FC = () => {
                 goToEditBook(book?.storybook_id)
               }}
             >
-              <IconPencil />
+              <IconPencil/>
               <span>Edit</span>
             </EditButton>
             <DeleteButton
@@ -137,12 +139,12 @@ const BookPage: React.FC = () => {
                 setShowConfirmModal(true);
               }}
             >
-              <IconTrash />
+              <IconTrash/>
               <span>Remove</span>
             </DeleteButton>
           </FormGroup>
-          <BookCard style={{ flexDirection: 'row-reverse' }}>
-            <BookCover src={book.cover_image_url} alt="Book Cover" />
+          <BookCard style={{flexDirection: 'row-reverse'}}>
+            <BookCover src={book.cover_image_url} alt="Book Cover"/>
             <BookDetails>
               <BookTitle>{book.storybook_title}</BookTitle>
               <BookMeta>Published: {book.published}</BookMeta>
@@ -210,13 +212,13 @@ const BookPage: React.FC = () => {
         </BootstrapModal.Header>
 
         <BootstrapModal.Body>
-          Are you sure you want to remove this? <br />
+          Are you sure you want to remove this? <br/>
           This action cannot be undone.
         </BootstrapModal.Body>
 
         <BootstrapModal.Footer>
           {deleting ? (
-            <Spinner />
+            <Spinner/>
           ) : (
             <>
               <Button
@@ -238,7 +240,7 @@ const BookPage: React.FC = () => {
         <Container>
           <Alert
             variant={alert.type}
-            onClose={() => setAlert({ ...alert, show: false })}
+            onClose={() => setAlert({...alert, show: false})}
             dismissible
           >
             {alert.message}
@@ -258,7 +260,7 @@ const BookPage: React.FC = () => {
           <BootstrapModal.Title>Success</BootstrapModal.Title>
         </BootstrapModal.Header>
         <BootstrapModal.Body>
-          Book deleted successfully. <br />
+          Book deleted successfully. <br/>
           You will be redirected to manage books page
         </BootstrapModal.Body>
       </BootstrapModal>
