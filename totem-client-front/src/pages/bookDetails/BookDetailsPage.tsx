@@ -76,7 +76,6 @@ const BookPage: React.FC = () => {
           <BookMeta>Language: {book.language}</BookMeta>
           <PublisherInfo>
             <p>Publisher: {book.publisher}</p>
-            <p>Contributed by: {book.contributed_by}</p>
           </PublisherInfo>
           {authors.length > 0 && (
             <AuthorInfo>
