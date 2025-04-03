@@ -41,6 +41,7 @@ const ForgotPassword = () => {
         setMessage('Password reset link sent. Check your email.');
         // navigate("/confirmPage");
       } else {
+        console.log('An error occured', response.statusText);
         setMessage('An error occured');
       }
       // navigate("/confirmPage");
