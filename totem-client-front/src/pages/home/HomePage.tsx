@@ -48,6 +48,7 @@ const AudioComponent: React.FC<Audio> = ({
   const displayName = Name || name || 'Untitled'; // Fallback to name or 'Untitled'
   const imageSrc = cover_image_url || `/assets/$audio${objectId}.png`;
 
+  console.log('imgSrc in HomePage', imageSrc);
   return (
     <div
       style={{ textAlign: 'center', cursor: 'pointer' }}
