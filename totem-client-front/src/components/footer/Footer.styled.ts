@@ -8,13 +8,12 @@ export const FooterContainer = styled.footer`
   bottom: 0;
   margin: 0;
   width: 100%;
-  height: 8vh; /* 5% of the viewport height */
+  height: 10vh; /* 5% of the viewport height */
   background-color: ${COLORS.Lightest};
   border-top: 0.05px solid ${COLORS.Light}; /* 0.1% of the viewport width */
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 1vh 0; /* Padding based on viewport height */
   padding-left: 0;
 `;
 
@@ -23,6 +22,7 @@ export const IconWrapper = styled.div`
   justify-content: space-between;
   width: 80vw; /* 80% of the viewport width */
   max-width: 40em; /* Limits the maximum width */
+  padding: 10% 0;
 `;
 
 export const IconStyle = styled.div`
