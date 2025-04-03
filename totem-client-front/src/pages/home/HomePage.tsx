@@ -52,8 +52,11 @@ const AudioComponent: React.FC<Audio> = ({
   useEffect(() => {
     // Define audioImages within the useEffect hook
     const audioImages = import.meta.glob('/assets/*.png', { eager: true });
+    console.log('audioImages', audioImages); // Log the imported images
     const imageName = `assets/audio${objectId}.png`; // Adjust path and filename pattern as needed
     setImageSrc(audioImages[imageName] || cover_image_url || '');
+    console.log('audioImages[imageName]', audioImages[imageName]); // Log the image source
+    console.log('cover_image_url', cover_image_url); // Log the cover image URL
   }, [objectId, cover_image_url]);
 
   console.log('imgSrc in HomePage', imageSrc);
