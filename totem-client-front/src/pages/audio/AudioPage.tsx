@@ -110,7 +110,8 @@ const AudioPage: React.FC = () => {
             <AudioItemComponent
               key={audio.objectId}
               src={
-                audio.cover_image_url || `/assets/audio${audio.objectId}.png`
+                audio.cover_image_url ||
+                `../../../public/assests/audio${audio.objectId}.png`
               }
               alt={audio.title}
               title={audio.title}
