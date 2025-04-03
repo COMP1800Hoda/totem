@@ -109,10 +109,7 @@ const AudioPage: React.FC = () => {
           {audios.map((audio) => (
             <AudioItemComponent
               key={audio.objectId}
-              src={
-                audio.cover_image_url ||
-                `../../../public/assets/audio${audio.objectId}.png`
-              }
+              src={audio.cover_image_url || `/assets/${audio.objectId}.png`}
               alt={audio.title}
               title={audio.title}
               name={audio.Name} // Using audio.Name to match API response

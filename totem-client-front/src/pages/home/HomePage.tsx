@@ -46,8 +46,7 @@ const AudioComponent: React.FC<Audio> = ({
 }) => {
   const navigate = useNavigate();
   const displayName = Name || name || 'Untitled'; // Fallback to name or 'Untitled'
-  const imageSrc =
-    cover_image_url || `../../../public/assets/audio${objectId}.png`;
+  const imageSrc = cover_image_url || `/assets/${objectId}.png`;
 
   return (
     <div
