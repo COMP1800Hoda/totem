@@ -3,10 +3,10 @@ import Parse from "parse/dist/parse.min.js";
 
 // Initialize with your Back4app keys
 Parse.initialize(
-    import.meta.env.VITE_APP_ID,
-    import.meta.env.VITE_JS_KEY
+    "XWNVzANvs7w6pYMl4fZWLCcikgXdMvCZhEnI48sH",
+    "NFHym7RCYmwrHL2Ohqr7769mcUt66ikBF13liUdt"
 );
 
-Parse.serverURL = import.meta.env.VITE_SERVER_URL;
+Parse.serverURL = "https://parseapi.back4app.com/";
 
 export default Parse;

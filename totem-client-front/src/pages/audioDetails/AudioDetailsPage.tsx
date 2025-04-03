@@ -1,8 +1,12 @@
-import React, { useEffect, useState } from "react";
-import { useParams } from "react-router";
-import { Header } from "../../components/header/Header";
-import Footer from "../../components/footer/Footer";
-import { PageContainer, AudioPlayer, BackButton} from "./AudioDetailsPage.styled";
+import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router';
+import { Header } from '../../components/header/Header';
+import Footer from '../../components/footer/Footer';
+import {
+  PageContainer,
+  AudioPlayer,
+  BackButton,
+} from './AudioDetailsPage.styled';
 
 interface Audio {
   objectId: string;
@@ -24,17 +28,19 @@ const AudioDetailsPage: React.FC = () => {
         const response = await fetch(
           `https://parseapi.back4app.com/classes/Audios/${id}`,
           {
-            method: "GET",
+            method: 'GET',
             headers: {
-              "X-Parse-Application-Id": import.meta.env.VITE_APP_ID,
-              "X-Parse-REST-API-Key": import.meta.env.VITE_RESTAPI_Key,
-              "Content-Type": "application/json",
+              'X-Parse-Application-Id':
+                'XWNVzANvs7w6pYMl4fZWLCcikgXdMvCZhEnI48sH',
+              'X-Parse-REST-API-Key':
+                'mRZK1BOLh5EIaOR9Ircc2OhX5OU28aidSsZAtyJP',
+              'Content-Type': 'application/json',
             },
           }
         );
 
         if (!response.ok) {
-          throw new Error("Failed to fetch audio details");
+          throw new Error('Failed to fetch audio details');
         }
 
         const data = await response.json();
@@ -46,7 +52,7 @@ const AudioDetailsPage: React.FC = () => {
           updatedAt: data.updatedAt,
         });
       } catch (error) {
-        setError("Error fetching audio details. Please try again.");
+        setError('Error fetching audio details. Please try again.');
       } finally {
         setLoading(false);
       }
@@ -60,23 +66,27 @@ const AudioDetailsPage: React.FC = () => {
   if (!audio) return <p>Audio not found.</p>;
 
   return (
-      <PageContainer>
+    <PageContainer>
       <Header />
       <BackButton onClick={() => window.history.back()}>&lt; Back</BackButton>
-        <h1>{audio.name}</h1>
-        <img src={`/src/assets/audio${audio.objectId}.png`} alt={audio.name} style={{ width: "25em" }} />
-        <p>Created At: {new Date(audio.createdAt).toLocaleString()}</p>
-        <p>Last Updated: {new Date(audio.updatedAt).toLocaleString()}</p>
-        {audio.audio_url ? (
-            <AudioPlayer controls>
-              <source src={audio.audio_url} type="audio/mpeg" />
-              Your browser does not support the audio element.
-            </AudioPlayer>
-        ) : (
-          <p>No audio file available.</p>
-        )}
-        <Footer />
-      </PageContainer>
+      <h1>{audio.name}</h1>
+      <img
+        src={`/src/assets/audio${audio.objectId}.png`}
+        alt={audio.name}
+        style={{ width: '25em' }}
+      />
+      <p>Created At: {new Date(audio.createdAt).toLocaleString()}</p>
+      <p>Last Updated: {new Date(audio.updatedAt).toLocaleString()}</p>
+      {audio.audio_url ? (
+        <AudioPlayer controls>
+          <source src={audio.audio_url} type="audio/mpeg" />
+          Your browser does not support the audio element.
+        </AudioPlayer>
+      ) : (
+        <p>No audio file available.</p>
+      )}
+      <Footer />
+    </PageContainer>
   );
 };
 
