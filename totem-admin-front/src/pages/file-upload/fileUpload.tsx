@@ -84,7 +84,7 @@ const FileUpload: React.FC = () => {
 
   useEffect(() => {
     const token = getToken(); // Get the token from local storage
-    fetch('https://totemchildrenstorybookadmin-1g9u4lon.b4a.run/add-book', {
+    fetch('https://totemadmin-fkrivn3y.b4a.run/add-book', {
       method: 'GET',
       headers: {
         Authorization: `Bearer ${token}`,
@@ -382,7 +382,8 @@ const FileUpload: React.FC = () => {
   };
 
   const handlePreview = async () => {
-    const isCreatedByValid = creators.length > 0 && creators.every(creator => creator.name !== '');
+    const isCreatedByValid =
+      creators.length > 0 && creators.every((creator) => creator.name !== '');
     if (!bookTitle || !bookId || !age || !isCreatedByValid) {
       alert('Please fill in all required fields');
       setIsUploading(false);
@@ -532,7 +533,9 @@ const FileUpload: React.FC = () => {
                   width: window.innerWidth < 768 ? '100%' : '525px',
                 }}
               >
-                <option value="" disabled selected>Select Age</option>
+                <option value="" disabled selected>
+                  Select Age
+                </option>
                 <option value="0~2">0~2</option>
                 <option value="3~4">3~4</option>
                 <option value="5~6">5~6</option>

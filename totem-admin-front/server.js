@@ -37,7 +37,8 @@ app.post('/reset-password-request', async(req, res) => {
     // change this based on the port your front end is running on if you test it locally
     // const resetLink = `http://localhost:5173/edit-password?token=${token}}`;
 
-    const resetLink = `https://totemchildrenstorybookadmin-1g9u4lon.b4a.run/edit-password?token=${token}}`;
+    const resetLink = `https://totemadmin-fkrivn3y.b4a.run/edit-password?token=${token}}`;
+    
     console.log("reset link: ", resetLink);
     const emailResponse = await sendResetEmail(email, resetLink);
 

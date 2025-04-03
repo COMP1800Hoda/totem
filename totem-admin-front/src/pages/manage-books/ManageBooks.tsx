@@ -27,7 +27,7 @@ const ManageBooks = () => {
 
     // Log the token only once when the component is mounted
 
-    fetch('https://totemchildrenstorybookadmin-1g9u4lon.b4a.run/manage-books', {
+    fetch('https://totemadmin-fkrivn3y.b4a.run/manage-books', {
       method: 'GET',
       headers: {
         Authorization: `Bearer ${token}`,

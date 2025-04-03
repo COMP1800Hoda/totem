@@ -26,7 +26,7 @@ const ForgotPassword = () => {
 
       // change this based on the port
       const response = await fetch(
-        'https://totemchildrenstorybookadmin-1g9u4lon.b4a.run/reset-password-request',
+        'https://totemadmin-fkrivn3y.b4a.run/reset-password-request',
         // 'http://localhost:8080/reset-password-request',
         {
           method: 'POST',
