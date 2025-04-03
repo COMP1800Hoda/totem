@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom'; // Changed from "react-router" to "react-router-dom"
+import { Link, useNavigate } from 'react-router';
 import { Header } from '../../components/header/Header';
 import Footer from '../../components/footer/Footer';
 import {
@@ -11,12 +11,11 @@ import {
 } from './HomePage.styled';
 import { Storybook } from '../../types/Storybook.ts';
 
-// Updated Audio interface to match API response
+// Define Audio type
 interface Audio {
   objectId: string;
-  cover_image_url?: string; // Made optional
-  Name: string; // Note capital N to match API
-  name?: string; // Optional lowercase for backward compatibility
+  cover_image_url: string;
+  title: string;
 }
 
 // Book Component
@@ -28,7 +27,7 @@ const BookComponent: React.FC<Storybook> = ({
   const navigate = useNavigate();
   return (
     <div
-      style={{ textAlign: 'center', cursor: 'pointer' }}
+      style={{ textAlign: 'center' }}
       onClick={() => navigate(`/books/${storybook_id}`)}
     >
       <BookThumbnail src={cover_image_url} alt={storybook_title} />
@@ -37,24 +36,16 @@ const BookComponent: React.FC<Storybook> = ({
   );
 };
 
-// Updated Audio Component
-const AudioComponent: React.FC<Audio> = ({
-  objectId,
-  cover_image_url,
-  Name,
-  name,
-}) => {
+// Audio Component
+const AudioComponent: React.FC<Audio> = ({ objectId, title }) => {
   const navigate = useNavigate();
-  const displayName = Name || name || 'Untitled'; // Fallback to name or 'Untitled'
-  const imageSrc = cover_image_url || `/src/assets/audio${objectId}.png`;
-
   return (
     <div
-      style={{ textAlign: 'center', cursor: 'pointer' }}
+      style={{ textAlign: 'center' }}
       onClick={() => navigate(`/audios/${objectId}`)}
     >
-      <BookThumbnail src={imageSrc} alt={displayName} />
-      <div>{displayName}</div>
+      <BookThumbnail src={`/assets/audio${objectId}.png`} alt={title} />
+      <div>{title}</div>
     </div>
   );
 };
@@ -62,7 +53,6 @@ const AudioComponent: React.FC<Audio> = ({
 const Home: React.FC = () => {
   const [books, setBooks] = useState<Storybook[]>([]);
   const [audios, setAudios] = useState<Audio[]>([]);
-
   useEffect(() => {
     const fetchBooks = async () => {
       try {
@@ -71,17 +61,15 @@ const Home: React.FC = () => {
           {
             method: 'GET',
             headers: {
-              'X-Parse-Application-Id':
-                'XWNVzANvs7w6pYMl4fZWLCcikgXdMvCZhEnI48sH',
-              'X-Parse-REST-API-Key':
-                'mRZK1BOLh5EIaOR9Ircc2OhX5OU28aidSsZAtyJP',
+              'X-Parse-Application-Id': import.meta.env.VITE_APP_ID,
+              'X-Parse-REST-API-Key': import.meta.env.VITE_RESTAPI_Key,
               'Content-Type': 'application/json',
             },
           }
         );
         const data = await response.json();
         if (data.results) {
-          setBooks(data.results.slice(0, 3));
+          setBooks(data.results.slice(0, 3)); // Take the first 3 books for display
         } else {
           console.error('Invalid data format:', data);
         }
@@ -101,25 +89,15 @@ const Home: React.FC = () => {
           {
             method: 'GET',
             headers: {
-              'X-Parse-Application-Id':
-                'XWNVzANvs7w6pYMl4fZWLCcikgXdMvCZhEnI48sH',
-              'X-Parse-REST-API-Key':
-                'mRZK1BOLh5EIaOR9Ircc2OhX5OU28aidSsZAtyJP',
+              'X-Parse-Application-Id': import.meta.env.VITE_APP_ID,
+              'X-Parse-REST-API-Key': import.meta.env.VITE_RESTAPI_Key,
               'Content-Type': 'application/json',
             },
           }
         );
         const data = await response.json();
-
         if (data.results) {
-          // Map the API response to our Audio interface
-          const formattedAudios = data.results.map((audio: any) => ({
-            objectId: audio.objectId,
-            cover_image_url: audio.cover_image_url,
-            Name: audio.Name, // Using the capital N property from API
-            name: audio.name, // Optional lowercase
-          }));
-          setAudios(formattedAudios.slice(0, 3));
+          setAudios(data.results.slice(0, 3)); // Take the first 3 audios for display
         } else {
           console.error('Invalid data format:', data);
         }
@@ -169,13 +147,7 @@ const Home: React.FC = () => {
           }}
         >
           {audios.map((audio) => (
-            <AudioComponent
-              key={audio.objectId}
-              objectId={audio.objectId}
-              cover_image_url={audio.cover_image_url}
-              Name={audio.Name}
-              name={audio.name}
-            />
+            <AudioComponent key={audio.objectId} {...audio} />
           ))}
         </div>
       </Section>
