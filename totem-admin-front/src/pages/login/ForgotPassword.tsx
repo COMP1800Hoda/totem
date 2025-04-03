@@ -38,7 +38,9 @@ const ForgotPassword = () => {
       );
 
       if (response.ok) {
-        setMessage('Password reset link sent. Check your email.');
+        setMessage(
+          'Password reset link already sent. Please check your email.'
+        );
         // navigate("/confirmPage");
       } else {
         setMessage('An error occured');
