@@ -1,6 +1,6 @@
-import React, { useRef, useEffect } from "react";
-import HTMLFlipBook from "react-pageflip";
-import { Page } from "./BookTypes";
+import React, { useRef, useEffect } from 'react';
+import HTMLFlipBook from 'react-pageflip';
+import { Page } from './BookTypes';
 
 interface TwoPageLayoutProps {
   pages: Page[];
@@ -45,23 +45,23 @@ export const TwoPageLayout: React.FC<TwoPageLayoutProps> = ({
   return (
     <div
       style={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        height: "100vh",
-        backgroundColor: "#f0f0f0",
-        position: "relative",
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '100vh',
+        backgroundColor: '#f0f0f0',
+        position: 'relative',
       }}
       onClick={onPageClick}
     >
       <div
         style={{
-          position: "absolute",
+          position: 'absolute',
           left: 0,
           top: 0,
-          width: "25%",
-          height: "100%",
-          cursor: "pointer",
+          width: '25%',
+          height: '100%',
+          cursor: 'pointer',
           zIndex: 10,
         }}
         onClick={handleFlipNext}
@@ -69,12 +69,12 @@ export const TwoPageLayout: React.FC<TwoPageLayoutProps> = ({
 
       <div
         style={{
-          position: "absolute",
+          position: 'absolute',
           right: 0,
           top: 0,
-          width: "25%",
-          height: "100%",
-          cursor: "pointer",
+          width: '25%',
+          height: '100%',
+          cursor: 'pointer',
           zIndex: 10,
         }}
         onClick={handleFlipPrev}
@@ -106,11 +106,12 @@ export const TwoPageLayout: React.FC<TwoPageLayoutProps> = ({
       // Adding the missing required props
       className="flip-book"
       startZIndex={0}
-      autoSize={false}
+      autoSize={true}
       clickEventForward={false}
       useMouseEvents={true}
-      swipeDistance={10}
+      swipeDistance={10} 
     >
+
         {reversedPages.map((page, index) => (
           <div key={`page-${index}`} className="page">
             <img

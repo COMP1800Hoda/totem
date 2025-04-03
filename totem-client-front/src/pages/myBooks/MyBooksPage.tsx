@@ -16,8 +16,9 @@ const MyBooksPage: React.FC = () => {
     'threeColumns'
   );
   const [books, setBooks] = useState<Storybook[]>([]);
-  const [limit] = useState(10); // Limit set to 10 books initially
-  const [skip, setSkip] = useState(0); // Start from the first book
+  
+  const [limit] = useState(12);  // Limit set to 10 books initially
+  const [skip, setSkip] = useState(0);   // Start from the first book
   const [hasMore, setHasMore] = useState(true); // Track if there are more books to load
   const navigate = useNavigate();
 

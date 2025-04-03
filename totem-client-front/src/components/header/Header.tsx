@@ -1,8 +1,5 @@
 import React from 'react';
-// import { IconSearch } from '@tabler/icons-react';
-
 import { HeaderContainer, Inner } from './Header.styled.ts';
-
 interface HeaderSearchProps {}
 
 export const Header: React.FC<HeaderSearchProps> = ({}) => {

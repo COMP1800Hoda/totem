@@ -4,9 +4,16 @@ import { Container } from '../Container.tsx';
 import { MenuItem, MenuItemTitle } from './Menu.styled.ts';
 import { MenuSubItem } from './MenuSubItem.tsx';
 
-interface MenuProps {}
+/**
+ * Add isSuperAdmin prop to determine if the user is a super admin.
+ * If true, show the Manage Admins menu item.
+ * @type {boolean}
+ */
+interface MenuProps {
+  isSuperAdmin?: boolean;
+}
 
-export const Menu: React.FC<MenuProps> = () => {
+export const Menu: React.FC<MenuProps> = ({ isSuperAdmin }) => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -26,8 +33,15 @@ export const Menu: React.FC<MenuProps> = () => {
     {
       title: 'User Management',
       links: [
-        { name: 'Manage Users', path: '/manage-users' },
-        { name: 'Manage Admins', path: '/manage-admins' },
+        /**
+         * The Manage Users menu item is always included.
+         * The Manage Admins menu item is conditionally included based on the isSuperAdmin prop.
+         * If isSuperAdmin is true, the Manage Admins menu item will be displayed.
+         */
+        { name: 'Manage Users', path: '/manage-users' }, // Always included
+        ...(isSuperAdmin
+          ? [{ name: 'Manage Admins', path: '/manage-admins' }]
+          : []), // Conditionally included
       ],
     },
     {

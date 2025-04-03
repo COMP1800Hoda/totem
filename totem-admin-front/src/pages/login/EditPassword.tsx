@@ -3,22 +3,24 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import React, { useState, useEffect } from 'react';
 import Parse from '../../database';
 import bcrypt from 'bcryptjs';
+import { jwtDecode } from 'jwt-decode';
 
 const EditPassword = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState<string | ''>('');
   const [message, setMessage] = useState('');
   const [success, setSuccess] = useState(false);
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
-    const emailFromURL = params.get('email');
+    const token = params.get('token');
+    const emailFromURL: any = token ? jwtDecode(token) : null;
     console.log('Email from URL:', emailFromURL);
     if (emailFromURL) {
-      setEmail(emailFromURL);
+      setEmail(emailFromURL.email);
     }
   }, [location]);
 
