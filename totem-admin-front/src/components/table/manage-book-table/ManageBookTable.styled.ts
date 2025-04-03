@@ -4,6 +4,10 @@ export const TableContainer = styled.div`
   width: 100vw;
   height: calc(100vh - 222px);
   overflow: scroll;
+  
+  .authors {
+      
+  }
 `
 
 export const StyledManageBookTable = styled.table`

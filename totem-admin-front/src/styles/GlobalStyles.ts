@@ -123,6 +123,18 @@ const GlobalStyles = createGlobalStyle`
         //pointer-events: none !important;
         cursor: not-allowed !important;
     }
+    
+    .created_by{
+        display: block;
+        max-width: 100%;
+        padding: 0 4px;
+        direction: rtl;
+        word-break: break-all;
+        text-align: center;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+    }
 `;
 
 

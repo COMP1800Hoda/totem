@@ -1,5 +1,5 @@
-import { ColumnDef } from '@tanstack/react-table';
-import { Storybook } from '../../../types/Storybook.ts';
+import {ColumnDef} from '@tanstack/react-table';
+import {Storybook} from '../../../types/Storybook.ts';
 
 export const bookColumns: ColumnDef<Storybook>[] = [
   {
@@ -21,7 +21,7 @@ export const bookColumns: ColumnDef<Storybook>[] = [
       <img
         src={info.getValue() as string}
         alt="Cover"
-        style={{ width: '100px', height: 'auto' }}
+        style={{width: '100px', height: 'auto'}}
       />
     ),
   },
@@ -64,10 +64,23 @@ export const bookColumns: ColumnDef<Storybook>[] = [
     cell: (info) => <span>{info.getValue() as string}</span>,
   },
   {
-    accessorKey: 'contributed_by',
-    header: 'Contributed By',
+    accessorKey: 'created_by',
+    header: 'Created By',
     size: 160,
-    cell: (info) => <span className={"rtl"}>{info.getValue() as string}</span>,
+    cell: (info) => {
+      console.log('created by', info.getValue())
+      // @ts-ignore
+      const authors = [...(info.getValue() || [])];
+      if (authors.length == 0) {
+        return (<span>N/A</span>)
+      }
+      const names = authors.map(author=>author.name);
+      const names_text = names.join(', ')
+      return (
+        <span className={"rtl created_by"}>
+          {names_text}
+        </span>)
+    },
   },
   {
     accessorKey: 'paid_storybook',
