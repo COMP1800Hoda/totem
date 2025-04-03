@@ -111,7 +111,7 @@ const MyAudioPage: React.FC = () => {
               key={audio.objectId}
               src={
                 audio.cover_image_url ||
-                `../../../public/assests/audio${audio.objectId}.png`
+                `../../../public/assets/audio${audio.objectId}.png`
               }
               alt={audio.title}
               title={audio.title}
