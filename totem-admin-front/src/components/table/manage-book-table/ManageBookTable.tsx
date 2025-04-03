@@ -57,7 +57,10 @@ export const ManageBookTable: React.FC = () => {
   useEffect(() => {
     const getTotalCount = async () => {
       try {
-        const count = await fetchStorybookCount(searchResultType, searchResultKeyword);
+        let type = searchResultType;
+        if (type === 'created_by')
+          type = 'created_by_names'
+        const count = await fetchStorybookCount(type, searchResultKeyword);
         setTotalStorybooks(count);
       } catch (error) {
         console.error("Error fetching total storybook count:", error);
