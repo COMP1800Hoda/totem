@@ -86,7 +86,7 @@ export const BottomNavButton = styled.button`
   font-size: 1em;
   font-weight: bold;
   cursor: pointer;
-  padding: 0.75em 1.5em;
+  padding: 0.5em 1em;
   border-radius: 0.75em;
   transition: all 0.2s ease-in-out;
   box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.2); /*  Raised shadow */
