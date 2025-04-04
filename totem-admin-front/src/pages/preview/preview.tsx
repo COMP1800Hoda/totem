@@ -51,7 +51,7 @@ const PreviewPage: React.FC = () => {
 
   useEffect(() => {
     const token = getToken(); // Get the token from local storage
-    fetch('https://totemchildrenstorybookadmin-1g9u4lon.b4a.run/preview', {
+    fetch('https://adminfinaldeployment-9gry1pfp.b4a.run/preview', {
       method: 'GET',
       headers: {
         Authorization: `Bearer ${token}`,
