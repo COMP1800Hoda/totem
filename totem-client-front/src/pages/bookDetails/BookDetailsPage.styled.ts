@@ -153,7 +153,4 @@ export const ShowMoreButton = styled.button`
 `;
 
 export const FooterWrapper = styled.footer`
-  & > * {
-    margin: 0 -1em; /* Apply negative margin to all direct children */
-  }
 `;
