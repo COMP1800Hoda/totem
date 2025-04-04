@@ -8,8 +8,9 @@ import {
   Padding,
   SectionHeader,
   BookThumbnail,
-} from './HomePage.styled';
-import { Storybook } from '../../types/Storybook.ts';
+  AudioThumbnail
+} from "./HomePage.styled";
+import {Storybook} from "../../types/Storybook.ts";
 
 // Updated Audio interface to match API response
 interface Audio {
@@ -27,10 +28,7 @@ const BookComponent: React.FC<Storybook> = ({
 }) => {
   const navigate = useNavigate();
   return (
-    <div
-      style={{ textAlign: 'center', cursor: 'pointer' }}
-      onClick={() => navigate(`/books/${storybook_id}`)}
-    >
+    <div style={{ textAlign: 'center', cursor: 'pointer' }} onClick={() => navigate(`/books/${storybook_id}`, { state: { from: 'home' } })}>
       <BookThumbnail src={cover_image_url} alt={storybook_title} />
       <div>{storybook_title}</div>
     </div>
@@ -61,11 +59,8 @@ const AudioComponent: React.FC<Audio> = ({
 
   console.log('imgSrc in HomePage', imageSrc);
   return (
-    <div
-      style={{ textAlign: 'center', cursor: 'pointer' }}
-      onClick={() => navigate(`/audios/${objectId}`)}
-    >
-      <BookThumbnail src={imageSrc} alt={displayName} />
+    <div style={{ textAlign: 'center', cursor: 'pointer' }} onClick={() => navigate(`/audios/${objectId}`)}>
+      <AudioThumbnail src={imageSrc} alt={displayName} />
       <div>{displayName}</div>
     </div>
   );
@@ -153,14 +148,7 @@ const Home: React.FC = () => {
           <Link to="/my-books">See All</Link>
           <h2>Recent Books</h2>
         </SectionHeader>
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'center',
-            flexWrap: 'wrap',
-            gap: '20px',
-          }}
-        >
+        <div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap', gap: '1.25em' }}>
           {books.map((book) => (
             <BookComponent key={book.storybook_id} {...book} />
           ))}
@@ -172,14 +160,7 @@ const Home: React.FC = () => {
           <Link to="/my-audio">See All</Link>
           <h2>Recent Audio</h2>
         </SectionHeader>
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'center',
-            flexWrap: 'wrap',
-            gap: '20px',
-          }}
-        >
+        <div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap', gap: '1.25em' }}>
           {audios.map((audio) => (
             <AudioComponent
               key={audio.objectId}

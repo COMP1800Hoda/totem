@@ -16,10 +16,11 @@ export const HeaderContainer = styled.header<{
           hideBorder
                   ? 'none'
                   : '1px solid ${COLORS.Light}'};
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
 `;
 
 export const Inner = styled.div`
-  height: 3em;
+  height: 100%;
   display: flex;
   justify-content: flex-end;
   align-items: center;

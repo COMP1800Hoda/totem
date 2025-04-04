@@ -69,24 +69,20 @@ const AudioDetailsPage: React.FC = () => {
     <PageContainer>
       <Header />
       <BackButton onClick={() => window.history.back()}>&lt; Back</BackButton>
-      <h1>{audio.name}</h1>
-      <img
-        src={`/src/assets/audio${audio.objectId}.png`}
-        alt={audio.name}
-        style={{ width: '25em' }}
-      />
-      <p>Created At: {new Date(audio.createdAt).toLocaleString()}</p>
-      <p>Last Updated: {new Date(audio.updatedAt).toLocaleString()}</p>
-      {audio.audio_url ? (
-        <AudioPlayer controls>
-          <source src={audio.audio_url} type="audio/mpeg" />
-          Your browser does not support the audio element.
-        </AudioPlayer>
-      ) : (
-        <p>No audio file available.</p>
-      )}
-      <Footer />
-    </PageContainer>
+        <h1>{audio.name}</h1>
+        <img src={`/src/assets/audio${audio.objectId}.png`} alt={audio.name} style={{ width: "15em" }} />
+        <p>Created At: {new Date(audio.createdAt).toLocaleString()}</p>
+        <p>Last Updated: {new Date(audio.updatedAt).toLocaleString()}</p>
+        {audio.audio_url ? (
+            <AudioPlayer controls>
+              <source src={audio.audio_url} type="audio/mpeg" />
+              Your browser does not support the audio element.
+            </AudioPlayer>
+        ) : (
+          <p>No audio file available.</p>
+        )}
+        <Footer />
+      </PageContainer>
   );
 };
 

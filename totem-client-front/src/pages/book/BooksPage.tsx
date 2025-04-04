@@ -60,7 +60,7 @@ const BooksPage: React.FC = () => {
 
   // Navigate to MyBooks page for a specific book
   const goToBook = (storybook_id: string) => {
-    navigate(`/books/${storybook_id}`);
+    navigate(`/books/${storybook_id}`, { state: { from: 'books' } });
   };
 
   // Load more books when the button is clicked
@@ -130,27 +130,19 @@ const BooksPage: React.FC = () => {
           </div>
         ))}
       </BookGrid>
-
       {/* Load More button */}
-      {hasMore && (
+      {hasMore ? (
         // You can modify the styles of the button container to ensure it's positioned properly and not overlapped by the footer.
-        <div
-          style={{ textAlign: 'center', margin: '20px', marginBottom: '100px' }}
+      <div style={{ textAlign: 'center', margin: '1.25em', marginBottom: '6.5em' }}>
+        <button
+          onClick={loadMoreBooks}
+          style={{ padding: '0.75em 1.25em', cursor: 'pointer', color: COLORS.Dark, backgroundColor: COLORS.Lightest , borderRadius: '6px', border: `2px solid ${COLORS.Dark}` }}
         >
-          <button
-            onClick={loadMoreBooks}
-            style={{
-              padding: '10px 20px',
-              cursor: 'pointer',
-              color: COLORS.Dark,
-              backgroundColor: COLORS.Lightest,
-              borderRadius: '6px',
-              border: `2px solid ${COLORS.Dark}`,
-            }}
-          >
-            Load More
-          </button>
-        </div>
+          Load More
+        </button>
+      </div>
+      ) : (
+        <div style={{ height: '3em' }} /> 
       )}
 
       <Footer />

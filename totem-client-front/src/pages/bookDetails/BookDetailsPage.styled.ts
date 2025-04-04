@@ -15,7 +15,16 @@ export const BookContainer = styled.div`
     flex: 1;
   }
 `;
-
+export const BookTwoContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: space-between;
+  gap: 1em;
+  padding: 1em;
+  width: 100%;
+  max-width: 40em;
+  margin: 0 auto; /* Center the container */
+`;
 export const BackButton = styled.button`
   display: flex;
   align-items: center;
@@ -30,20 +39,6 @@ export const BackButton = styled.button`
   font-size: 1em;
   border-radius: 0.25em;
   transition: background-color 0.3s ease, color 0.3s ease;
-
-  &:hover {
-    background-color: #f0f0f0; // Light gray background on hover
-    color: #000; // Darker text on hover
-  }
-
-  &:active {
-    background-color: ${COLORS.Lightest}; // Slightly darker background on click
-  }
-
-  &:focus {
-    outline: none; // Remove default focus outline
-    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.5); // Add a custom focus outline
-  }
 `;
 
 export const BookCard = styled.div`
@@ -54,10 +49,11 @@ export const BookCard = styled.div`
 `;
 
 export const BookCover = styled.img`
-  margin-top: 0.8em;
+  margin-top: 0.5em;
   width: 7.5em;
-  height: 13.5em;
-  border-radius: 0.5em;
+  height: 12.5em;
+  border-radius: 1em;
+  object-fit: contain;
 `;
 
 export const BookDetails = styled.div`
@@ -93,12 +89,15 @@ export const Tag = styled.span`
 `;
 
 export const ReadButton = styled.button`
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: 100%;
   margin-top: 1em;
   background: ${COLORS.Light};
   color: ${COLORS.Darkest};
   padding: 0.6em;
-  border: 0.5px solid ${COLORS.Darkest}; 
+  border: 0.05em solid ${COLORS.Darkest}; 
   border-radius: 0.5em;
   cursor: pointer;
 `;

@@ -93,19 +93,11 @@ const MyBooksPage: React.FC = () => {
   return (
     <MyBooksContainer>
       <Header />
-      <div style={{ padding: '20px', marginTop: '80px', textAlign: 'center' }}>
+      <div style={{ padding: '1.25em', marginTop: '5em', textAlign: 'center' }}>
         <h1>Recently opened books.</h1>
         <button
           onClick={toggleLayout}
-          style={{
-            margin: '20px',
-            padding: '10px 20px',
-            cursor: 'pointer',
-            color: COLORS.Dark,
-            backgroundColor: COLORS.Lightest,
-            borderRadius: '6px',
-            border: `2px solid ${COLORS.Dark}`,
-          }}
+          style={{ margin: '1.25em', padding: '0.75em 1.25em', cursor: 'pointer', color: COLORS.Dark, backgroundColor: COLORS.Lightest , borderRadius: '6px', border: `2px solid ${COLORS.Dark}`}}
         >
           Toggle {layoutType === 'threeColumns' ? 'Two' : 'Three'} Columns
         </button>
@@ -136,27 +128,19 @@ const MyBooksPage: React.FC = () => {
       </BookGrid>
 
       {/* Load More button */}
-      {hasMore && (
-        // You can modify the styles of the button container to ensure it's positioned properly and not overlapped by the footer.
-        <div
-          style={{ textAlign: 'center', margin: '20px', marginBottom: '100px' }}
-        >
-          <button
-            onClick={loadMoreBooks}
-            style={{
-              padding: '10px 20px',
-              cursor: 'pointer',
-              color: COLORS.Dark,
-              backgroundColor: COLORS.Lightest,
-              borderRadius: '6px',
-              border: `2px solid ${COLORS.Dark}`,
-            }}
-          >
-            Load More
-          </button>
-        </div>
+      {hasMore ? (
+// You can modify the styles of the button container to ensure it's positioned properly and not overlapped by the footer.
+<div style={{ textAlign: 'center', margin: '1.25em', marginBottom: '6.5em' }}>
+  <button
+    onClick={loadMoreBooks}
+    style={{ padding: '0.75em 1.25em', cursor: 'pointer', color: COLORS.Dark, backgroundColor: COLORS.Lightest , borderRadius: '6px', border: `2px solid ${COLORS.Dark}` }}
+  >
+    Load More
+  </button>
+</div>
+      ) : (
+        <div style={{ height: '3em' }} /> 
       )}
-
       <Footer />
     </MyBooksContainer>
   );

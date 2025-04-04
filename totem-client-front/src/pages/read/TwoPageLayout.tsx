@@ -45,10 +45,12 @@ export const TwoPageLayout: React.FC<TwoPageLayoutProps> = ({
   return (
     <div
       style={{
+        top: '-1.5em',
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        height: '100vh',
+        height: '100%',
+        width: '90%',
         backgroundColor: '#f0f0f0',
         position: 'relative',
       }}
@@ -59,7 +61,7 @@ export const TwoPageLayout: React.FC<TwoPageLayoutProps> = ({
           position: 'absolute',
           left: 0,
           top: 0,
-          width: '25%',
+          width: '30%',
           height: '100%',
           cursor: 'pointer',
           zIndex: 10,
@@ -72,7 +74,7 @@ export const TwoPageLayout: React.FC<TwoPageLayoutProps> = ({
           position: 'absolute',
           right: 0,
           top: 0,
-          width: '25%',
+          width: '30%',
           height: '100%',
           cursor: 'pointer',
           zIndex: 10,
@@ -82,13 +84,13 @@ export const TwoPageLayout: React.FC<TwoPageLayoutProps> = ({
 
     <HTMLFlipBook
       ref={flipBook}
-      width={500}
-      height={700}
+      width={450}
+      height={550}
       size="stretch"
-      minWidth={550}
-      maxWidth={1100}
-      minHeight={700}
-      maxHeight={1400}
+      minWidth={350}
+      maxWidth={1000}
+      minHeight={500}
+      maxHeight={1500}
       maxShadowOpacity={0.5}
       showCover={true}
       mobileScrollSupport={true}
@@ -99,7 +101,7 @@ export const TwoPageLayout: React.FC<TwoPageLayoutProps> = ({
       usePortrait={false}
       startPage={pages.length - currentPage}
       disableFlipByClick={true}
-      flippingTime={450}
+      flippingTime={300}
       style={{ margin: "0 auto" }}
       drawShadow={true}
       showPageCorners={false}
@@ -120,7 +122,6 @@ export const TwoPageLayout: React.FC<TwoPageLayoutProps> = ({
               style={{
                 width: "100%",
                 height: "100%",
-                objectFit: "contain",
               }}
             />
           </div>

@@ -115,6 +115,7 @@ html, body {
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
+  direction: rtl; 
 }
 
 

@@ -33,6 +33,9 @@ export async function fetchStorybooks(
           console.warn('Invalid createdAt format. Expected MM/DD/YY');
           return [];
         }
+      } else if (searchType === 'created_by') {
+        // search created_by_names instead because Parse DB doesn't support object type array search
+        query.matches('created_by_names', searchKeyword, 'i');
       } else {
         // Add search by key and keyword (case-sensitive)
         query.matches(searchType, searchKeyword, 'i');

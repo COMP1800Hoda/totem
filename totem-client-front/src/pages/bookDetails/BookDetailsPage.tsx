@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router'; // Import useNavigate
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
+import { ChevronLeft } from "lucide-react";
 import {
   BookContainer,
+  BookTwoContainer,
   BackButton,
   BookCard,
   BookCover,
@@ -31,6 +33,9 @@ const BookPage: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false); // State for modal
+  const location = useLocation();
+  const fromPage = location.state?.from;
+
 
   useEffect(() => {
     (async () => {
@@ -60,7 +65,22 @@ const BookPage: React.FC = () => {
   return (
     <BookContainer>
       <Header />
-      <BackButton onClick={() => window.history.back()}>&lt; Back</BackButton>
+      
+        <BackButton
+          onClick={() => {
+            if (fromPage === 'home') {
+              navigate('/');
+            } else if (fromPage === 'books') {
+              navigate('/books');
+            } else {
+              navigate(-1); // fallback to browser history
+            }
+          }}
+        >
+          <ChevronLeft size={30} />
+        </BackButton>
+        
+      <BookTwoContainer>
       <BookCard style={{ flexDirection: 'row-reverse' }}>
         <BookCover src={book.cover_image_url} alt="Book Cover" />
         <BookDetails>
@@ -76,7 +96,6 @@ const BookPage: React.FC = () => {
           <BookMeta>Language: {book.language}</BookMeta>
           <PublisherInfo>
             <p>Publisher: {book.publisher}</p>
-            <p>Contributed by: {book.contributed_by}</p>
           </PublisherInfo>
           {authors.length > 0 && (
             <AuthorInfo>
@@ -94,7 +113,8 @@ const BookPage: React.FC = () => {
           )}
         </BookDetails>
       </BookCard>
-      <ReadButton onClick={() => navigate(`/read/${book.storybook_id}`)}>
+      <ReadButton onClick={() => navigate(`/read/${book.storybook_id}`, {
+  state: { from: location.state?.from }} )}>
         Read this book
       </ReadButton>
       <Synopsis>
@@ -113,6 +133,7 @@ const BookPage: React.FC = () => {
           </p>
         ))}
       </Modal>
+      </BookTwoContainer>
       <FooterWrapper>
         <Footer />
       </FooterWrapper>
