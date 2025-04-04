@@ -1,57 +1,95 @@
+import { useNavigate, useLocation } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
 import Parse from '../../database';
-const ForgotPassword = () => {
-  const [email, setEmail] = useState('');
-  const [message, setMessage] = useState('');
+import bcrypt from 'bcryptjs';
+import { jwtDecode } from 'jwt-decode';
+import { checkTokenAndRedirect, getToken } from '../../utils/tokenUtils.js';
 
+const ChangePassword = () => {
   const navigate = useNavigate();
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [email, setEmail] = useState<string | ''>('');
+  const [message, setMessage] = useState('');
+  const [success, setSuccess] = useState(false);
+  const [isCheckingToken, setIsCheckingToken] = useState(true); // prevent rendering before token check
+  const [error, setError] = useState<string | null>(null);
 
-  const handleReset = async (e: React.FormEvent) => {
+  useEffect(() => {
+    const checkToken = async () => {
+      checkTokenAndRedirect();
+      setIsCheckingToken(false); // Set to false after token check
+    };
+    checkToken();
+  }, []);
+
+  useEffect(() => {
+    if (isCheckingToken) return; // Prevent rendering until token check is complete
+    const token = getToken(); // Get the token from local storage
+    if (token) {
+      try {
+        const decodedToken: any = jwtDecode(token);
+        const adminEmail = decodedToken?.email;
+        setEmail(adminEmail || '');
+        console.log('Email from token:', adminEmail);
+      } catch (error) {
+        console.error('Error decoding token:', error);
+      }
+    } else {
+      console.log('No token found');
+      setError('No token found'); // Handle case where token is not found
+      navigate('/'); // Redirect to login if no token is found
+    }
+  }, [isCheckingToken]);
+
+  const handleChangePassword = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setMessage('');
+    setSuccess(false);
 
-    // Let browser handle validation if the field is empty
-    if (!email) return;
+    if (newPassword !== confirmPassword) {
+      setMessage('Passwords do not match');
+      return;
+    }
 
     try {
+      console.log('Email:', email);
       const query = new Parse.Query('Admin');
       query.equalTo('admin_email', email);
-      const adminUser = await query.first();
-      if (!adminUser) {
-        setMessage('Email not found');
-        console.log('Email not found');
+      const admin = await query.first();
+      if (!admin) {
+        setMessage('Admin not found. Cannot Change Password');
+        console.log('Admin not found. Cannot Change Password');
         return;
       }
 
-      // change this based on the port
-      const response = await fetch(
-        'https://adminfinaldeployment-9gry1pfp.b4a.run/reset-password-request',
-        // 'http://localhost:8080/reset-password-request',
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ email }),
+      // Hash the new password
+      const saltRounds = 10;
+      bcrypt.hash(newPassword, saltRounds, async (err, hashedPassword) => {
+        if (err) {
+          console.log('Error generating salt: ', err);
+          setMessage('An error occured');
+          return;
         }
-      );
+        console.log('Hashed password: ', hashedPassword);
 
-      if (response.ok) {
-        setMessage('Password reset link sent. Check your email.');
-        // navigate("/confirmPage");
-      } else {
-        setMessage('An error occured');
-      }
-      // navigate("/confirmPage");
+        admin.set('admin_hashed_password', hashedPassword);
+        await admin.save();
+        setSuccess(true);
+        console.log('Password updated successfully');
+      });
     } catch (error) {
-      console.log('An error occured', error);
-      setMessage('An error occurred. Please try again.');
+      setMessage('An error occured');
+      console.log('An error occured: ', error);
     }
   };
 
+  //Check if the token is being checked or if there is an error
+  if (isCheckingToken) return null; // Prevent rendering UI until token check is complete
+  if (error) navigate('/'); // Redirect to login if there's an error
   return (
-    <div className="d-flex justify-content-center align-items-center vh-100">
+    <div className="d-flex justify-content-center align-items-center vh-100 w-100">
       <div
         className="card p-4 shadow-lg"
         style={{
@@ -61,57 +99,53 @@ const ForgotPassword = () => {
           backgroundColor: '#F8F0E9',
         }}
       >
-        {/* Back Button */}
-        <button
-          className="btn btn-light mb-3 d-flex align-items-center justify-content-center"
-          onClick={() => navigate('/')}
-          style={{
-            width: '32px',
-            height: '32px',
-            borderRadius: '60%',
-            padding: '5px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            boxShadow: '0 2px 5px rgba(18, 1, 1, 0.1)',
-          }}
-        >
-          ←
-        </button>
-        <h3 className="fw-bold">Forgot password</h3>
-        <p className="text-muted">
-          Please enter your email to reset the password
-        </p>
-        <form onSubmit={handleReset}>
-          {/* Email Input */}
+        {success && (
+          <div className="alert alert-success">
+            Password updated successfully
+          </div>
+        )}
+        <h3 className="fw-bold">Change password</h3>
+        <form onSubmit={handleChangePassword}>
+          {/* New Password Input */}
+          <label className="form-label">New Password:</label>
           <div className="mb-3">
-            <label className="form-label fw-semibold">Your Email</label>
             <input
-              type="email"
-              className="form-control p-3"
-              placeholder="Enter your email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              type="password"
+              className="form-control p-2"
+              placeholder="Enter your new password"
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
               required
-              style={{ borderRadius: '8px' }}
             />
           </div>
 
-          {/* Reset Button */}
+          {/* Confirm Password Input */}
+          <label className="form-label">Confirm Password:</label>
+          <div className="mb-3">
+            <input
+              type="password"
+              className="form-control p-2"
+              placeholder="Re-enter your new password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              required
+            />
+          </div>
+
+          {/* Save Button */}
           <button
             type="submit"
-            className="btn btn-primary w-100 p-3"
-            onClick={handleReset}
+            className="btn mx-auto d-block"
             style={{
               color: '#000000',
+              width: '120px',
+              height: '50px',
+              fontSize: '18px',
               backgroundColor: '#DECBB7',
-              borderRadius: '8px',
-              border: 'none',
-              cursor: email ? 'pointer' : 'not-allowed',
-              opacity: email ? 1 : 0.6,
+              cursor: 'pointer',
             }}
           >
-            Reset Password
+            Save
           </button>
           {message && <p className="mt-2">{message}</p>}
         </form>
@@ -120,4 +154,4 @@ const ForgotPassword = () => {
   );
 };
 
-export default ForgotPassword;
+export default ChangePassword;

@@ -47,7 +47,7 @@ export const Menu: React.FC<MenuProps> = ({ isSuperAdmin }) => {
     {
       title: 'Account Settings',
       links: [
-        { name: 'Change Password', path: '/edit-password' },
+        { name: 'Change Password', path: '/change-password' },
         {
           name: 'Log Out',
           path: '#',
