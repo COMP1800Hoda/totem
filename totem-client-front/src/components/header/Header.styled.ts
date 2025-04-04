@@ -17,11 +17,10 @@ export const HeaderContainer = styled.header<{
                   ? 'none'
                   : '1px solid ${COLORS.Light}'};
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-  z-index: 50;
 `;
 
 export const Inner = styled.div`
-  height: 3em;
+  height: 100%;
   display: flex;
   justify-content: flex-end;
   align-items: center;
