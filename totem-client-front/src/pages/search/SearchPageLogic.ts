@@ -30,7 +30,7 @@ export const useSearch = () => {
           { storybook_title: { $regex: searchQuery, $options: 'i' } },
           { genre: { $regex: searchQuery, $options: 'i' } },
           { ISBN: { $regex: searchQuery, $options: 'i' } },
-          { contributed_by: { $regex: searchQuery, $options: 'i' } },
+          { created_by: { $regex: searchQuery, $options: 'i' } },
           { language: { $regex: searchQuery, $options: 'i' } },
           { publisher: { $regex: searchQuery, $options: 'i' } },
           { storybook_description: { $regex: searchQuery, $options: 'i' } },
