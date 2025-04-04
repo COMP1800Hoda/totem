@@ -39,20 +39,6 @@ export const BackButton = styled.button`
   font-size: 1em;
   border-radius: 0.25em;
   transition: background-color 0.3s ease, color 0.3s ease;
-
-  &:hover {
-    background-color: #f0f0f0; // Light gray background on hover
-    color: #000; // Darker text on hover
-  }
-
-  &:active {
-    background-color: ${COLORS.Lightest}; // Slightly darker background on click
-  }
-
-  &:focus {
-    outline: none; // Remove default focus outline
-    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.5); // Add a custom focus outline
-  }
 `;
 
 export const BookCard = styled.div`
