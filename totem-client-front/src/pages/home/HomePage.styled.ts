@@ -22,12 +22,12 @@ export const Padding = styled.div`
 
 export const SectionHeader = styled.div`
   display: flex;
-  justify-content: space-between;
+  justify-content: space-evenly;
   align-items: center;
-  margin: 1.5vh;
+  margin: 1em;
 
   h2 {
-    font-size: 1.2em; /* Adjusted font size based on viewport width */
+    font-size: 1em; /* Adjusted font size based on viewport width */
     color: ${COLORS.Darkest}; 
   }
 

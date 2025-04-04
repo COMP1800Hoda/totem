@@ -39,7 +39,12 @@ const AudioComponent: React.FC<Audio> = ({ objectId, cover_image_url, Name, name
   return (
     <div style={{ textAlign: 'center', cursor: 'pointer' }} onClick={() => navigate(`/audios/${objectId}`)}>
       <BookThumbnail src={imageSrc} alt={displayName} />
-      <div>{displayName}</div>
+      <div
+        style={{
+          whiteSpace: 'nowrap', // Prevent text from wrapping to multiple lines
+          overflow: 'hidden', // Hide overflow
+          textOverflow: 'ellipsis', // Add ellipsis for overflow
+        }}>{displayName}</div>
     </div>
   );
 };
@@ -116,7 +121,7 @@ const Home: React.FC = () => {
           <Link to="/my-books">See All</Link>
           <h2>Recent Books</h2>
         </SectionHeader>
-        <div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap', gap: '20px' }}>
+        <div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap', gap: '1.25em' }}>
           {books.map((book) => (
             <BookComponent key={book.storybook_id} {...book} />
           ))}
@@ -128,7 +133,7 @@ const Home: React.FC = () => {
           <Link to="/my-audio">See All</Link>
           <h2>Recent Audio</h2>
         </SectionHeader>
-        <div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap', gap: '20px' }}>
+        <div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap', gap: '1.25em' }}>
           {audios.map((audio) => (
             <AudioComponent 
               key={audio.objectId} 

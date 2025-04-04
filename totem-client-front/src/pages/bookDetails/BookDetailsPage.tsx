@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router'; // Import useNavigate
 import {
   BookContainer,
+  BookTwoContainer,
   BackButton,
   BookCard,
   BookCover,
@@ -61,6 +62,7 @@ const BookPage: React.FC = () => {
     <BookContainer>
       <Header />
       <BackButton onClick={() => window.history.back()}>&lt; Back</BackButton>
+      <BookTwoContainer>
       <BookCard style={{ flexDirection: 'row-reverse' }}>
         <BookCover src={book.cover_image_url} alt="Book Cover" />
         <BookDetails>
@@ -112,6 +114,7 @@ const BookPage: React.FC = () => {
           </p>
         ))}
       </Modal>
+      </BookTwoContainer>
       <FooterWrapper>
         <Footer />
       </FooterWrapper>
