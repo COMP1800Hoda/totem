@@ -152,4 +152,5 @@ export const ShowMoreButton = styled.button`
   }
 `;
 
-export const FooterWrapper = styled.footer``;
+export const FooterWrapper = styled.footer`
+`;
