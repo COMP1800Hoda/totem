@@ -35,8 +35,8 @@ export const Container = styled.div`
   height: 100vh;
   background-color: ${COLORS.Lightest};
   display: flex;
-  flex-direction: column;
   align-items: center;
+  flex-direction: column;
   justify-content: center;
   overflow: hidden;
 `;
@@ -83,11 +83,11 @@ export const NavButton = styled.button`
 export const BottomNavButton = styled.button`
   background: linear-gradient(to bottom, #DECBB7, #BFA88F); /*  Gradient for depth */
   color: ${COLORS.Darkest};
-  font-size: 16px;
+  font-size: 1em;
   font-weight: bold;
   cursor: pointer;
-  padding: 10px 24px;
-  border-radius: 12px;
+  padding: 0.75em 1.5em;
+  border-radius: 0.75em;
   transition: all 0.2s ease-in-out;
   box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.2); /*  Raised shadow */
   border: none; /*  Removed outline */
@@ -135,12 +135,10 @@ export const Title = styled.h2`
 /* 🔹 Reading Page */
 export const ReadingContainer = styled.div`
   position: absolute;
-  top: 8%;
-  bottom: 10%;
+  top: 0;
   width: 100%;
   height: calc(100vh - 18%);
   display: flex;
-  align-items: center;
   justify-content: center;
   cursor: pointer;
   overflow: hidden;
@@ -203,8 +201,8 @@ export const SliderContainer = styled.div`
   input::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
-    width: 16px;
-    height: 16px;
+    width: 1em;
+    height: 1em;
     border-radius: 50%;
     background: ${COLORS.Dark};
     cursor: pointer;
@@ -213,8 +211,8 @@ export const SliderContainer = styled.div`
   }
 
   input::-moz-range-thumb {
-    width: 16px;
-    height: 16px;
+    width: 1em;
+    height: 1em;
     border-radius: 50%;
     background: ${COLORS.Dark};
     cursor: pointer;
@@ -225,8 +223,8 @@ export const SliderContainer = styled.div`
 
 /* 🔹 Page Indicator */
 export const PageIndicator = styled.span`
-  margin-right: 10px;
-  font-size: 16px;
+  margin-right: 0.75em;
+  font-size: 1em;
   font-weight: bold;
   color: ${COLORS.Dark}; /*  Updated color */
 `;

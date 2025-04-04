@@ -12,11 +12,11 @@ const ReadPage: React.FC = () => {
   const { book, pages, loading, error } = useBookData(id || "");
   const [currentPage, setCurrentPage] = useState(1);
   const [showNav, setShowNav] = useState(false);
-  const [isWideScreen, setIsWideScreen] = useState(window.innerWidth >= 900);
+  const [isWideScreen, setIsWideScreen] = useState(window.innerWidth >= 1100);
 
   useEffect(() => {
     const handleResize = () => {
-      setIsWideScreen(window.innerWidth >= 900);
+      setIsWideScreen(window.innerWidth >= 1100);
     };
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
