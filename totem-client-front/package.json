@@ -12,7 +12,6 @@
   "dependencies": {
     "@popperjs/core": "^2.11.8",
     "@tabler/icons-react": "^3.29.0",
-    "@vite/vitejs-client": "^2.2.10",
     "bootstrap": "^5.3.3",
     "dotenv": "^16.4.7",
     "lucide-react": "^0.475.0",
@@ -29,7 +28,6 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.17.0",
-    "@types/node": "^22.14.0",
     "@types/react": "^18.3.18",
     "@types/react-dom": "^18.3.5",
     "@vitejs/plugin-react": "^4.3.4",
@@ -37,7 +35,6 @@
     "eslint-plugin-react-hooks": "^5.0.0",
     "eslint-plugin-react-refresh": "^0.4.16",
     "globals": "^15.14.0",
-    "lodash": "^4.17.21",
     "prettier": "^3.4.2",
     "typescript": "~5.6.2",
     "typescript-eslint": "^8.18.2",
