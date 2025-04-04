@@ -75,7 +75,7 @@ const Home: React.FC = () => {
             method: 'GET',
             headers: {
               'X-Parse-Application-Id':
-                'XWNVzANvs7w6pYMl4fZWLCcikgXdMvCZhEnI48sHs',
+                'XWNVzANvs7w6pYMl4fZWLCcikgXdMvCZhEnI48sH',
               'X-Parse-REST-API-Key':
                 'mRZK1BOLh5EIaOR9Ircc2OhX5OU28aidSsZAtyJP',
               'Content-Type': 'application/json',
