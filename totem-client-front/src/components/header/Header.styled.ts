@@ -16,6 +16,8 @@ export const HeaderContainer = styled.header<{
           hideBorder
                   ? 'none'
                   : '1px solid ${COLORS.Light}'};
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  z-index: 50;
 `;
 
 export const Inner = styled.div`
