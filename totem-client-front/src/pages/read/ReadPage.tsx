@@ -12,7 +12,7 @@ const ReadPage: React.FC = () => {
   const { book, pages, loading, error } = useBookData(id || "");
   const [currentPage, setCurrentPage] = useState(1);
   const [showNav, setShowNav] = useState(false);
-  const [isWideScreen, setIsWideScreen] = useState(window.innerWidth >= 900);
+  const [isWideScreen, setIsWideScreen] = useState(window.innerWidth >= 1100);
   const location = useLocation(); // Get location info (including state)
 
   // When back button is clicked on the read page, pass the 'from' state to book details
@@ -25,7 +25,7 @@ const ReadPage: React.FC = () => {
 
   useEffect(() => {
     const handleResize = () => {
-      setIsWideScreen(window.innerWidth >= 900);
+      setIsWideScreen(window.innerWidth >= 1100);
     };
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);

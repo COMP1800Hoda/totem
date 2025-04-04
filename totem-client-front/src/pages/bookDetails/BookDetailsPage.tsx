@@ -3,6 +3,7 @@ import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { ChevronLeft } from "lucide-react";
 import {
   BookContainer,
+  BookTwoContainer,
   BackButton,
   BookCard,
   BookCover,
@@ -78,7 +79,8 @@ const BookPage: React.FC = () => {
         >
           <ChevronLeft size={30} />
         </BackButton>
-
+        
+      <BookTwoContainer>
       <BookCard style={{ flexDirection: 'row-reverse' }}>
         <BookCover src={book.cover_image_url} alt="Book Cover" />
         <BookDetails>
@@ -131,6 +133,7 @@ const BookPage: React.FC = () => {
           </p>
         ))}
       </Modal>
+      </BookTwoContainer>
       <FooterWrapper>
         <Footer />
       </FooterWrapper>
