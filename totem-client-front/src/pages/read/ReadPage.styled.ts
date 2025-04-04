@@ -135,7 +135,7 @@ export const Title = styled.h2`
 /* 🔹 Reading Page */
 export const ReadingContainer = styled.div`
   position: absolute;
-  top: 0;
+  top: 8%;
   width: 100%;
   height: calc(100vh - 18%);
   display: flex;

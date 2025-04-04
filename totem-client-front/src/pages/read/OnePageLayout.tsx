@@ -21,14 +21,13 @@ export const OnePageLayout: React.FC<OnePageLayoutProps> = ({
     const { clientX, currentTarget } = e;
     const clickX = clientX / currentTarget.clientWidth;
 
-    if (clickX < 0.3 && currentPage < pages.length) {
+    if (clickX < 0.35 && currentPage < pages.length) {
       // Clicked on the left side (30% of the screen)
       onPageChange(currentPage + 1); // Go to the previous page
-    } else if (clickX > 0.7 && currentPage > 1) {
+    } else if (clickX > 0.65 && currentPage > 1) {
       // Clicked on the right side (70% of the screen)
       onPageChange(currentPage - 1); // Go to the next page
     }
-
     // Call the parent onPageClick handler if needed
     onPageClick(e);
   };
@@ -41,7 +40,8 @@ export const OnePageLayout: React.FC<OnePageLayoutProps> = ({
         style={{
           backgroundImage: `url(${pages[currentPage - 1]?.imageUrl})`, // Use currentPage to display the correct page
           width: "95%",
-          height: "95%",
+          height: "100%",
+          margin: "0.5em",
           backgroundSize: "contain",
           backgroundRepeat: "no-repeat",
           backgroundPosition: "center",
