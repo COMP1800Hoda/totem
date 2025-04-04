@@ -70,7 +70,7 @@ const AudioDetailsPage: React.FC = () => {
       <Header />
       <BackButton onClick={() => window.history.back()}>&lt; Back</BackButton>
         <h1>{audio.name}</h1>
-        <img src={`/src/assets/audio${audio.objectId}.png`} alt={audio.name} style={{ width: "15em" }} />
+        <img src={`/audio${audio.objectId}.png`} alt={audio.name} style={{ width: "15em" }} />
         <p>Created At: {new Date(audio.createdAt).toLocaleString()}</p>
         <p>Last Updated: {new Date(audio.updatedAt).toLocaleString()}</p>
         {audio.audio_url ? (
