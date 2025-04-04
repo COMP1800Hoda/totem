@@ -303,6 +303,7 @@ const EditBook: React.FC = () => {
     imageNames: string[];
   }) => {
     const updatedCreators = replaceOtherWithCustomRole(creators);
+    const updatedCreatorsNames = updatedCreators.map(author => author.name);
     const Storybook = Parse.Object.extend("storybook");
     let storybook;
 
@@ -320,6 +321,7 @@ const EditBook: React.FC = () => {
     storybook.set("Age", age);
     storybook.set("genre", genres);
     storybook.set("created_by", updatedCreators);
+    storybook.set("created_by_names", updatedCreatorsNames);
     storybook.set("publisher", publisher);
     storybook.set("published", published);
     storybook.set("ISBN", isbn);
