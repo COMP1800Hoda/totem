@@ -23,7 +23,7 @@ interface Audio {
 const BookComponent: React.FC<Storybook> = ({ storybook_id, cover_image_url, storybook_title }) => {
   const navigate = useNavigate();
   return (
-    <div style={{ textAlign: 'center', cursor: 'pointer' }} onClick={() => navigate(`/books/${storybook_id}`)}>
+    <div style={{ textAlign: 'center', cursor: 'pointer' }} onClick={() => navigate(`/books/${storybook_id}`, { state: { from: 'home' } })}>
       <BookThumbnail src={cover_image_url} alt={storybook_title} />
       <div>{storybook_title}</div>
     </div>

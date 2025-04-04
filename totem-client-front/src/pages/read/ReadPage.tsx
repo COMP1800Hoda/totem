@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 import { useBookData } from "./FetchBookData";
 import { NavBars } from "./NavBars";
 import { OnePageLayout } from "./OnePageLayout";
@@ -13,6 +13,15 @@ const ReadPage: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [showNav, setShowNav] = useState(false);
   const [isWideScreen, setIsWideScreen] = useState(window.innerWidth >= 900);
+  const location = useLocation(); // Get location info (including state)
+
+  // When back button is clicked on the read page, pass the 'from' state to book details
+  const handleBack = () => {
+    const fromPage = location.state?.from; // Get the 'from' state
+    navigate(`/books/${id}`, {
+      state: { from: fromPage }, // Pass the fromPage state to book details page
+    });
+  };
 
   useEffect(() => {
     const handleResize = () => {
@@ -47,7 +56,7 @@ const ReadPage: React.FC = () => {
         bookTitle={book?.storybook_title}
         currentPage={currentPage}
         totalPages={pages.length}
-        onBack={() => navigate(`/books/${id}`)}
+        onBack={handleBack} 
         onPageChange={setCurrentPage}
         isTwoPageLayout={isWideScreen}
       />

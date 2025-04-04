@@ -46,7 +46,7 @@ const BooksPage: React.FC = () => {
 
   // Navigate to MyBooks page for a specific book
   const goToBook = (storybook_id: string) => {
-    navigate(`/books/${storybook_id}`);
+    navigate(`/books/${storybook_id}`, { state: { from: 'books' } });
   };
 
   // Load more books when the button is clicked
