@@ -111,7 +111,7 @@ const AudioPage: React.FC = () => {
               key={audio.objectId}
               src={
                 audio.cover_image_url ||
-                `/src/assets/audio${audio.objectId}.png`
+                `/audio${audio.objectId}.png`
               }
               alt={audio.title}
               title={audio.title}
@@ -127,7 +127,7 @@ const AudioPage: React.FC = () => {
               key={audio.objectId}
               src={
                 audio.cover_image_url ||
-                `/src/assets/audio${audio.objectId}.png`
+                `/audio${audio.objectId}.png`
               }
               alt={audio.title}
               title={audio.title}
