@@ -5,7 +5,6 @@ export const SearchContainer = styled.div`
   display: flex;
   flex-direction: column;
   min-height: 100vh; /* Ensure the container takes the full height of the viewport */
-  padding: 0;
   margin: 0;
   background-color: ${COLORS.Lightest}; /* Light background color for the page */
   color: ${COLORS.Dark}; /* Dark text color */
@@ -26,18 +25,18 @@ export const BookGrid = styled.div<BookGridProps>`
   direction: rtl;
   grid-template-columns: ${(props) =>
     props.layoutType === 'threeColumns' ? 'repeat(3, 1fr)' : 'repeat(2, 1fr)'};
-  gap: 15px;
+  gap: 1em;
   margin-top: 0.5em;
   justify-content: center;
 `;
 
 // Book cover styling with dynamic size adjustments
 export const BookCover = styled.img<BookGridProps>`
-  width: ${(props) => (props.layoutType === 'threeColumns' ? '110px' : '150px')};
-  height: ${(props) => (props.layoutType === 'threeColumns' ? '160px' : '225px')};
-  object-fit: cover;
-  border-radius: 6px;
-  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
+  width: ${(props) => (props.layoutType === 'threeColumns' ? '6.75em' : '9.5em')};
+  height: ${(props) => (props.layoutType === 'threeColumns' ? '10em' : '15em')};
+  object-fit: contain;
+  border-radius: 0.5em;
+  box-shadow: 0 0.25em 0.4em rgba(0, 0, 0, 0.1);
   transition: transform 0.2s;
 
   &:hover {
@@ -77,11 +76,11 @@ export const SearchButton = styled.button`
 export const SearchResults = styled.ul`
   list-style-type: none;
   padding: 0;
-  margin-top: 20px;
+  margin-top: 1.25em;
 `;
 
 export const SearchResultItem = styled.li`
-  padding: 10px;
-  border-bottom: 1px solid #ddd;
+  padding: 0.25em;
+  border-bottom: 0.1em solid #ddd;
   min-width: 0;
 `;

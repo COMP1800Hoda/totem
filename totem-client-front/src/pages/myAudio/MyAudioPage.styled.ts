@@ -40,7 +40,7 @@ export const AudioItem = styled.div`
 export const AudioThumbnail = styled.img`
   width: 150px;
   height: 150px;
-  object-fit: cover;
+  object-fit: contain;
   margin-bottom: 10px;
   border-radius: 6px;
   box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
