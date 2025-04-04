@@ -55,8 +55,8 @@ export const FormGroup = styled.div`
 
 export const Input = styled.input`
   width: 100%;
-  padding: 10px;
-  margin-bottom: 10px;
+  padding: 9px;
+  margin-bottom: 11px;
   border: 1px solid #ccc;
   border-radius: 5px;
   background-color: white;
@@ -230,7 +230,7 @@ export const GenerateButton = styled.button`
   border: solid;
   color: white;
   padding: 2px 4px;
-  margin-top: 5px;
+  margin-top: 2px;
   text-align: center;
   font-size: 14px;
   cursor: pointer;

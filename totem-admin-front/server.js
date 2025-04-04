@@ -37,7 +37,7 @@ app.post('/reset-password-request', async(req, res) => {
     // change this based on the port your front end is running on if you test it locally
     // const resetLink = `http://localhost:5173/edit-password?token=${token}}`;
 
-    const resetLink = `https://totemchildrenstorybookadmin-1g9u4lon.b4a.run/edit-password?token=${token}}`;
+    const resetLink = `https://adminfinaldeployment-9gry1pfp.b4a.run/edit-password?token=${token}}`;
     console.log("reset link: ", resetLink);
     const emailResponse = await sendResetEmail(email, resetLink);
 
@@ -112,6 +112,10 @@ app.use ('/preview', checkAuth, (req,res) => {
 //done
 app.use ('/success', checkAuth, (req,res) => {
     res.json({message:'You are logged in and allow to access success page', user: req.user});
+})
+
+app.use('/change-password', checkAuth, (req,res) => {
+    res.json({message:'You are logged in and allow to access change-password page', user: req.user});
 })
 
 // Serve static files from the 'dist' folder

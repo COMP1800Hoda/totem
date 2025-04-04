@@ -16,7 +16,7 @@ import Preview from './pages/preview/preview.tsx';
 import Success from './pages/success/success.tsx';
 import BookDetailsPage from './pages/book-details/BookDetailsPage.tsx';
 import EditBook from './pages/edit-book/EditBook.tsx';
-
+import ChangePassword from './pages/change-password/ChangePassword.tsx';
 const App: React.FC = () => {
   return (
     <Router>
@@ -45,6 +45,8 @@ const App: React.FC = () => {
         <Route path="/preview" element={<Preview />} />
         {/* done JWT */}
         <Route path="/success" element={<Success />} />
+        {/* done JWT */}
+        <Route path="/change-password" element={<ChangePassword />}></Route>
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </Router>
