@@ -71,7 +71,7 @@ const AudioDetailsPage: React.FC = () => {
       <BackButton onClick={() => window.history.back()}>&lt; Back</BackButton>
       <h1>{audio.name}</h1>
       <img
-        src={`/src/assets/audio${audio.objectId}.png`}
+        src={`/audio${audio.objectId}.png`}
         alt={audio.name}
         style={{ width: '15em' }}
       />
