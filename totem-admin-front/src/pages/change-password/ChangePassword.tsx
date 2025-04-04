@@ -5,7 +5,7 @@ import Parse from '../../database';
 import bcrypt from 'bcryptjs';
 import { jwtDecode } from 'jwt-decode';
 import { checkTokenAndRedirect, getToken } from '../../utils/tokenUtils.js';
-
+import { Header } from '../../components/header/Header.js';
 const ChangePassword = () => {
   const navigate = useNavigate();
   const [newPassword, setNewPassword] = useState('');
@@ -78,6 +78,9 @@ const ChangePassword = () => {
         await admin.save();
         setSuccess(true);
         console.log('Password updated successfully');
+        setTimeout(() => {
+          navigate('/main');
+        }, 2000);
       });
     } catch (error) {
       setMessage('An error occured');
@@ -89,14 +92,13 @@ const ChangePassword = () => {
   if (isCheckingToken) return null; // Prevent rendering UI until token check is complete
   if (error) navigate('/'); // Redirect to login if there's an error
   return (
-    <div className="d-flex justify-content-center align-items-center vh-100 w-100">
+    <div className="d-flex justify-content-center vh-100 w-100 align-items-start">
+      <Header />
       <div
-        className="card p-4 shadow-lg"
         style={{
-          width: '100%',
+          marginTop: '8rem',
+          width: '75%',
           maxWidth: '400px',
-          borderRadius: '12px',
-          backgroundColor: '#F8F0E9',
         }}
       >
         {success && (
@@ -132,21 +134,42 @@ const ChangePassword = () => {
             />
           </div>
 
-          {/* Save Button */}
-          <button
-            type="submit"
-            className="btn mx-auto d-block"
-            style={{
-              color: '#000000',
-              width: '120px',
-              height: '50px',
-              fontSize: '18px',
-              backgroundColor: '#DECBB7',
-              cursor: 'pointer',
-            }}
-          >
-            Save
-          </button>
+          {/* Buttons */}
+          <div className="d-flex justify-content-center gap-3 mt-3">
+            <button
+              type="button"
+              className="btn"
+              style={{
+                color: '#000000',
+                width: '120px',
+                height: '50px',
+                fontSize: '18px',
+                backgroundColor: '#E0E0E0',
+                cursor: 'pointer',
+              }}
+              onClick={() => {
+                // Add your cancel logic here, for example:
+                navigate('/main');
+              }}
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              className="btn"
+              style={{
+                color: '#000000',
+                width: '120px',
+                height: '50px',
+                fontSize: '18px',
+                backgroundColor: '#DECBB7',
+                cursor: 'pointer',
+              }}
+            >
+              Save
+            </button>
+          </div>
+
           {message && <p className="mt-2">{message}</p>}
         </form>
       </div>
