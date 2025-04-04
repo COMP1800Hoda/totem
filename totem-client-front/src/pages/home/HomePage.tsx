@@ -8,6 +8,7 @@ import {
   Padding,
   SectionHeader, 
   BookThumbnail,
+  AudioThumbnail
 } from "./HomePage.styled";
 import {Storybook} from "../../types/Storybook.ts";
 
@@ -38,13 +39,8 @@ const AudioComponent: React.FC<Audio> = ({ objectId, cover_image_url, Name, name
   
   return (
     <div style={{ textAlign: 'center', cursor: 'pointer' }} onClick={() => navigate(`/audios/${objectId}`)}>
-      <BookThumbnail src={imageSrc} alt={displayName} />
-      <div
-        style={{
-          whiteSpace: 'nowrap', // Prevent text from wrapping to multiple lines
-          overflow: 'hidden', // Hide overflow
-          textOverflow: 'ellipsis', // Add ellipsis for overflow
-        }}>{displayName}</div>
+      <AudioThumbnail src={imageSrc} alt={displayName} />
+      <div>{displayName}</div>
     </div>
   );
 };

@@ -5,7 +5,6 @@ export const PageContainer = styled.div`
   position: relative;  // Add this for positioning context
   text-align: center;
   min-height: 100vh;
-  padding: 1em;
   padding-top: 80px;  // Add space for header
   color: ${COLORS.Darkest};
   background-color: ${COLORS.Lightest};
