@@ -75,6 +75,10 @@ export const BookMeta = styled.p`
 `;
 
 export const BookTags = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5em;
+  direction: rtl;
 `;
 
 export const Tag = styled.span`
