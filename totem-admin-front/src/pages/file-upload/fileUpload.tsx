@@ -537,6 +537,7 @@ const FileUpload: React.FC = () => {
                 onChange={(e) => setlanguage(e.target.value)}
                 style={{
                   width: window.innerWidth < 768 ? '100%' : '525px',
+                  color: age === '' ? '#888' : 'black',
                 }}
               >
                 <option value="" disabled selected>
