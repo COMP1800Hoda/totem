@@ -5,9 +5,8 @@
  */
 import React, { useState, useEffect } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
-import Parse from '../../database';
 import 'bootstrap/dist/css/bootstrap.min.css';
-
+import { getToken } from '../../utils/tokenUtils.js';
 interface EditAdminModalProps {
   show: boolean;
   onClose: () => void;
@@ -33,15 +32,24 @@ const EditAdminModal: React.FC<EditAdminModalProps> = ({
   }, [admin]);
 
   console.log('editedAdmin in editModal.tsx:', editedAdmin.name);
-
+  const token = getToken(); // Get the token from local storage
   const handleEditAdmin = async () => {
     try {
-      const query = new Parse.Query('Admin');
-      const adminToUpdate = await query.get(admin.id);
-      adminToUpdate.set('admin_name', editedAdmin.name);
-      adminToUpdate.set('admin_email', editedAdmin.email);
-      adminToUpdate.set('admin_role', editedAdmin.role);
-      await adminToUpdate.save();
+      const response = await fetch(`http://localhost:8080/manage-admins`, {
+        method: 'PUT',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: editedAdmin.name,
+          email: editedAdmin.email,
+          role: editedAdmin.role,
+        }),
+      });
+      if (!response.ok) {
+        throw new Error('Failed to update admin');
+      }
       onAdminUpdated(); // refresh the admin table
       onClose();
     } catch (error) {

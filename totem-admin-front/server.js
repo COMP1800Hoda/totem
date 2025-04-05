@@ -78,11 +78,90 @@ app.post('/', async(req,res) => {
     }
 })
 
+
  //only accessible if user is logged in
  //done
 app.use ('/main', checkAuth, (req,res) => {
     res.json({message:'You are logged in and allow to access main page', user: req.user});
 })
+
+// Admin CRUD operations
+app.get('/manage-admins', checkAuth, async (req, res) => {
+    try {
+        const query = new ParseConfig.Query('Admin');
+        const results = await query.find();
+        const admins = results.map(admin => ({
+            id: admin.id,
+            name: admin.get('admin_name'),
+            role: admin.get('admin_role'),
+            email: admin.get('admin_email')
+        }));
+        res.status(200).json(admins);
+    } catch (error) {
+        console.error('Error fetching admins:', error);
+        res.status(500).json({message: 'Failed to fetch admins'});
+    }
+});
+
+app.delete('/manage-admins/:id', checkAuth, async (req, res) => {
+    try {
+        const query = new ParseConfig.Query('Admin');
+        const admin = await query.get(req.params.id);
+        await admin.destroy();
+        res.status(200).json({success: true});
+    } catch (error) {
+        console.error('Error deleting admin:', error);
+        res.status(500).json({message: 'Failed to delete admin'});
+    }
+});
+
+app.put('/manage-admins/', checkAuth, async(req,res) => {
+    try {
+          const query = new ParseConfig.Query('Admin');
+          const editedAdmin = req.body;
+          query.equalTo('admin_email', editedAdmin.email);
+          const adminToUpdate = await query.first();
+          adminToUpdate.set('admin_name',editedAdmin.name);
+          adminToUpdate.set('admin_email', editedAdmin.email);
+          adminToUpdate.set('admin_role', editedAdmin.role);
+          await adminToUpdate.save();
+          res.status(200).json({success: true});
+        } catch (error) {
+          console.log('Error updating admin: ', error);
+          res.status(500).json({message: 'Failed to update admin'});
+        }
+})
+
+app.post('/manage-admins', checkAuth, async(req,res) => {
+    try{
+        const newAdmin = req.body;
+        const adminObj = new ParseConfig.Object('Admin');
+        console.log("new admin: ", newAdmin.email);
+
+        adminObj.set('admin_name', newAdmin.name);
+        adminObj.set('admin_email', newAdmin.email);
+        adminObj.set('admin_role', newAdmin.role);
+        /**
+        * get the unhashed password from the request body-> no need to hash password in the front end
+        * just need to send the unhashed password to the server
+        * and hash it here before saving to the database
+        */
+        const unhashedPassword = newAdmin.password;
+        console.log("unhashed password: ", unhashedPassword);
+
+        //Hash password before saving to the database
+        const saltRounds = 12;
+        const hashedPassword = await bcrypt.hash(newAdmin.password, saltRounds);
+        console.log('Hashed password:', hashedPassword);
+        adminObj.set('admin_hashed_password', hashedPassword);
+        await adminObj.save();
+        res.status(200).json({success: true});
+    } catch(error){
+        console.error('Error creating admin:', error);
+        res.status(500).json({message: 'Response from server. Failed to create admin'});
+    }
+})
+
 
 //done
 app.use('/manage-books', checkAuth, (req,res) => {

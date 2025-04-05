@@ -24,7 +24,7 @@ const AdminProfile = () => {
   const [selectedAdmin, setSelectedAdmin] = useState<Admin | null>(null);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [adminToDelete, setAdminToDelete] = useState<string | null>(null);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
   const [isCheckingToken, setIsCheckingToken] = useState(true); // prevent rendering before token check
 
   useEffect(() => {
@@ -37,45 +37,24 @@ const AdminProfile = () => {
 
   useEffect(() => {
     if (isCheckingToken) return; // Prevent rendering until token check is complete
-
-    const token = getToken(); // Get the token from local storage
-
-    fetch('https://adminfinaldeployment-9gry1pfp.b4a.run/manage-admins', {
-      method: 'GET',
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error('Failed to fetch admins');
-        }
-        return response.json();
-      })
-      .catch((error) => {
-        setError(error.message);
-        console.log('Error:', error);
-      });
-
     fetchAdmins();
   }, [isCheckingToken]); // Ensure useEffect runs only on mount
 
+  const token = getToken(); // Get the token from local storage
   const fetchAdmins = async () => {
     try {
-      const query = new Parse.Query('Admin');
-      const results = await query.find(); // fetch all the admins in db
-
-      //map results into the state
-      const adminList = results.map((admin: Parse.Object) => ({
-        id: admin.id, // Store Parse Object ID
-        name: admin.get('admin_name'),
-        role: admin.get('admin_role'),
-        email: admin.get('admin_email'),
-      }));
-
+      const response = await fetch('http://localhost:8080/manage-admins', {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (!response.ok) throw new Error('Failed to fetch admins');
+      const adminList = await response.json();
       setAdmins(adminList);
-    } catch (error) {
+    } catch (error: unknown) {
       console.error('Error fetching admins: ', error);
+      setError(error instanceof Error ? error.message : 'Unknown error');
     }
   };
 
@@ -86,13 +65,18 @@ const AdminProfile = () => {
   const handleDelete = async () => {
     if (!adminToDelete) return;
     try {
-      const query = new Parse.Query('Admin');
-      const adminToRemove = await query.get(adminToDelete); // find the admin by id
-      if (adminToDelete) {
-        await adminToRemove.destroy();
-        setAdmins(admins.filter((admin) => admin.id !== adminToDelete)); // Update state
-      }
-    } catch (error) {
+      const response = await fetch(
+        `http://localhost:8080/manage-admins/${adminToDelete}`,
+        {
+          method: 'DELETE',
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (!response.ok) throw new Error('Failed to delete admin');
+      setAdmins(admins.filter((admin) => admin.id !== adminToDelete));
+    } catch (error: unknown) {
       console.error('Error deleting admin: ', error);
     } finally {
       setShowConfirmModal(false);
@@ -148,6 +132,7 @@ const AdminProfile = () => {
                 <td>{admin.email}</td>
                 <td>{admin.role}</td>
                 <td>
+                  {/* Edit Button */}
                   <Button
                     variant="success"
                     size="sm"
@@ -161,6 +146,7 @@ const AdminProfile = () => {
                   </Button>
                 </td>
                 <td>
+                  {/* Delete Button */}
                   <Button
                     variant="danger"
                     size="sm"

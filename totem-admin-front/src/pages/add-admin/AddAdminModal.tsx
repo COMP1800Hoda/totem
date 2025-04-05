@@ -7,8 +7,7 @@
 import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Modal, Button, Form } from 'react-bootstrap';
-import Parse from '../../database';
-import bcrypt from 'bcryptjs';
+import { getToken } from '../../utils/tokenUtils.js';
 
 interface AddAdminModalProps {
   show: boolean;
@@ -26,28 +25,27 @@ const AddAdminModal: React.FC<AddAdminModalProps> = ({
     password: '',
     role: 'Normal Admin',
   });
+  const token = getToken();
 
   const handleAddAdmin = async () => {
     try {
-      const admin = new Parse.Object('Admin');
-
-      console.log('New admin email: ', newAdmin.email);
-      admin.set('admin_name', newAdmin.name);
-      admin.set('admin_email', newAdmin.email);
-      admin.set('admin_role', newAdmin.role);
-
-      const unhashedPassword = newAdmin.password;
-      console.log('Unhashed password: ', unhashedPassword);
-      // Hash the password correctly using await
-      const saltRounds = 12;
-      const hashedPassword = await bcrypt.hash(newAdmin.password, saltRounds);
-      console.log('Hashed password:', hashedPassword);
-
-      admin.set('admin_hashed_password', hashedPassword);
-
-      await admin.save();
-
+      const response = await fetch('http://localhost:8080/manage-admins', {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: newAdmin.email,
+          password: newAdmin.password,
+          name: newAdmin.name,
+          role: newAdmin.role,
+        }),
+      });
       setNewAdmin({ name: '', email: '', password: '', role: 'Normal Admin' });
+      if (!response.ok) {
+        throw new Error('Failed to add admin from AddAdminModal.tsx.');
+      }
       onAdminAdded();
       onClose();
     } catch (error) {
