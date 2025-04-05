@@ -64,8 +64,6 @@ const EditBook: React.FC = () => {
           setCoverImageUrl(result.cover_image_url);
         }
 
-
-
       } catch (error: unknown) {
         console.error(error);
       }

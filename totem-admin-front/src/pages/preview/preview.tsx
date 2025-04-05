@@ -211,6 +211,7 @@ const PreviewPage: React.FC = () => {
     contentimageurl: string[];
   }) => {
     const updatedCreators = replaceOtherWithCustomRole(previewData.creators);
+    const updatedCreatorsNames = updatedCreators.map(author => author.name);
 
     const Storybook = Parse.Object.extend('storybook');
     const storybook = new Storybook();
@@ -224,6 +225,7 @@ const PreviewPage: React.FC = () => {
     storybook.set('Age', previewData.age);
     storybook.set('genre', previewData.genres);
     storybook.set('created_by', updatedCreators);
+    storybook.set('created_by_names', updatedCreatorsNames);
     storybook.set('publisher', previewData.publisher);
     storybook.set('published', previewData.published);
     storybook.set('ISBN', previewData.isbn);
