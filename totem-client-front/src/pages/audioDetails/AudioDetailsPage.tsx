@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
 import { Header } from '../../components/header/Header';
 import Footer from '../../components/footer/Footer';
+import { ChevronLeft } from "lucide-react";
 import {
   PageContainer,
   AudioPlayer,
@@ -68,21 +69,27 @@ const AudioDetailsPage: React.FC = () => {
   return (
     <PageContainer>
       <Header />
-      <BackButton onClick={() => window.history.back()}>&lt; Back</BackButton>
-        <h1>{audio.name}</h1>
-        <img src={`/audio${audio.objectId}.png`} alt={audio.name} style={{ width: "15em" }} />
-        <p>Created At: {new Date(audio.createdAt).toLocaleString()}</p>
-        <p>Last Updated: {new Date(audio.updatedAt).toLocaleString()}</p>
-        {audio.audio_url ? (
-            <AudioPlayer controls>
-              <source src={audio.audio_url} type="audio/mpeg" />
-              Your browser does not support the audio element.
-            </AudioPlayer>
-        ) : (
-          <p>No audio file available.</p>
-        )}
-        <Footer />
-      </PageContainer>
+      <BackButton onClick={() => window.history.back()}>
+        <ChevronLeft size={30} />
+      </BackButton>
+      <h1>{audio.name}</h1>
+      <img
+        src={`/audio${audio.objectId}.png`}
+        alt={audio.name}
+        style={{ width: '15em' }}
+      />
+      <p>Created At: {new Date(audio.createdAt).toLocaleString()}</p>
+      <p>Last Updated: {new Date(audio.updatedAt).toLocaleString()}</p>
+      {audio.audio_url ? (
+        <AudioPlayer controls>
+          <source src={audio.audio_url} type="audio/mpeg" />
+          Your browser does not support the audio element.
+        </AudioPlayer>
+      ) : (
+        <p>No audio file available.</p>
+      )}
+      <Footer />
+    </PageContainer>
   );
 };
 
