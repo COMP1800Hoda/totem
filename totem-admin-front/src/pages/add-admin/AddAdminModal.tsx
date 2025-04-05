@@ -29,19 +29,22 @@ const AddAdminModal: React.FC<AddAdminModalProps> = ({
 
   const handleAddAdmin = async () => {
     try {
-      const response = await fetch('http://localhost:8080/manage-admins', {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email: newAdmin.email,
-          password: newAdmin.password,
-          name: newAdmin.name,
-          role: newAdmin.role,
-        }),
-      });
+      const response = await fetch(
+        'https://adminfinaldeployment-9gry1pfp.b4a.run/manage-admins',
+        {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            email: newAdmin.email,
+            password: newAdmin.password,
+            name: newAdmin.name,
+            role: newAdmin.role,
+          }),
+        }
+      );
       setNewAdmin({ name: '', email: '', password: '', role: 'Normal Admin' });
       if (!response.ok) {
         throw new Error('Failed to add admin from AddAdminModal.tsx.');

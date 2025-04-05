@@ -43,12 +43,15 @@ const AdminProfile = () => {
   const token = getToken(); // Get the token from local storage
   const fetchAdmins = async () => {
     try {
-      const response = await fetch('http://localhost:8080/manage-admins', {
-        method: 'GET',
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await fetch(
+        'https://adminfinaldeployment-9gry1pfp.b4a.run/manage-admins',
+        {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       if (!response.ok) throw new Error('Failed to fetch admins');
       const adminList = await response.json();
       setAdmins(adminList);
@@ -66,7 +69,7 @@ const AdminProfile = () => {
     if (!adminToDelete) return;
     try {
       const response = await fetch(
-        `http://localhost:8080/manage-admins/${adminToDelete}`,
+        `https://adminfinaldeployment-9gry1pfp.b4a.run/manage-admins/${adminToDelete}`,
         {
           method: 'DELETE',
           headers: {

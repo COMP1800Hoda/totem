@@ -35,18 +35,21 @@ const EditAdminModal: React.FC<EditAdminModalProps> = ({
   const token = getToken(); // Get the token from local storage
   const handleEditAdmin = async () => {
     try {
-      const response = await fetch(`http://localhost:8080/manage-admins`, {
-        method: 'PUT',
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          name: editedAdmin.name,
-          email: editedAdmin.email,
-          role: editedAdmin.role,
-        }),
-      });
+      const response = await fetch(
+        `https://adminfinaldeployment-9gry1pfp.b4a.run/manage-admins`,
+        {
+          method: 'PUT',
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            name: editedAdmin.name,
+            email: editedAdmin.email,
+            role: editedAdmin.role,
+          }),
+        }
+      );
       if (!response.ok) {
         throw new Error('Failed to update admin');
       }
