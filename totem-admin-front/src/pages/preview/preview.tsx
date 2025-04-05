@@ -101,6 +101,7 @@ const PreviewPage: React.FC = () => {
       !previewData.bookTitle ||
       !previewData.bookId ||
       !previewData.age ||
+      !previewData.language ||
       !isCreatedByVaild
     ) {
       alert('Please fill in all required fields');
@@ -221,6 +222,7 @@ const PreviewPage: React.FC = () => {
     storybook.set('index', nextIndex);
     storybook.set('storybook_title', previewData.bookTitle);
     storybook.set('storybook_id', previewData.bookId);
+    storybook.set('language', previewData.language);
     storybook.set('Age', previewData.age);
     storybook.set('genre', previewData.genres);
     storybook.set('created_by', updatedCreators);
@@ -255,6 +257,7 @@ const PreviewPage: React.FC = () => {
           <BookDetails>
             <BookTitle>{previewData.bookTitle}</BookTitle>
             <BookMeta>BookId: {previewData.bookId}</BookMeta>
+            <BookMeta>Language: {previewData.language}</BookMeta>
             {creators.map((creator: Creator, index: number) => (
               <BookMeta key={index}>
                 {creator.customRole || creator.role}: {creator.name}
