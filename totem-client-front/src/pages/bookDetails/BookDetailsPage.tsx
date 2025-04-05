@@ -72,8 +72,8 @@ const BookPage: React.FC = () => {
               navigate('/');
             } else if (fromPage === 'books') {
               navigate('/books');
-            } else {
-              navigate(-1); // fallback to browser history
+            } else if (fromPage === 'search') {
+              navigate('/search'); // fallback to browser history
             }
           }}
         >
