@@ -1,5 +1,5 @@
-import React, {useEffect, useRef, useState} from "react";
-import {Header} from '../../components/header/Header.tsx';
+import React, { useEffect, useRef, useState } from "react";
+import { Header } from '../../components/header/Header.tsx';
 import imagekit from "../../imagekit.js";
 import Parse from "../../database.js";
 import {
@@ -16,14 +16,14 @@ import {
   TextArea,
   UploadHeader,
 } from './EditBook.styled.ts';
-import {Spinner} from "react-bootstrap";
-import {useNavigate} from "react-router-dom";
-import {useParams} from "react-router";
-import {Storybook} from "../../types/Storybook.ts";
-import {fetchStorybookById} from "../../api/fetchStorybookById.ts";
-import {deleteRemovedImages} from "../../api/deleteRemovedImages.ts";
-import {FileData, ImagesDroppable} from "../../components/ImagesDroppable.tsx";
-import {deleteImageByName} from "../../api/deleteImageByName.ts";
+import { Spinner } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
+import { useParams } from "react-router";
+import { Storybook } from "../../types/Storybook.ts";
+import { fetchStorybookById } from "../../api/fetchStorybookById.ts";
+import { deleteRemovedImages } from "../../api/deleteRemovedImages.ts";
+import { FileData, ImagesDroppable } from "../../components/ImagesDroppable.tsx";
+import { deleteImageByName } from "../../api/deleteImageByName.ts";
 
 const EditBook: React.FC = () => {
   // get original information
@@ -41,6 +41,7 @@ const EditBook: React.FC = () => {
         // Populate state from fetched result
         setBookTitle(result.storybook_title || "");
         setBookId(result.storybook_id || "");
+        setAge(result.language || "");
         setAge(result.Age || "0~2");
         setGenres(result.genre || []);
         setCreators(result.created_by || [{ role: "Author", name: "", customRole: "" }]);
@@ -75,6 +76,7 @@ const EditBook: React.FC = () => {
   const [bookTitle, setBookTitle] = useState<string>("");
   const [bookId, setBookId] = useState<string>("");
   const [age, setAge] = useState<string>("0~2");
+  const [language, setlanguage] = useState<string>("0~2");
   const [genres, setGenres] = useState([
     "Action Adventure",
     "Historical Fiction",
@@ -83,11 +85,11 @@ const EditBook: React.FC = () => {
 
   // default creators
   const initialCreators = [
-    {role: "Author", name: "", customRole: ""},
+    { role: "Author", name: "", customRole: "" },
   ];
   const initialRoles = [
-    {value: "Author", label: "Author"},
-    {value: "Illustrator", label: "Illustrator"},
+    { value: "Author", label: "Author" },
+    { value: "Illustrator", label: "Illustrator" },
   ];
   const [creators, setCreators] = useState(initialCreators);
   const [published, setPublished] = useState<string>("");
@@ -122,7 +124,7 @@ const EditBook: React.FC = () => {
       if (i === index) {
 
         if (field === "customRole") {
-          return {...creator, customRole: value};
+          return { ...creator, customRole: value };
         }
 
         if (field === "role" && value === "Other") {
@@ -133,7 +135,7 @@ const EditBook: React.FC = () => {
           };
         }
 
-        return {...creator, [field]: value};
+        return { ...creator, [field]: value };
       }
       return creator;
     });
@@ -155,7 +157,7 @@ const EditBook: React.FC = () => {
 
   const handleAddCreator = () => {
     const defaultRole = initialRoles.length > 0 ? initialRoles[0].value : "Author";
-    setCreators([...creators, {role: defaultRole, name: "", customRole: ""}]);
+    setCreators([...creators, { role: defaultRole, name: "", customRole: "" }]);
   };
 
   const handleRemoveCreator = (index: number) => {
@@ -290,11 +292,11 @@ const EditBook: React.FC = () => {
   };
 
   const handleAddToDB = async ({
-     coverimageurl,
-     contentimageurl,
-     coverimagename,
-     imageNames,
-   }: {
+    coverimageurl,
+    contentimageurl,
+    coverimagename,
+    imageNames,
+  }: {
     coverimageurl: string;
     contentimageurl: string[];
     coverimagename: string;
@@ -316,6 +318,7 @@ const EditBook: React.FC = () => {
 
     // Update fields
     storybook.set("storybook_title", bookTitle);
+    storybook.set("language", language);
     storybook.set("Age", age);
     storybook.set("genre", genres);
     storybook.set("created_by", updatedCreators);
@@ -350,7 +353,7 @@ const EditBook: React.FC = () => {
 
   return (
     <div>
-      <div style={{gap: "50px"}}><Header/></div>
+      <div style={{ gap: "50px" }}><Header /></div>
       <AppContainer>
         <UploadHeader>Edit Book</UploadHeader>
         <form onSubmit={handleSubmit}>
@@ -371,17 +374,36 @@ const EditBook: React.FC = () => {
                 type="text"
                 value={bookId}
                 onChange={(e) => setBookId(e.target.value)}
-                style={{marginRight: "10px", width: "90%"}}
+                style={{ marginRight: "10px", width: "90%" }}
                 disabled
               />
-              <GenerateButton className={"disabled"} onClick={()=>{}} disabled>Generate</GenerateButton>
+              <GenerateButton className={"disabled"} onClick={() => { }} disabled>Generate</GenerateButton>
             </FormRow>
-            <div style={{fontSize: "12px", marginTop: -20}}>
-              <span style={{fontWeight: "bold", color:'red'}}>Book ID</span> consists of English letters, numbers, and
+            <div style={{ fontSize: "12px", marginTop: -20 }}>
+              <span style={{ fontWeight: "bold", color: 'red' }}>Book ID</span> consists of English letters, numbers, and
               underscores
               (e.g., cropson_00390039).
-              It is used as the folder path in the image CDN.<span style={{fontWeight: "bold"}}> Once generated, it cannot be changed.</span> Click
+              It is used as the folder path in the image CDN.<span style={{ fontWeight: "bold" }}> Once generated, it cannot be changed.</span> Click
               “Generate” to create a random ID.
+            </div>
+          </FormGroup>
+
+          <FormGroup className={'required'}>
+            <label>Language</label>
+            <div>
+              <Select
+                value={language}
+                onChange={(e) => setlanguage(e.target.value)}
+                style={{
+                  width: window.innerWidth < 768 ? '100%' : '525px',
+                }}
+              >
+                <option value="" disabled selected>
+                  Select Language
+                </option>
+                <option value="فارسي">فارسي</option>
+                <option value="English">English</option>
+              </Select>
             </div>
           </FormGroup>
 
@@ -390,8 +412,11 @@ const EditBook: React.FC = () => {
             <Select
               value={age}
               onChange={(e) => setAge(e.target.value)}
-              style={{width: "530px"}}
+              style={{ width: window.innerWidth < 768 ? '100%' : '525px' }}
             >
+              <option value="" disabled selected>
+                  Select Age
+              </option>
               <option value="0~2">0~2</option>
               <option value="3~4">3~4</option>
               <option value="5~6">5~6</option>
@@ -414,7 +439,7 @@ const EditBook: React.FC = () => {
                   value={genre}
                   onChange={(e) => handleGenreInputChange(index, e.target.value)}
                   placeholder="Enter genre..."
-                  style={{marginRight: "10px"}}
+                  style={{ marginRight: "10px" }}
                 />
                 <div className="input-with-icon">
                   <DeleteButton
@@ -428,7 +453,7 @@ const EditBook: React.FC = () => {
               </div>
             ))}
 
-            <div style={{display: "flex", justifyContent: "flex-end"}}>
+            <div style={{ display: "flex", justifyContent: "flex-end" }}>
               <AddButton
                 type="button"
                 onClick={handleAddGenre}
@@ -459,7 +484,7 @@ const EditBook: React.FC = () => {
                       onChange={(e) =>
                         handleCreatorChange(index, "customRole", e.target.value)
                       }
-                      style={{marginRight: "5px"}}
+                      style={{ marginRight: "5px" }}
                     />
                     <Input
                       type="text"
@@ -477,7 +502,7 @@ const EditBook: React.FC = () => {
                       onChange={(e) =>
                         handleCreatorChange(index, "role", e.target.value)
                       }
-                      style={{marginRight: "5px"}}
+                      style={{ marginRight: "5px" }}
                     >
                       <option value="">Select role</option>
                       <option value="Author">Author</option>
@@ -495,7 +520,7 @@ const EditBook: React.FC = () => {
                       onChange={(e) =>
                         handleCreatorChange(index, "name", e.target.value)
                       }
-                      style={{marginRight: "3px"}}
+                      style={{ marginRight: "3px" }}
                     />
                   </>
                 )}
@@ -509,7 +534,7 @@ const EditBook: React.FC = () => {
                 </div>
               </div>
             ))}
-            <div style={{display: "flex", justifyContent: "flex-end"}}>
+            <div style={{ display: "flex", justifyContent: "flex-end" }}>
               <AddButton
                 type="button"
                 onClick={handleAddCreator}
@@ -536,7 +561,7 @@ const EditBook: React.FC = () => {
               type="text"
               value={published}
               onChange={(e) => setPublished(e.target.value)}
-              placeholder="Published"/>
+              placeholder="Published" />
           </FormGroup>
 
           <FormGroup>
@@ -579,7 +604,7 @@ const EditBook: React.FC = () => {
                 backgroundColor: "var(--color-primary)",
                 border: "1px solid #ccc",
                 borderRadius: "5px",
-                color:"#fff",
+                color: "#fff",
                 margin: "5px 0",
                 cursor: "pointer",
                 display: "inline-block"
@@ -592,13 +617,13 @@ const EditBook: React.FC = () => {
 
           {coverImageUrl && !coverImage && (
             <>
-              Previous book cover: <br/>
+              Previous book cover: <br />
               <img
                 src={coverImageUrl}
                 alt="Current Cover"
                 style={{ maxWidth: '150px', marginTop: '10px' }}
               />
-              <br/><br/>
+              <br /><br />
             </>
           )}
         </FormGroup>
@@ -615,7 +640,7 @@ const EditBook: React.FC = () => {
             <SubPreButton type="submit" onClick={handleSubmit}>
               Edit
             </SubPreButton>
-          ) : (<Spinner/>)}
+          ) : (<Spinner />)}
         </ButtonRow>
       </AppContainer>
     </div>

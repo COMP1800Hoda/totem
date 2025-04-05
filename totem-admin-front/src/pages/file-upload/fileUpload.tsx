@@ -30,6 +30,7 @@ interface PreviewData {
   bookTitle: string;
   bookId: string;
   age: string;
+  language:string;
   genres: string[];
   creators: { role: string; name: string; customRole: string }[];
   publisher: string;
@@ -52,6 +53,7 @@ const FileUpload: React.FC = () => {
   const [bookTitle, setBookTitle] = useState<string>('');
   const [bookId, setBookId] = useState<string>('');
   const [age, setAge] = useState<string>('');
+  const [language, setlanguage] = useState<string>('');
   const [genres, setGenres] = useState([
     'Action Adventure',
     'Historical Fiction',
@@ -360,6 +362,7 @@ const FileUpload: React.FC = () => {
     storybook.set('index', nextIndex);
     storybook.set('storybook_title', bookTitle);
     storybook.set('storybook_id', bookId);
+    storybook.set('language', language);
     storybook.set('Age', age);
     storybook.set('genre', genres);
     storybook.set('created_by', updatedCreators);
@@ -386,7 +389,7 @@ const FileUpload: React.FC = () => {
   const handlePreview = async () => {
     const isCreatedByValid =
       creators.length > 0 && creators.every((creator) => creator.name !== '');
-    if (!bookTitle || !bookId || !age || !isCreatedByValid) {
+    if (!bookTitle || !bookId || !age || !isCreatedByValid ||!language) {
       alert('Please fill in all required fields');
       setIsUploading(false);
       return;
@@ -445,6 +448,7 @@ const FileUpload: React.FC = () => {
     const previewData: PreviewData = {
       bookTitle,
       bookId,
+      language,
       age,
       genres,
       creators,
@@ -522,6 +526,26 @@ const FileUpload: React.FC = () => {
                 Once generated, it cannot be changed.
               </span>{' '}
               Click “Generate” to create a random ID.
+            </div>
+          </FormGroup>
+
+          <FormGroup className={'required'}>
+            <label>Language</label>
+            <div>
+              <Select
+                value={language}
+                onChange={(e) => setlanguage(e.target.value)}
+                style={{
+                  width: window.innerWidth < 768 ? '100%' : '525px',
+                  color: age === '' ? '#888' : 'black',
+                }}
+              >
+                <option value="" disabled selected>
+                  Select Language
+                </option>
+                <option value="فارسي">فارسي</option>
+                <option value="English">English</option>
+              </Select>
             </div>
           </FormGroup>
 
