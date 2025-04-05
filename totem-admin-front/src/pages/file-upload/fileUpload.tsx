@@ -589,7 +589,13 @@ const FileUpload: React.FC = () => {
           </FormGroup>
 
           <FormGroup className={'required'}>
-            <label>Created by</label>
+            <div style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
+              <label style={{ marginRight: '5px' }}>Created by</label>
+              <span style={{ color: 'red', marginLeft: '1px', marginRight:'10px',marginTop:'5px', fontSize:'14px' }}>*</span> 
+              <div style={{ fontSize: '12px',marginTop:'1px' }}>
+                <span>If there are more than one creators, please click "Add"</span>
+              </div>
+            </div>
             {creators.map((creator, index) => (
               <div
                 key={index}

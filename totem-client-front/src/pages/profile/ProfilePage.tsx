@@ -10,7 +10,8 @@ import {
   SectionContent, 
   Divider, 
   SettingsRow, 
-  Footer 
+  Footer,
+  Content
 } from './ProfilePage.styled';
 
 const ProfilePage: React.FC = () => {
@@ -24,41 +25,42 @@ const ProfilePage: React.FC = () => {
         </NavButton>
       </TopNavBar>
 
-      <Section>
-        <SectionTitle>Name:</SectionTitle>
-        <SectionContent>Sample Name</SectionContent>
-      </Section>
-      <Divider />
+      <Content>
+        <Section>
+          <SectionTitle>Name:</SectionTitle>
+          <SectionContent>Sample Name</SectionContent>
+        </Section>
+        <Divider />
 
-      <Section>
-        <SectionTitle>Email and Username:</SectionTitle>
-        <SectionContent>sample@email.com</SectionContent>
-      </Section>
-      <Divider />
+        <Section>
+          <SectionTitle>Email and Username:</SectionTitle>
+          <SectionContent>sample@email.com</SectionContent>
+        </Section>
+        <Divider />
 
-      <br />
-      <br />
+        <br />
+        <br />
 
-      <SectionTitle>Edit Account</SectionTitle>
-      <Divider />
-      <SettingsRow onClick={() => navigate('/change-password')}> {/* Navigate to ChangePassword page */}
-        <SectionContent>Change Password</SectionContent>
-        <ChevronLeft size={28} style={{ transform: 'rotate(180deg)' }} />
-      </SettingsRow>
-      <Divider />
+        <SectionTitle>Edit Account</SectionTitle>
+        <Divider />
+        <SettingsRow onClick={() => navigate('/change-password')}> {/* Navigate to ChangePassword page */}
+          <SectionContent>Change Password</SectionContent>
+          <ChevronLeft size={28} style={{ transform: 'rotate(180deg)' }} />
+        </SettingsRow>
+        <Divider />
 
-      <br />
-      <br />
+        <br />
+        <br />
 
-      <SectionTitle>Account Settings</SectionTitle>
-      <Divider />
+        <SectionTitle>Account Settings</SectionTitle>
+        <Divider />
 
-      <SettingsRow>
-        <SectionContent>Log Out</SectionContent>
-        <ChevronLeft size={28} style={{ transform: 'rotate(180deg)' }} />
-      </SettingsRow>
-      <Divider />
-      
+        <SettingsRow>
+          <SectionContent>Log Out</SectionContent>
+          <ChevronLeft size={28} style={{ transform: 'rotate(180deg)' }} />
+        </SettingsRow>
+        <Divider />
+      </Content>
       <br />
       <br />
 

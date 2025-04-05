@@ -22,7 +22,7 @@ const SearchPage: React.FC = () => {
   const [displayCount, setDisplayCount] = useState(12);
   const navigate = useNavigate();
 
-  const goToBook = (storybook_id: string) => navigate(`/books/${storybook_id}`);
+  const goToBook = (storybook_id: string) => navigate(`/books/${storybook_id}`, { state: { from: 'search' } } );
   const toggleLayout = () => setLayoutType(prev => (prev === 'threeColumns' ? 'twoColumns' : 'threeColumns'));
   
   const loadMoreBooks = () => {

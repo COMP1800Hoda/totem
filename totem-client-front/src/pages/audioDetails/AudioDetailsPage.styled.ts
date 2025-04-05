@@ -24,35 +24,20 @@ export const AudioPlayer = styled.audio`
 `;
 
 export const BackButton = styled.button`
-  position: absolute;  // Changed from static to absolute
-  top: 20px;         // Position from top
+  position: fixed;  // Changed from static to absolute
+  top: 15px;         // Position from top
   left: 20px;        // Position from left
   z-index: 100;      // Higher than header
   display: flex;
   align-items: center;
   gap: 0.5em;
   color: ${COLORS.Dark}; 
-  padding: 8px 12px;
   background: ${COLORS.Lightest};
-  border: 1px solid ${COLORS.Light};
-  border-radius: 0.25em;
+  border: none;
   cursor: pointer;
   font-size: 1em;
   transition: all 0.3s ease;
 
-  &:hover {
-    background-color: ${COLORS.Light};
-    color: ${COLORS.Darkest};
-  }
-
-  &:active {
-    background-color: ${COLORS.Light};
-  }
-
-  &:focus {
-    outline: none;
-    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.5);
-  }
 `;
 
 // Add these new components for better structure
