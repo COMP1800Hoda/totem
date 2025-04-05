@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Header } from '../../components/header/Header';
 import Footer from '../../components/footer/Footer';
-import { useNavigate } from 'react-router';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useSearch } from './SearchPageLogic.ts';
 import { COLORS } from '../../constants/colors.ts';
 import {
@@ -31,6 +31,8 @@ const SearchPage: React.FC = () => {
 
   const displayedBooks = searchResults.slice(0, displayCount);
   const hasMore = displayCount < searchResults.length;
+
+  const location = useLocation();
 
   return (
     <SearchContainer>
