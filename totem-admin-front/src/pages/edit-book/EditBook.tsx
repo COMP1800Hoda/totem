@@ -354,7 +354,7 @@ const EditBook: React.FC = () => {
     <div>
       <div style={{gap: "50px"}}><Header/></div>
       <AppContainer>
-        <UploadHeader>Add New Book</UploadHeader>
+        <UploadHeader>Edit Book</UploadHeader>
         <form onSubmit={handleSubmit}>
           <FormGroup className={"required"}>
             <label>Book Title</label>
@@ -378,8 +378,8 @@ const EditBook: React.FC = () => {
               />
               <GenerateButton className={"disabled"} onClick={()=>{}} disabled>Generate</GenerateButton>
             </FormRow>
-            <div style={{fontSize: "12px"}}>
-              <span style={{fontWeight: "bold"}}>Book ID</span> consists of English letters, numbers, and
+            <div style={{fontSize: "12px", marginTop: -20}}>
+              <span style={{fontWeight: "bold", color:'red'}}>Book ID</span> consists of English letters, numbers, and
               underscores
               (e.g., cropson_00390039).
               It is used as the folder path in the image CDN.<span style={{fontWeight: "bold"}}> Once generated, it cannot be changed.</span> Click

@@ -513,11 +513,11 @@ const FileUpload: React.FC = () => {
                 Generate
               </GenerateButton>
             </FormRow>
-            <div style={{ fontSize: '12px' }}>
+            <div style={{ fontSize: '12px' , marginTop: -20}}>
               <span style={{ fontWeight: 'bold' }}>Book ID</span> consists of
               English letters, numbers, and underscores (e.g.,
               cropson_00390039). It is used as the folder path in the image CDN.
-              <span style={{ fontWeight: 'bold' }}>
+              <span style={{ fontWeight: 'bold', color:'red' }}>
                 {' '}
                 Once generated, it cannot be changed.
               </span>{' '}

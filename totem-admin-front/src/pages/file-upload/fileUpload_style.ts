@@ -43,11 +43,11 @@ export const FormGroup = styled.div`
       display: block;
       &:after {
         position: relative;
-        top: 2px;
+        top: -1px;
         margin-left: 6px;
         color: red;
-        font-weight: bold;
-        content: '*';
+        content: '* Required';
+        font-size: 11px;
       }
     }
   }
