@@ -5,6 +5,7 @@ import {
   BookGrid,
   BookCover,
   BookText,
+  Content,
 } from './BooksPage.styled';
 import { Header } from '../../components/header/Header';
 import Footer from '../../components/footer/Footer';
@@ -93,6 +94,7 @@ const BooksPage: React.FC = () => {
   return (
     <BooksContainer>
       <Header />
+      <Content>
       <div style={{ padding: '20px', marginTop: '80px', textAlign: 'center' }}>
         <h1>Book Catalogue.</h1>
         <button
@@ -162,6 +164,7 @@ const BooksPage: React.FC = () => {
         <div style={{ height: '3em' }} />
       )}
 
+      </Content>
       <Footer />
     </BooksContainer>
   );

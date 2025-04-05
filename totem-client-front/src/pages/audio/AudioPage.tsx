@@ -8,6 +8,7 @@ import {
   AudioList,
   AudioItem,
   AudioThumbnail,
+  Content
 } from './AudioPage.styled';
 import { COLORS } from '../../constants/colors.ts';
 
@@ -87,6 +88,7 @@ const AudioPage: React.FC = () => {
   return (
     <AudioContainer>
       <Header />
+      <Content>
       <div style={{ padding: '20px', marginTop: '80px', textAlign: 'center' }}>
         <h1>Audio Catalogue</h1>
         <button
@@ -134,6 +136,7 @@ const AudioPage: React.FC = () => {
           ))}
         </AudioList>
       )}
+      </Content>
       <Footer />
     </AudioContainer>
   );

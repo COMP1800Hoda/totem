@@ -84,3 +84,11 @@ export const SearchResultItem = styled.li`
   border-bottom: 0.1em solid #ddd;
   min-width: 0;
 `;
+
+export const Content = styled.div`
+  @media (min-width: 800px) {
+    width: 45vw;
+    max-width: 80vw;
+    margin: 0 auto;
+  }
+`;

@@ -15,7 +15,13 @@ export const AudioContainer = styled.div`
     flex: 1;
   }
 `;
-
+export const Content = styled.div`
+  @media (min-width: 800px) {
+    width: 45vw;
+    max-width: 80vw;
+    margin: 0 auto;
+  }
+`;
 export const AudioGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(2, 1fr);

@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router';
 import { useSearch } from './SearchPageLogic.ts';
 import { COLORS } from '../../constants/colors.ts';
 import {
+  Content,
   SearchContainer,
   SearchInput,
   SearchButton,
@@ -35,7 +36,7 @@ const SearchPage: React.FC = () => {
   return (
     <SearchContainer>
       <Header />
-
+      <Content>
       <div style={{ padding: '1.25em', marginTop: '5em', textAlign: 'center' }}>
         <h1>Search Page</h1>
 
@@ -101,7 +102,7 @@ const SearchPage: React.FC = () => {
           )}
         </SearchResults>
       </div>
-
+      </Content>
       <Footer />
     </SearchContainer>
   );

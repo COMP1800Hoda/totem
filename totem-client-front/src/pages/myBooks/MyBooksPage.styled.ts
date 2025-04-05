@@ -48,3 +48,11 @@ export const BookText = styled.div<BookGridProps>`
   text-align: center;
   line-height: 1.3;
 `;
+
+export const Content = styled.div`
+  @media (min-width: 800px) {
+    width: 45vw;
+    max-width: 80vw;
+    margin: 0 auto;
+    }
+    `;
