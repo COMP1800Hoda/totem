@@ -67,7 +67,7 @@ export const ManageBookTable: React.FC = () => {
       }
     };
     getTotalCount();
-  }, [searchResultKeyword]);
+  }, [searchResultKeyword, searchResultType]);
 
   const loaderRef = useRef<HTMLDivElement | null>(null);
 

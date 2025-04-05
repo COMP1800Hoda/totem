@@ -37,34 +37,11 @@ export async function deleteStorybook(storybook_id: string): Promise<void> {
 }
 
 async function deleteImagekitFolder(folderPath: string) {
-  // const privateKey = import.meta.env.VITE_IMAGEKIT_PRIVATE_KEY || '';
-  // const auth = btoa(`${privateKey}:`);
-
-  // const response = await fetch('https://api.imagekit.io/v1/folder/', {
-  //   method: 'DELETE',
-  //   headers: {
-  //     'Content-Type': 'application/json',
-  //     'Authorization': `Basic ${auth}`,
-  //   },
-  //   body: JSON.stringify({ folderPath }),
-  // });
-
   try {
-
     await imagekit.deleteFolder(folderPath);
     console.log(` Folder deleted: ${folderPath}`);
-
-
   } catch (e) {
     console.warn(`Failed to delete folder ${folderPath}.`);
     console.error(e)
   }
-
-  // if (!response.ok) {
-  //   const error = await response.text();
-  //   console.warn(` Failed to delete folder ${folderPath}. Response: ${error}`);
-  //   return;
-  // }
-  //
-  // console.log(` Folder deleted: ${folderPath}`);
 }
