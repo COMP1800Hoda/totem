@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
 import { Header } from '../../components/header/Header';
 import Footer from '../../components/footer/Footer';
-import { useNavigate } from 'react-router';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useSearch } from './SearchPageLogic.ts';
 import { COLORS } from '../../constants/colors.ts';
 import {
-  Content,
   SearchContainer,
   SearchInput,
   SearchButton,
@@ -23,7 +22,7 @@ const SearchPage: React.FC = () => {
   const [displayCount, setDisplayCount] = useState(12);
   const navigate = useNavigate();
 
-  const goToBook = (storybook_id: string) => navigate(`/books/${storybook_id}`);
+  const goToBook = (storybook_id: string) => navigate(`/books/${storybook_id}`, { state: { from: 'search' } } );
   const toggleLayout = () => setLayoutType(prev => (prev === 'threeColumns' ? 'twoColumns' : 'threeColumns'));
   
   const loadMoreBooks = () => {
@@ -33,10 +32,12 @@ const SearchPage: React.FC = () => {
   const displayedBooks = searchResults.slice(0, displayCount);
   const hasMore = displayCount < searchResults.length;
 
+  const location = useLocation();
+
   return (
     <SearchContainer>
       <Header />
-      <Content>
+
       <div style={{ padding: '1.25em', marginTop: '5em', textAlign: 'center' }}>
         <h1>Search Page</h1>
 
@@ -102,7 +103,7 @@ const SearchPage: React.FC = () => {
           )}
         </SearchResults>
       </div>
-      </Content>
+
       <Footer />
     </SearchContainer>
   );
