@@ -5,12 +5,21 @@ import { COLORS } from '../../constants/colors.ts';
 export const ProfileContainer = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
   padding: 10vh 5% 5% 5%; /* Ensures content is not blocked by TopNavBar */
   font-family: Arial, sans-serif;
   background: ${COLORS.Lightest};
   min-height: 100vh;
   color: ${COLORS.Darkest};
+`;
+
+export const Content = styled.div`
+  width: 90%;
+
+  @media (min-width: 768px) {
+    width: 45vw;
+    max-width: 80vw;
+  }
 `;
 
 /* Top Navigation Bar */
