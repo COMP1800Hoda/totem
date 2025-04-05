@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Table, Button, Modal } from 'react-bootstrap';
-import Parse from '../../database';
 import AddAdminModal from './AddAdminModal';
 import EditAdminModal from './EditAdminModal';
 import { Header } from '../../components/header/Header';
