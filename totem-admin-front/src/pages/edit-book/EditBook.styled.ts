@@ -38,7 +38,7 @@ export const FormGroup = styled.div`
   width: auto;
   margin-bottom: 10px;
   
-  &.required{
+  .required, &.required{
     > label:first-child {
       display: block;
       &:after {

@@ -533,7 +533,9 @@ const FileUpload: React.FC = () => {
                 onChange={(e) => setAge(e.target.value)}
                 style={{
                   width: window.innerWidth < 768 ? '100%' : '525px',
+                  color: age === '' ? '#888' : 'black',
                 }}
+
               >
                 <option value="" disabled selected>
                   Select Age
@@ -588,10 +590,9 @@ const FileUpload: React.FC = () => {
             </div>
           </FormGroup>
 
-          <FormGroup className={'required'}>
-            <div style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
-              <label style={{ marginRight: '5px' }}>Created by</label>
-              <span style={{ color: 'red', marginLeft: '1px', marginRight:'10px',marginTop:'5px', fontSize:'14px' }}>*</span> 
+          <FormGroup>
+            <div className={'created_by_title required'}>
+              <label>Created by</label>
               <div style={{ fontSize: '12px',marginTop:'1px' }}>
                 <span>If there are more than one creators, please click "Add"</span>
               </div>

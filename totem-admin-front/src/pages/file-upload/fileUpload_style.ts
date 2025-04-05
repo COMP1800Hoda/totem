@@ -36,9 +36,20 @@ export const FormGroup = styled.div`
   position: relative;
   flex: 1;
   width: auto;
-  margin-bottom: 10px;
-  
-  &.required{
+  margin-bottom: 10px; 
+    
+  .created_by_title{
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+      
+      label {
+          margin-right: 10px;
+      }
+  }
+    
+  .required, &.required{
     > label:first-child {
       display: block;
       &:after {
