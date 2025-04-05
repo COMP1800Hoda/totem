@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
 import { Header } from '../../components/header/Header';
 import Footer from '../../components/footer/Footer';
+import { ChevronLeft } from "lucide-react";
 import {
   PageContainer,
   AudioPlayer,
@@ -68,7 +69,9 @@ const AudioDetailsPage: React.FC = () => {
   return (
     <PageContainer>
       <Header />
-      <BackButton onClick={() => window.history.back()}>&lt; Back</BackButton>
+      <BackButton onClick={() => window.history.back()}>
+        <ChevronLeft size={30} />
+      </BackButton>
       <h1>{audio.name}</h1>
       <img
         src={`/audio${audio.objectId}.png`}
