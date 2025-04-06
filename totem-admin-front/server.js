@@ -38,13 +38,11 @@ app.post('/reset-password-request', async(req, res) => {
     // set epiration time to 5 minutes for the reset password link
     const token = jwt.sign({email: email}, JWT_SECRET, {expiresIn: '5m'});
 
-    // HOSTED LINK
-    // const resetLink = `https://totemchildrenstorybookadmin-1g9u4lon.b4a.run/edit-password?token=${token}}`;
-
     // change this based on the port your front end is running on if you test it locally
     // const resetLink = `http://localhost:5173/edit-password?token=${token}}`;
 
-    const resetLink = `https://adminfinaldeployment-9gry1pfp.b4a.run/edit-password?token=${token}}`;
+    // const resetLink = `https://adminfinaldeployment-9gry1pfp.b4a.run/edit-password?token=${token}}`;
+    const resetLink = `http://localhost:8080/edit-password?token=${token}}`;
     console.log("reset link: ", resetLink);
     const emailResponse = await sendResetEmail(email, resetLink);
 
@@ -86,8 +84,8 @@ app.post('/', async(req,res) => {
 })
 
 
-app.post('/reset-password',checkAuth,  async(req,res) => {
-    const authHeader = req.headers.authorization;
+app.post('/reset-password',checkAuth, async(req,res) => {
+    const authHeader = req.headers. req.headers['authorization'];;
 
     const password = req.body.newPassword;
 

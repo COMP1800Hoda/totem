@@ -27,17 +27,14 @@ const EditPassword = () => {
     }
 
     try {
-      const response = await fetch(
-        'https://adminfinaldeployment-9gry1pfp.b4a.run/reset-password',
-        {
-          method: 'POST',
-          headers: {
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ newPassword }),
-        }
-      );
+      const response = await fetch('http://localhost:8080/reset-password', {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ newPassword }),
+      });
 
       if (response.ok) {
         setSuccess(true);

@@ -16,7 +16,7 @@ const ForgotPassword = () => {
       // change this based on the port
       const response = await fetch(
         // 'https://adminfinaldeployment-9gry1pfp.b4a.run/reset-password-request',
-        'https://adminfinaldeployment-9gry1pfp.b4a.run/reset-password-request',
+        'http://localhost:8080/reset-password-request',
         {
           method: 'POST',
           headers: {
@@ -25,8 +25,12 @@ const ForgotPassword = () => {
           body: JSON.stringify({ email }),
         }
       );
+      const data = await response.json();
       if (response.ok)
         setMessage('Password reset link sent. Check your email.');
+      else {
+        setMessage(data.message);
+      }
     } catch (error) {
       console.log('An error occured', error);
       setMessage(`An error occurred. ${error}`);
