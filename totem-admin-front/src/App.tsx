@@ -28,7 +28,7 @@ const App: React.FC = () => {
         {/* NOT done JWT*/}
         <Route path="/confirm-page" element={<ConfirmPage />} />
         {/* NOT done JWT*/}
-        <Route path="/edit-password" element={<EditPassword />} />
+        <Route path="/reset-password" element={<EditPassword />} />
         {/* done JWT*/}
         <Route path="/main" element={<HomePage />} />
         {/* done JWT*/}

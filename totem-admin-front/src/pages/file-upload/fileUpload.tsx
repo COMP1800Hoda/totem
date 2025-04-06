@@ -30,7 +30,7 @@ interface PreviewData {
   bookTitle: string;
   bookId: string;
   age: string;
-  language:string;
+  language: string;
   genres: string[];
   creators: { role: string; name: string; customRole: string }[];
   publisher: string;
@@ -389,7 +389,7 @@ const FileUpload: React.FC = () => {
   const handlePreview = async () => {
     const isCreatedByValid =
       creators.length > 0 && creators.every((creator) => creator.name !== '');
-    if (!bookTitle || !bookId || !age || !isCreatedByValid ||!language) {
+    if (!bookTitle || !bookId || !age || !isCreatedByValid || !language) {
       alert('Please fill in all required fields');
       setIsUploading(false);
       return;
@@ -517,11 +517,11 @@ const FileUpload: React.FC = () => {
                 Generate
               </GenerateButton>
             </FormRow>
-            <div style={{ fontSize: '12px' , marginTop: -20}}>
+            <div style={{ fontSize: '12px', marginTop: -20 }}>
               <span style={{ fontWeight: 'bold' }}>Book ID</span> consists of
               English letters, numbers, and underscores (e.g.,
               cropson_00390039). It is used as the folder path in the image CDN.
-              <span style={{ fontWeight: 'bold', color:'red' }}>
+              <span style={{ fontWeight: 'bold', color: 'red' }}>
                 {' '}
                 Once generated, it cannot be changed.
               </span>{' '}
@@ -559,7 +559,6 @@ const FileUpload: React.FC = () => {
                   width: window.innerWidth < 768 ? '100%' : '525px',
                   color: age === '' ? '#888' : 'black',
                 }}
-
               >
                 <option value="" disabled selected>
                   Select Age
@@ -617,8 +616,10 @@ const FileUpload: React.FC = () => {
           <FormGroup>
             <div className={'created_by_title required'}>
               <label>Created by</label>
-              <div style={{ fontSize: '12px',marginTop:'1px' }}>
-                <span>If there are more than one creators, please click "Add"</span>
+              <div style={{ fontSize: '12px', marginTop: '1px' }}>
+                <span>
+                  If there are more than one creators, please click "Add"
+                </span>
               </div>
             </div>
             {creators.map((creator, index) => (

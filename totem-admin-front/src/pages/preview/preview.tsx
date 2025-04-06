@@ -212,7 +212,7 @@ const PreviewPage: React.FC = () => {
     contentimageurl: string[];
   }) => {
     const updatedCreators = replaceOtherWithCustomRole(previewData.creators);
-    const updatedCreatorsNames = updatedCreators.map(author => author.name);
+    const updatedCreatorsNames = updatedCreators.map((author) => author.name);
 
     const Storybook = Parse.Object.extend('storybook');
     const storybook = new Storybook();

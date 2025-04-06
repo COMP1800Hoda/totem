@@ -15,8 +15,8 @@ const ForgotPassword = () => {
     try {
       // change this based on the port
       const response = await fetch(
-        // 'https://adminfinaldeployment-9gry1pfp.b4a.run/reset-password-request',
-        'http://localhost:8080/reset-password-request',
+        'https://adminfinaldeployment-9gry1pfp.b4a.run/reset-password-request',
+        // 'http://localhost:8080/reset-password-request',
         {
           method: 'POST',
           headers: {

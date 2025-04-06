@@ -41,8 +41,8 @@ app.post('/reset-password-request', async(req, res) => {
     // change this based on the port your front end is running on if you test it locally
     // const resetLink = `http://localhost:5173/edit-password?token=${token}}`;
 
-    // const resetLink = `https://adminfinaldeployment-9gry1pfp.b4a.run/edit-password?token=${token}}`;
-    const resetLink = `http://localhost:8080/edit-password?token=${token}}`;
+    // const resetLink = `https://adminfinaldeployment-9gry1pfp.b4a.run/reset-password?token=${token}}`;
+    const resetLink = `http://localhost:5173/reset-password?token=${token}`;
     console.log("reset link: ", resetLink);
     const emailResponse = await sendResetEmail(email, resetLink);
 
@@ -84,12 +84,12 @@ app.post('/', async(req,res) => {
 })
 
 
-app.post('/reset-password',checkAuth, async(req,res) => {
-    const authHeader = req.headers. req.headers['authorization'];;
+app.post('/reset-password', checkAuth, async(req,res) => {
+    const authHeader = req.headers['authorization'];;
 
     const password = req.body.newPassword;
 
-    if(!authHeader || !password){
+    if(!authHeader || !authHeader.startsWith('Bearer') || !password){
         return res.status(400).json({message: "Both token and password are required"});
     }
 
