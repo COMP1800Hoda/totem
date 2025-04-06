@@ -1,10 +1,6 @@
 import { useNavigate, useLocation } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import React, { useState, useEffect } from 'react';
-import Parse from '../../database';
-import bcrypt from 'bcryptjs';
-import { jwtDecode } from 'jwt-decode';
-
 const EditPassword = () => {
   const navigate = useNavigate();
   const location = useLocation();
