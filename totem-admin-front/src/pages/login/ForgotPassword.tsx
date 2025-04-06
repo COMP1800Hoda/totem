@@ -1,7 +1,6 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Parse from '../../database';
 const ForgotPassword = () => {
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
@@ -10,24 +9,14 @@ const ForgotPassword = () => {
 
   const handleReset = async (e: React.FormEvent) => {
     e.preventDefault();
-
     // Let browser handle validation if the field is empty
     if (!email) return;
 
     try {
-      const query = new Parse.Query('Admin');
-      query.equalTo('admin_email', email);
-      const adminUser = await query.first();
-      if (!adminUser) {
-        setMessage('Email not found');
-        console.log('Email not found');
-        return;
-      }
-
       // change this based on the port
       const response = await fetch(
+        // 'https://adminfinaldeployment-9gry1pfp.b4a.run/reset-password-request',
         'https://adminfinaldeployment-9gry1pfp.b4a.run/reset-password-request',
-        // 'http://localhost:8080/reset-password-request',
         {
           method: 'POST',
           headers: {
@@ -36,17 +25,11 @@ const ForgotPassword = () => {
           body: JSON.stringify({ email }),
         }
       );
-
-      if (response.ok) {
+      if (response.ok)
         setMessage('Password reset link sent. Check your email.');
-        // navigate("/confirmPage");
-      } else {
-        setMessage('An error occured');
-      }
-      // navigate("/confirmPage");
     } catch (error) {
       console.log('An error occured', error);
-      setMessage('An error occurred. Please try again.');
+      setMessage(`An error occurred. ${error}`);
     }
   };
 

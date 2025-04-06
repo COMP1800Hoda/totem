@@ -10,18 +10,14 @@ const EditPassword = () => {
   const location = useLocation();
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [email, setEmail] = useState<string | ''>('');
   const [message, setMessage] = useState('');
   const [success, setSuccess] = useState(false);
+  const [token, setToken] = useState<string | null>(null);
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
-    const token = params.get('token');
-    const emailFromURL: any = token ? jwtDecode(token) : null;
-    console.log('Email from URL:', emailFromURL);
-    if (emailFromURL) {
-      setEmail(emailFromURL.email);
-    }
+    const tokenParam = params.get('token');
+    setToken(tokenParam);
   }, [location]);
 
   const handleEditPassword = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -35,34 +31,25 @@ const EditPassword = () => {
     }
 
     try {
-      console.log('Email:', email);
-      const query = new Parse.Query('Admin');
-      query.equalTo('admin_email', email);
-      const admin = await query.first();
-      if (!admin) {
-        setMessage('Admin not found');
-        console.log('Admin not found');
-        return;
-      }
-
-      // Hash the new password
-      const saltRounds = 10;
-      bcrypt.hash(newPassword, saltRounds, async (err, hashedPassword) => {
-        if (err) {
-          console.log('Error generating salt: ', err);
-          setMessage('An error occured');
-          return;
+      const response = await fetch(
+        'https://adminfinaldeployment-9gry1pfp.b4a.run/reset-password',
+        {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ newPassword }),
         }
-        console.log('Hashed password: ', hashedPassword);
+      );
 
-        admin.set('admin_hashed_password', hashedPassword);
-        await admin.save();
+      if (response.ok) {
         setSuccess(true);
-        console.log('Password updated successfully');
+        setMessage('Password updated successfully');
         setTimeout(() => {
           navigate('/confirm-page');
         }, 2000);
-      });
+      }
     } catch (error) {
       setMessage('An error occured');
       console.log('An error occured: ', error);

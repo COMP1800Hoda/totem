@@ -27,6 +27,13 @@ app.post('/reset-password-request', async(req, res) => {
         return res.status(400).json({message: "Email is required"});
     }
 
+    const query = new ParseConfig.Query('Admin');
+    query.equalTo('admin_email', email);
+    const admin = await query.first();
+    if(!admin){
+        console.log('Email not found');
+        return res.status(404).json({message: "Email not found"});
+    }
     //The token store the email for later use
     // set epiration time to 5 minutes for the reset password link
     const token = jwt.sign({email: email}, JWT_SECRET, {expiresIn: '5m'});
@@ -77,6 +84,46 @@ app.post('/', async(req,res) => {
         res.status(500).json({message: "Internal server error"});
     }
 })
+
+
+app.post('/reset-password',checkAuth,  async(req,res) => {
+    const authHeader = req.headers.authorization;
+
+    const password = req.body.newPassword;
+
+    if(!authHeader || !password){
+        return res.status(400).json({message: "Both token and password are required"});
+    }
+
+    const token = authHeader.split(' ')[1]; // Remove Bearer from the token
+    try{
+        //decode the token to get the email
+        const decoded= jwt.verify(token, JWT_SECRET);
+        const email = decoded?.email;
+        // if token is expired, so no email is found, return error message
+        if(!email){
+            return res.status(400).json({message: "Invalid or expired token"});
+        }
+
+        const query = new ParseConfig.Query('Admin');
+        query.equalTo('admin_email', email);
+        const admin = await query.first();
+        if(!admin){
+            console.log("In server.js Email not found");
+            return res.status(401).json({message: "Email not found"});
+        }
+        //hash the new password before saving to the database
+        const hashedPassword = await bcrypt.hash(password, 10);
+        admin.set('admin_hashed_password', hashedPassword);
+        await admin.save();
+        console.log('Password updated successfully');
+        res.status(200).json({message: 'Password updated successfully'});
+    } catch(error){
+        console.log("error in reset password route: ", error);
+        res.status(500).json({message: "Internal server error"});
+    }
+
+});
 
 
  //only accessible if user is logged in

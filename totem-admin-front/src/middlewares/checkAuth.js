@@ -15,7 +15,7 @@ const checkAuth = (req, res, next) => {
     try {
         const decoded = jwt.verify(token, JWT_SECRET);
         req.user = decoded; // Attach user details to the request
-        next(); // if uncomment this line, it doesn't work as expected
+        next(); //Proceed to next middleware or route
     } catch (error) {
         return res.status(403).json({ message: 'Forbidden: Invalid or expired token' });
     }
