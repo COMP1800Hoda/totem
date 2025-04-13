@@ -75,7 +75,7 @@ app.post('/', async(req,res) => {
         const adminRole = admin.get('admin_role');
 
         // change expiration time to any time you want for testing        
-        const token = jwt.sign({email: email, adminRole: adminRole}, JWT_SECRET, {expiresIn: '1200000s'});
+        const token = jwt.sign({email: email, adminRole: adminRole}, JWT_SECRET, {expiresIn: '15m'});
         res.json({token, message: 'Login successful'});
     } catch(error){
         console.log("error in logging route: ", error);
