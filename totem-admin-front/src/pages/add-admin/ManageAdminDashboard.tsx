@@ -68,7 +68,7 @@ const AdminProfile = () => {
     if (!adminToDelete) return;
     try {
       const response = await fetch(
-        `https://adminfinaldeployment-9gry1pfp.b4a.run/${adminToDelete}`,
+        `https://adminfinaldeployment-9gry1pfp.b4a.run/manage-admins/${adminToDelete}`,
         {
           method: 'DELETE',
           headers: {
@@ -76,10 +76,16 @@ const AdminProfile = () => {
           },
         }
       );
-      if (!response.ok) throw new Error('Failed to delete admin');
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to delete admin');
+      }
       setAdmins(admins.filter((admin) => admin.id !== adminToDelete));
     } catch (error: unknown) {
       console.error('Error deleting admin: ', error);
+      setError(
+        error instanceof Error ? error.message : 'Failed to delete admin'
+      );
     } finally {
       setShowConfirmModal(false);
       setAdminToDelete(null);
